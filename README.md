@@ -1,1 +1,1 @@
-My Infosec, hacking and general blog
+My Infosec, hacking and general blog.
