@@ -74,7 +74,7 @@ repo: darrynb89.github.io
 branch: dev
 relative_source: ../darrynb89.github.io
 destination: ./_site/
-production_url: https://darrynb89.github.io
+production_url: https://darrynb89.github.io/
 source_url: https://github.com/darrynb89/darrynb89.github.io
 
 exclude:
