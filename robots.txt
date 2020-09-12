@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: https://darrynbrownfield.co.uk/sitemap.xml

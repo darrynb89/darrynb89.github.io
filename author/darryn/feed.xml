@@ -2,10 +2,10 @@
 
 <feed xmlns="http://www.w3.org/2005/Atom" >
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
-  <link href="/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="/" rel="alternate" type="text/html" />
-  <updated>2020-09-12T13:31:54+00:00</updated>
-  <id>/author/darryn/feed.xml</id>
+  <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
+  <updated>2020-09-12T13:36:42+00:00</updated>
+  <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
   
@@ -33,11 +33,11 @@
   
     <entry>
       <title type="html">Git-Happens Write Up</title>
-      <link href="/githappens" rel="alternate" type="text/html" title="Git-Happens Write Up" />
+      <link href="https://darrynbrownfield.co.uk/githappens" rel="alternate" type="text/html" title="Git-Happens Write Up" />
       <published>2020-09-12T00:00:00+00:00</published>
       <updated>2020-09-12T00:00:00+00:00</updated>
-      <id>/githappens</id>
-      <content type="html" xml:base="/githappens">&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/cover.png&quot; alt=&quot;GitHappens&quot; /&gt;&lt;/p&gt;
+      <id>https://darrynbrownfield.co.uk/githappens</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/githappens">&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/cover.png&quot; alt=&quot;GitHappens&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -368,11 +368,11 @@ Date:   Mon Jul 20 20:46:28 2020 +0000
   
     <entry>
       <title type="html">GamingServer Write Up</title>
-      <link href="/gamingserver" rel="alternate" type="text/html" title="GamingServer Write Up" />
+      <link href="https://darrynbrownfield.co.uk/gamingserver" rel="alternate" type="text/html" title="GamingServer Write Up" />
       <published>2020-09-06T00:00:00+00:00</published>
       <updated>2020-09-06T00:00:00+00:00</updated>
-      <id>/gamingserver</id>
-      <content type="html" xml:base="/gamingserver">&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/gamingserver.png&quot; alt=&quot;GamingServer&quot; /&gt;&lt;/p&gt;
+      <id>https://darrynbrownfield.co.uk/gamingserver</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/gamingserver">&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/gamingserver.png&quot; alt=&quot;GamingServer&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -809,11 +809,11 @@ root.txt
   
     <entry>
       <title type="html">Photographer Write Up</title>
-      <link href="/photographer" rel="alternate" type="text/html" title="Photographer Write Up" />
+      <link href="https://darrynbrownfield.co.uk/photographer" rel="alternate" type="text/html" title="Photographer Write Up" />
       <published>2020-09-05T00:00:00+00:00</published>
       <updated>2020-09-05T00:00:00+00:00</updated>
-      <id>/photographer</id>
-      <content type="html" xml:base="/photographer">&lt;p&gt;&lt;img src=&quot;/assets/images/photographer.png&quot; alt=&quot;Photographer&quot; /&gt;&lt;/p&gt;
+      <id>https://darrynbrownfield.co.uk/photographer</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/photographer">&lt;p&gt;&lt;img src=&quot;/assets/images/photographer.png&quot; alt=&quot;Photographer&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
