@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>/photographer</loc>
+<lastmod>2020-09-05T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>/gamingserver</loc>
+<lastmod>2020-09-06T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>/githappens</loc>
+<lastmod>2020-09-12T00:00:00+00:00</lastmod>
+</url>
+<url>
+<loc>/</loc>
+</url>
+<url>
+<loc>/about/</loc>
+</url>
+<url>
+<loc>/tag/vulnhub/</loc>
+</url>
+<url>
+<loc>/tag/ctf/</loc>
+</url>
+<url>
+<loc>/tag/oscp/</loc>
+</url>
+<url>
+<loc>/tag/tryhackme/</loc>
+</url>
+<url>
+<loc>/author/darryn/</loc>
+</url>
+</urlset>
