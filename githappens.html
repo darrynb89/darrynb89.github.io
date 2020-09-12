@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Git-Happens Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="/githappens" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Git-Happens Write Up" />
+    <meta property="og:description" content="Overview Git-Happens is an easy room from TryHackMe with the description: Boss wanted me to create a prototype, so here it is! We even used something called “version control” that made deploying this really easy! We only have 1 task, find the super secret password. Nmap TryHackMe will assign a" />
+    <meta property="og:url" content="/githappens" />
+    <meta property="og:image" content="/assets/images/githappens/cover.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2020-09-12T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-09-12T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Git-Happens Write Up" />
+    <meta name="twitter:description" content="Overview Git-Happens is an easy room from TryHackMe with the description: Boss wanted me to create a prototype, so here it is! We even used something called “version control” that made deploying this really easy! We only have 1 task, find the super secret password. Nmap TryHackMe will assign a" />
+    <meta name="twitter:url" content="/" />
+    <meta name="twitter:image" content="/assets/images/githappens/cover.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "/assets/images/blog-icon.png"
+    },
+    "url": "/githappens",
+    "image": {
+        "@type": "ImageObject",
+        "url": "/assets/images/githappens/cover.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "/githappens"
+    },
+    "description": "Overview Git-Happens is an easy room from TryHackMe with the description: Boss wanted me to create a prototype, so here it is! We even used something called “version control” that made deploying this really easy! We only have 1 task, find the super secret password. Nmap TryHackMe will assign a"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Git-Happens Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="12 September 2020">12 September 2020</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Git-Happens Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/githappens/cover.png" alt="GitHappens" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p>Git-Happens is an easy room from <a href="https://tryhackme.com">TryHackMe</a> with the description:</p>
+
+<blockquote>
+  <p>Boss wanted me to create a prototype, so here it is! We even used something called “version control” that made deploying this really easy!</p>
+</blockquote>
+
+<p>We only have 1 task, find the super secret password.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>TryHackMe will assign a dynamic IP as part of the deployment, the IP I will be targeting is ‘10.10.39.144’. I started by doing an nmap scan to check what ports are open.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.39.144
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-12 13:07 BST
+Nmap scan report for 10.10.39.144
+Host is up (0.025s latency).
+Not shown: 999 closed ports
+PORT   STATE SERVICE VERSION
+80/tcp open  http    nginx 1.14.0 (Ubuntu)
+| http-git: 
+|   10.10.39.144:80/.git/
+|     Git repository found!
+|_    Repository description: Unnamed repository; edit this file 'description' to name the...
+|_http-server-header: nginx/1.14.0 (Ubuntu)
+|_http-title: Super Awesome Site!
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.83 seconds
+</code></pre>
+
+<p>The only port is HTTP, I browsed to the machine and found what appears to be a login page but nothing happened when I tried to log in.</p>
+
+<p><img src="/assets/images/githappens/WebPage.png" alt="WebPage" /></p>
+
+<p>I continued with some basic web enumeration by running Gobuster but didnt find anything.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $gobuster dir -u http://10.10.39.144 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.39.144
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/12 13:15:14 Starting gobuster
+===============================================================
+/css (Status: 301)
+===============================================================
+2020/09/12 13:17:12 Finished
+===============================================================
+</code></pre>
+
+<p>However nmap did find /.git/ so I looked at that next.</p>
+
+<p><img src="/assets/images/githappens/GitPage.png" alt="GitPage" /></p>
+
+<p>I tried to run git clone to download the files from the server but had no joy.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $git clone http://10.10.39.144/
+Cloning into '10.10.39.144'...
+fatal: repository 'http://10.10.39.144/' not found
+┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $git clone http://10.10.39.144/.git
+Cloning into '10.10.39.144'...
+fatal: repository 'http://10.10.39.144/.git/' not found
+┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $git clone http://10.10.39.144/.git/
+Cloning into '10.10.39.144'...
+fatal: repository 'http://10.10.39.144/.git/' not found
+</code></pre>
+
+<p>I did find some tools to dump the git files. However, I used wget using the -r flag to download the files.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]                                                                                                                             
+└──╼ $wget -r http://10.10.39.144/.git/                                                                                                                                       
+--2020-09-12 13:23:22--  http://10.10.39.144/.git/                                                                                                                            
+Connecting to 10.10.39.144:80... connected.                                                                                                                                   
+HTTP request sent, awaiting response... 200 OK                                                                                                                                
+Length: unspecified [text/html]                                                                                                                                               
+Saving to: ‘10.10.39.144/.git/index.html’                                                                                                                                     
+                                                                                                                                                                              
+10.10.39.144/.git/index.html                     [ &lt;=&gt;                                                                                           ]   1.36K  --.-KB/s    in 0s 
+
+2020-09-12 13:23:22 (146 MB/s) - ‘10.10.39.144/.git/index.html’ saved [1391]
+
+Loading robots.txt; please ignore errors.
+--2020-09-12 13:23:22--  http://10.10.39.144/robots.txt
+Reusing existing connection to 10.10.39.144:80.
+HTTP request sent, awaiting response... 404 Not Found
+2020-09-12 13:23:22 ERROR 404: Not Found.
+
+--2020-09-12 13:23:22--  http://10.10.39.144/ 
+Reusing existing connection to 10.10.39.144:80.
+HTTP request sent, awaiting response... 200 OK
+Length: 6890 (6.7K) [text/html]
+Saving to: ‘10.10.39.144/index.html’
+
+10.10.39.144/index.html                      100%[==============================================================================================&gt;]   6.73K  --.-KB/s    in 0s 
+
+2020-09-12 13:23:22 (16.1 MB/s) - ‘10.10.39.144/index.html’ saved [6890/6890]
+
+--2020-09-12 13:23:22--  http://10.10.39.144/.git/branches/
+Reusing existing connection to 10.10.39.144:80.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘10.10.39.144/.git/branches/index.html’
+
+&lt;&lt;SNIP&gt;&gt;
+</code></pre>
+
+<p>Now I had all the files, I took a look through but nothing jumped out as a super secret password so did some research on the git commands to see how I could use the files.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $ls
+10.10.39.144  nmap
+┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
+└──╼ $cd 10.10.39.144/
+┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
+└──╼ $ls -lah
+total 8.0K
+drwxr-xr-x 1 daz daz   34 Sep 12 13:23 .
+drwxr-xr-x 1 daz daz   32 Sep 12 13:23 ..
+drwxr-xr-x 1 daz daz   18 Sep 12 13:23 css
+drwxr-xr-x 1 daz daz  158 Sep 12 13:23 .git
+-rw-r--r-- 1 daz daz 6.8K Jul 23 23:39 index.html
+┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
+└──╼ $ls -lah .git
+total 24K
+drwxr-xr-x 1 daz daz  158 Sep 12 13:23 .
+drwxr-xr-x 1 daz daz   34 Sep 12 13:23 ..
+drwxr-xr-x 1 daz daz   20 Sep 12 13:23 branches
+-rw-r--r-- 1 daz daz  110 Jul 24 07:25 config
+-rw-r--r-- 1 daz daz   73 Jul 23 23:39 description
+-rw-r--r-- 1 daz daz   23 Jul 23 23:39 HEAD
+drwxr-xr-x 1 daz daz  434 Sep 12 13:23 hooks
+-rw-r--r-- 1 daz daz  645 Jul 23 23:39 index
+-rw-r--r-- 1 daz daz 1.4K Sep 12 13:23 index.html
+drwxr-xr-x 1 daz daz   34 Sep 12 13:23 info
+drwxr-xr-x 1 daz daz   36 Sep 12 13:23 logs
+drwxr-xr-x 1 daz daz  164 Sep 12 13:23 objects
+-rw-r--r-- 1 daz daz  102 Jul 24 07:25 packed-refs
+drwxr-xr-x 1 daz daz   52 Sep 12 13:23 refs
+┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
+└──╼ $
+</code></pre>
+
+<p>Running git without any flags shows the help output and some of available commands.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]                     
+└──╼ $git                                                                          
+usage: git [--version] [--help] [-C &lt;path&gt;] [-c &lt;name&gt;=&lt;value&gt;]                    
+           [--exec-path[=&lt;path&gt;]] [--html-path] [--man-path] [--info-path]         
+           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]     
+           [--git-dir=&lt;path&gt;] [--work-tree=&lt;path&gt;] [--namespace=&lt;name&gt;]            
+           &lt;command&gt; [&lt;args&gt;]                                                      
+                                                                                   
+These are common Git commands used in various situations:                          
+                                                                                   
+start a working area (see also: git help tutorial)
+   clone             Clone a repository into a new directory
+   init              Create an empty Git repository or reinitialize an existing one
+
+work on the current change (see also: git help everyday)
+   add               Add file contents to the index
+   mv                Move or rename a file, a directory, or a symlink
+   restore           Restore working tree files
+   rm                Remove files from the working tree and from the index
+   sparse-checkout   Initialize and modify the sparse-checkout
+
+examine the history and state (see also: git help revisions)
+   bisect            Use binary search to find the commit that introduced a bug
+   diff              Show changes between commits, commit and working tree, etc
+   grep              Print lines matching a pattern
+   log               Show commit logs
+   show              Show various types of objects
+   status            Show the working tree status
+
+grow, mark and tweak your common history
+   branch            List, create, or delete branches
+   commit            Record changes to the repository
+   merge             Join two or more development histories together
+   rebase            Reapply commits on top of another base tip
+   reset             Reset current HEAD to the specified state
+   switch            Switch branches
+   tag               Create, list, delete or verify a tag object signed with GPG
+
+collaborate (see also: git help workflows)
+   fetch             Download objects and refs from another repository
+   pull              Fetch from and integrate with another repository or a local branch
+   push              Update remote refs along with associated objects
+
+'git help -a' and 'git help -g' list available subcommands and some
+concept guides. See 'git help &lt;command&gt;' or 'git help &lt;concept&gt;'
+to read about a specific subcommand or concept.
+See 'git help git' for an overview of the system.
+</code></pre>
+
+<p>First I ran the ‘log’ command to check the commits.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]             
+└──╼ $git log                                                              
+commit d0b3578a628889f38c0affb1b75457146a4678e5 (HEAD -&gt; master, tag: v1.0)
+Author: Adam Bertrand &lt;hydragyrum@gmail.com&gt;                               
+Date:   Thu Jul 23 22:22:16 2020 +0000                                     
+                                                                           
+    Update .gitlab-ci.yml                                                  
+                                                                           
+commit 77aab78e2624ec9400f9ed3f43a6f0c942eeb82d                            
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;                                  
+Date:   Fri Jul 24 00:21:25 2020 +0200                                     
+                                                                           
+    add gitlab-ci config to build docker file.                             
+                                                                           
+commit 2eb93ac3534155069a8ef59cb25b9c1971d5d199                            
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;                                  
+Date:   Fri Jul 24 00:08:38 2020 +0200                                     
+                                                                           
+    setup dockerfile and setup defaults.                                   
+                                                                           
+commit d6df4000639981d032f628af2b4d03b8eff31213                            
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;                                  
+Date:   Thu Jul 23 23:42:30 2020 +0200
+
+    Make sure the css is standard-ish!
+
+commit d954a99b96ff11c37a558a5d93ce52d0f3702a7d
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;
+Date:   Thu Jul 23 23:41:12 2020 +0200
+
+    re-obfuscating the code to be really secure!
+
+commit bc8054d9d95854d278359a432b6d97c27e24061d
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;
+Date:   Thu Jul 23 23:37:32 2020 +0200
+
+    Security says obfuscation isn't enough.
+    
+    They want me to use something called 'SHA-512'
+
+commit e56eaa8e29b589976f33d76bc58a0c4dfb9315b1
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;
+Date:   Thu Jul 23 23:25:52 2020 +0200
+
+    Obfuscated the source code.
+    
+    Hopefully security will be happy!
+
+commit 395e087334d613d5e423cdf8f7be27196a360459
+Author: Hydragyrum &lt;hydragyrum@gmail.com&gt;
+Date:   Thu Jul 23 23:17:43 2020 +0200
+
+    Made the login page, boss!
+
+commit 2f423697bf81fe5956684f66fb6fc6596a1903cc
+Author: Adam Bertrand &lt;hydragyrum@gmail.com&gt;
+Date:   Mon Jul 20 20:46:28 2020 +0000
+
+    Initial commit
+</code></pre>
+
+<p>Great, we can now see all the commits. Commits 2 and 3 look interesting, clearly the security team were not happy with the configuration, so lets take a look at the source code. I will use git diff to compare. We could also use git checkout.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
+└──╼ $git diff 395e087334d613d5e423cdf8f7be27196a360459
+&lt;&lt;SNIP&gt;&gt;
+     &lt;script&gt;
+-      function login() {
+-        let form = document.getElementById("login-form");
+-        console.log(form.elements);
+-        let username = form.elements["username"].value;
+-        let password = form.elements["password"].value;
+-        if (
+-          username === "admin" &amp;&amp;
+-          password === ""
+-        ) {
+-          document.cookie = "login=1";
+-          window.location.href = "/dashboard.html";
+-        } else {
+-          document.getElementById("error").innerHTML =
+-            "INVALID USERNAME OR PASSWORD!"; 
+-        }
+-      }
+
+&lt;&lt;SNIP&gt;&gt;
+</code></pre>
+<p>Found it! Ive redacted it from the output as part of the TryHackMe write up rules however the password is part of the login function.</p>
+
+<p>Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="/">Darryn Brownfield</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
