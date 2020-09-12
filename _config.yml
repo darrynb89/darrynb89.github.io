@@ -46,6 +46,8 @@ permalink: /:title
 plugins_dir: [_plugins]
 plugins: [jekyll-paginate, jekyll-feed, jekyll-sitemap]
 
+url: "https://darrynbrownfield.co.uk"
+
 feed:
   path: feed.xml
 
