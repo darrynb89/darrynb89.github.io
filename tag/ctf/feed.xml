@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/ctf/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2020-11-21T12:47:08+00:00</updated>
+  <updated>2020-11-21T13:00:33+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/ctf/feed.xml</id>
 
   
@@ -33,11 +33,11 @@
   
     <entry>
       <title type="html">Startup Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/Startup" rel="alternate" type="text/html" title="Startup Write Up" />
+      <link href="https://darrynbrownfield.co.uk/startup" rel="alternate" type="text/html" title="Startup Write Up" />
       <published>2020-11-21T00:00:00+00:00</published>
       <updated>2020-11-21T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/Startup</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/Startup">&lt;p&gt;&lt;img src=&quot;/assets/images/startup/cover.jpg&quot; alt=&quot;Startup&quot; /&gt;&lt;/p&gt;
+      <id>https://darrynbrownfield.co.uk/startup</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/startup">&lt;p&gt;&lt;img src=&quot;/assets/images/startup/cover.jpg&quot; alt=&quot;Startup&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
