@@ -20,7 +20,7 @@ As part of the lab I completed process in 3 ways, manually using Burp repeater, 
 
 ### Final Script
 
-```python
+```highlight
 # 02/01/21
 # blind-sql-lab.py
 # https://portswigger.net/web-security/sql-injection/blind/lab-conditional-responses
