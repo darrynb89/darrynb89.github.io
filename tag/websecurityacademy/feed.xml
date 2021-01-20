@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/websecurityacademy/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-01-06T22:52:56+00:00</updated>
+  <updated>2021-01-20T21:36:18+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/websecurityacademy/feed.xml</id>
 
   
@@ -43,7 +43,7 @@
 
 &lt;p&gt;This post is to provide the script I created to automate the process of using blind SQL injection with conditional responses to brute force a password. This was completed for a lab while completing the SQL Injection topic on &lt;a href=&quot;https://portswigger.net/web-security&quot;&gt;WebSecurity Academy&lt;/a&gt;. I can’t recommend this training enough, the content is well written and the labs are great and best of all its free!&lt;/p&gt;
 
-&lt;p&gt;As part of the lab I completed process in 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I still learning Python and this was a good exercise to do more Python coding and also reenforce the learning.&lt;/p&gt;
+&lt;p&gt;As part of the lab I completed the process 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I am still learning Python and this was a good exercise to do more Python coding and also reenforce the learning.&lt;/p&gt;
 
 &lt;h3 id=&quot;final-script&quot;&gt;Final Script&lt;/h3&gt;
 
