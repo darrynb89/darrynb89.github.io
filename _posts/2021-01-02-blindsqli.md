@@ -16,7 +16,7 @@ author: darryn
 
 This post is to provide the script I created to automate the process of using blind SQL injection with conditional responses to brute force a password. This was completed for a lab while completing the SQL Injection topic on [WebSecurity Academy](https://portswigger.net/web-security). I can't recommend this training enough, the content is well written and the labs are great and best of all its free!
 
-As part of the lab I completed process in 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I still learning Python and this was a good exercise to do more Python coding and also reenforce the learning. 
+As part of the lab I completed the process 3 ways, manually using Burp repeater, using Burp intruder and finally by writing this Python script. I am still learning Python and this was a good exercise to do more Python coding and also reenforce the learning. 
 
 ### Final Script
 
