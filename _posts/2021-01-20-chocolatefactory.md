@@ -464,7 +464,7 @@ AUATL
 Enter your name:
 laksdhfas
  congratulations you have found the key:
-b'-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY='
+b'-VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}'
  Keep its safe
 Bad name!
 ;*3$"
@@ -660,7 +660,7 @@ systemd-coredump:!!:18396::::::
 _rpc:*:18451:0:99999:7:::
 statd:*:18451:0:99999:7:::
 _gvm:*:18496:0:99999:7:::
-charlie:$6$CZJnCPeQWp9/jpNx$khGlFdICJnr8R3JC/jTR2r7DrbFLp8zq8469d3c0.zuKN4se61FObwWGxcHZqO2RJHkkL1jjPYeeGyIJWE82X/:18535:0:99999:7:::
+charlie:$6$CZJnCPeQWp9/jpNx$khGlFdICJnr{REDACTED}:18535:0:99999:7:::
 ```
 
 Using hashcat I manage to crack the password. However, I'm unable to log in via SSH. Maybe the password has been changed?
@@ -787,12 +787,12 @@ Traceback (most recent call last):
   File "<string>", line 1, in <module>
 NameError: name 'test' is not defined
 root@chocolate-factory:/root# python root.py 
-Enter the key:  -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+Enter the key:  VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}
 Traceback (most recent call last):
   File "root.py", line 3, in <module>
     key=input("Enter the key:  ")
   File "<string>", line 1
-    -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+    VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}
                                                ^
 SyntaxError: unexpected EOF while parsing
 ```
@@ -805,7 +805,7 @@ from cryptography.fernet import Fernet
 import pyfiglet
 key=input("Enter the key:  ")
 f=Fernet(key)
-encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yE{REDACTED}'
 dcrypt_mess=f.decrypt(encrypted_mess)
 mess=dcrypt_mess.decode()
 display1=pyfiglet.figlet_format("You Are Now The Owner Of ")
@@ -822,9 +822,9 @@ I decided the quickest way was to remove the input element of the script and jus
 root@chocolate-factory:/root# cat root2.py 
 from cryptography.fernet import Fernet
 import pyfiglet
-key="-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY="
+key="VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}"
 f=Fernet(key)
-encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yE{REDACTED}'
 dcrypt_mess=f.decrypt(encrypted_mess)
 mess=dcrypt_mess.decode()
 display1=pyfiglet.figlet_format("You Are Now The Owner Of ")
