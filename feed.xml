@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-01-20T21:36:18+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Chocolate Factory CTF Write Up</title><link href="https://darrynbrownfield.co.uk/chocolatefactory" rel="alternate" type="text/html" title="Chocolate Factory CTF Write Up" /><published>2021-01-20T00:00:00+00:00</published><updated>2021-01-20T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/chocolatefactory</id><content type="html" xml:base="https://darrynbrownfield.co.uk/chocolatefactory">&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/cover.png&quot; alt=&quot;chocolatefactory&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-01-21T09:06:25+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Chocolate Factory CTF Write Up</title><link href="https://darrynbrownfield.co.uk/chocolatefactory" rel="alternate" type="text/html" title="Chocolate Factory CTF Write Up" /><published>2021-01-20T00:00:00+00:00</published><updated>2021-01-20T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/chocolatefactory</id><content type="html" xml:base="https://darrynbrownfield.co.uk/chocolatefactory">&lt;p&gt;&lt;img src=&quot;/assets/images/chocolatefactory/cover.png&quot; alt=&quot;chocolatefactory&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -457,7 +457,7 @@ AUATL
 Enter your name:
 laksdhfas
  congratulations you have found the key:
-b'-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY='
+b'-VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}'
  Keep its safe
 Bad name!
 ;*3$&quot;
@@ -649,7 +649,7 @@ systemd-coredump:!!:18396::::::
 _rpc:*:18451:0:99999:7:::
 statd:*:18451:0:99999:7:::
 _gvm:*:18496:0:99999:7:::
-charlie:$6$CZJnCPeQWp9/jpNx$khGlFdICJnr8R3JC/jTR2r7DrbFLp8zq8469d3c0.zuKN4se61FObwWGxcHZqO2RJHkkL1jjPYeeGyIJWE82X/:18535:0:99999:7:::
+charlie:$6$CZJnCPeQWp9/jpNx$khGlFdICJnr{REDACTED}:18535:0:99999:7:::
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Using hashcat I manage to crack the password. However, I’m unable to log in via SSH. Maybe the password has been changed?&lt;/p&gt;
@@ -773,12 +773,12 @@ Traceback (most recent call last):
   File &quot;&amp;lt;string&amp;gt;&quot;, line 1, in &amp;lt;module&amp;gt;
 NameError: name 'test' is not defined
 root@chocolate-factory:/root# python root.py 
-Enter the key:  -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+Enter the key:  VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}
 Traceback (most recent call last):
   File &quot;root.py&quot;, line 3, in &amp;lt;module&amp;gt;
     key=input(&quot;Enter the key:  &quot;)
   File &quot;&amp;lt;string&amp;gt;&quot;, line 1
-    -VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=
+    VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}
                                                ^
 SyntaxError: unexpected EOF while parsing
 &lt;/code&gt;&lt;/pre&gt;
@@ -790,7 +790,7 @@ from cryptography.fernet import Fernet
 import pyfiglet
 key=input(&quot;Enter the key:  &quot;)
 f=Fernet(key)
-encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yE{REDACTED}'
 dcrypt_mess=f.decrypt(encrypted_mess)
 mess=dcrypt_mess.decode()
 display1=pyfiglet.figlet_format(&quot;You Are Now The Owner Of &quot;)
@@ -806,9 +806,9 @@ root@chocolate-factory:/root#
 &lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root@chocolate-factory:/root# cat root2.py 
 from cryptography.fernet import Fernet
 import pyfiglet
-key=&quot;-VkgXhFf6sAEcAwrC6YR-SZbiuSb8ABXeQuvhcGSQzY=&quot;
+key=&quot;VkgXhFf6sAEcAwrC6YR-SZbiuSb8{REDACTED}&quot;
 f=Fernet(key)
-encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yEdGPhnm9_H_yQikhR-bPy09-NVQn8lF_PDXyTo-T7CpmrFfoVRWzlm0OffAsUM7KIO_xbIQkQojwf_unpPAAKyJQDHNvQaJ'
+encrypted_mess= 'gAAAAABfdb52eejIlEaE9ttPY8ckMMfHTIw5lamAWMy8yE{REDACTED}'
 dcrypt_mess=f.decrypt(encrypted_mess)
 mess=dcrypt_mess.decode()
 display1=pyfiglet.figlet_format(&quot;You Are Now The Owner Of &quot;)
