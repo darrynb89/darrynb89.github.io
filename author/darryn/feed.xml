@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-01-30T14:06:04+00:00</updated>
+  <updated>2021-01-30T16:04:12+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -41,7 +41,7 @@
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/cyborg&quot;&gt;Cyborg&lt;/a&gt; is a easy room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/cyborgt8&quot;&gt;Cyborg&lt;/a&gt; is a easy room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
 
@@ -481,7 +481,7 @@ root
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/&quot;&gt;Skynet&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/skynet&quot;&gt;Skynet&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Are you able to compromise this Terminator themed machine?&lt;/p&gt;
