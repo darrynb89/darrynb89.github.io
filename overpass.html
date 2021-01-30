@@ -325,94 +325,94 @@ by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
 
 <p>I tried various combinations of basic logins, admin/admin, admin/password etc but nothing worked. So I had a look at the source code for the admin page.</p>
 
-<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html&gt;</span>
+<pre><code class="language-highlight">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
 
-<span class="nt">&lt;head&gt;</span>
-    <span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">"utf-8"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">"X-UA-Compatible"</span> <span class="na">content=</span><span class="s">"IE=edge"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;title&gt;</span>Overpass<span class="nt">&lt;/title&gt;</span>
-    <span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">"viewport"</span> <span class="na">content=</span><span class="s">"width=device-width, initial-scale=1"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">href=</span><span class="s">"/css/main.css"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"stylesheet"</span> <span class="na">type=</span><span class="s">"text/css"</span> <span class="na">media=</span><span class="s">"screen"</span> <span class="na">href=</span><span class="s">"/css/login.css"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;link</span> <span class="na">rel=</span><span class="s">"icon"</span> <span class="na">type=</span><span class="s">"image/png"</span> <span class="na">href=</span><span class="s">"/img/overpass.png"</span> <span class="nt">/&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/main.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/login.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-    <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/cookie.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
-<span class="nt">&lt;/head&gt;</span>
+&lt;head&gt;
+    &lt;meta charset="utf-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+    &lt;title&gt;Overpass&lt;/title&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+    &lt;link rel="stylesheet" type="text/css" media="screen" href="/css/main.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" media="screen" href="/css/login.css"&gt;
+    &lt;link rel="icon" type="image/png" href="/img/overpass.png" /&gt;
+    &lt;script src="/main.js"&gt;&lt;/script&gt;
+    &lt;script src="/login.js"&gt;&lt;/script&gt;
+    &lt;script src="/cookie.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
 
-<span class="nt">&lt;body</span> <span class="na">onload=</span><span class="s">"onLoad()"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;nav&gt;</span>
-        <span class="nt">&lt;img</span> <span class="na">class=</span><span class="s">"logo"</span> <span class="na">src=</span><span class="s">"/img/overpass.svg"</span> <span class="na">alt=</span><span class="s">"Overpass logo"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;h2</span> <span class="na">class=</span><span class="s">"navTitle"</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">"/"</span><span class="nt">&gt;</span>Overpass<span class="nt">&lt;/a&gt;&lt;/h2&gt;</span>
-        <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">"current"</span> <span class="na">href=</span><span class="s">"/aboutus"</span><span class="nt">&gt;</span>About Us<span class="nt">&lt;/a&gt;</span>
-        <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"/downloads"</span><span class="nt">&gt;</span>Downloads<span class="nt">&lt;/a&gt;</span>
-    <span class="nt">&lt;/nav&gt;</span>
-    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"content"</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;h1&gt;</span>Administrator area<span class="nt">&lt;/h1&gt;</span>
-        <span class="nt">&lt;p&gt;</span>Please log in to access this content<span class="nt">&lt;/p&gt;</span>
-        <span class="nt">&lt;div&gt;</span>
-            <span class="nt">&lt;h3</span> <span class="na">class=</span><span class="s">"formTitle"</span><span class="nt">&gt;</span>Overpass administrator login<span class="nt">&lt;/h1&gt;</span>
-        <span class="nt">&lt;/div&gt;</span>
-        <span class="nt">&lt;form</span> <span class="na">id=</span><span class="s">"loginForm"</span><span class="nt">&gt;</span>
-            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"formElem"</span><span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">"username"</span><span class="nt">&gt;</span>Username:<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">id=</span><span class="s">"username"</span> <span class="na">name=</span><span class="s">"username"</span> <span class="na">required</span><span class="nt">&gt;&lt;/div&gt;</span>
-            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"formElem"</span><span class="nt">&gt;&lt;label</span> <span class="na">for=</span><span class="s">"password"</span><span class="nt">&gt;</span>Password:<span class="nt">&lt;/label&gt;&lt;input</span> <span class="na">id=</span><span class="s">"password"</span> <span class="na">name=</span><span class="s">"password"</span>
-                    <span class="na">type=</span><span class="s">"password"</span> <span class="na">required</span><span class="nt">&gt;&lt;/div&gt;</span>
-            <span class="nt">&lt;button&gt;</span>Login<span class="nt">&lt;/button&gt;</span>
-        <span class="nt">&lt;/form&gt;</span>
-        <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"loginStatus"</span><span class="nt">&gt;&lt;/div&gt;</span>
-    <span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/body&gt;</span>
+&lt;body onload="onLoad()"&gt;
+    &lt;nav&gt;
+        &lt;img class="logo" src="/img/overpass.svg" alt="Overpass logo"&gt;
+        &lt;h2 class="navTitle"&gt;&lt;a href="/"&gt;Overpass&lt;/a&gt;&lt;/h2&gt;
+        &lt;a class="current" href="/aboutus"&gt;About Us&lt;/a&gt;
+        &lt;a href="/downloads"&gt;Downloads&lt;/a&gt;
+    &lt;/nav&gt;
+    &lt;div class="content"&gt;
+        &lt;h1&gt;Administrator area&lt;/h1&gt;
+        &lt;p&gt;Please log in to access this content&lt;/p&gt;
+        &lt;div&gt;
+            &lt;h3 class="formTitle"&gt;Overpass administrator login&lt;/h1&gt;
+        &lt;/div&gt;
+        &lt;form id="loginForm"&gt;
+            &lt;div class="formElem"&gt;&lt;label for="username"&gt;Username:&lt;/label&gt;&lt;input id="username" name="username" required&gt;&lt;/div&gt;
+            &lt;div class="formElem"&gt;&lt;label for="password"&gt;Password:&lt;/label&gt;&lt;input id="password" name="password"
+                    type="password" required&gt;&lt;/div&gt;
+            &lt;button&gt;Login&lt;/button&gt;
+        &lt;/form&gt;
+        &lt;div id="loginStatus"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
 
-<span class="nt">&lt;/html&gt;</span>
-</code></pre></div></div>
+&lt;/html&gt;
+</code></pre>
 
 <p>/login.js looks interesting.</p>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">postData</span><span class="p">(</span><span class="nx">url</span> <span class="o">=</span> <span class="s1">''</span><span class="p">,</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{})</span> <span class="p">{</span>
-    <span class="c1">// Default options are marked with *</span>
-    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
-        <span class="na">method</span><span class="p">:</span> <span class="s1">'POST'</span><span class="p">,</span> <span class="c1">// *GET, POST, PUT, DELETE, etc.</span>
-        <span class="na">cache</span><span class="p">:</span> <span class="s1">'no-cache'</span><span class="p">,</span> <span class="c1">// *default, no-cache, reload, force-cache, only-if-cached</span>
-        <span class="na">credentials</span><span class="p">:</span> <span class="s1">'same-origin'</span><span class="p">,</span> <span class="c1">// include, *same-origin, omit</span>
-        <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">'Content-Type'</span><span class="p">:</span> <span class="s1">'application/x-www-form-urlencoded'</span>
-        <span class="p">},</span>
-        <span class="na">redirect</span><span class="p">:</span> <span class="s1">'follow'</span><span class="p">,</span> <span class="c1">// manual, *follow, error</span>
-        <span class="na">referrerPolicy</span><span class="p">:</span> <span class="s1">'no-referrer'</span><span class="p">,</span> <span class="c1">// no-referrer, *client</span>
-        <span class="na">body</span><span class="p">:</span> <span class="nx">encodeFormData</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="c1">// body data type must match "Content-Type" header</span>
-    <span class="p">});</span>
-    <span class="k">return</span> <span class="nx">response</span><span class="p">;</span> <span class="c1">// We don't always want JSON back</span>
-<span class="p">}</span>
-<span class="kd">const</span> <span class="nx">encodeFormData</span> <span class="o">=</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">key</span> <span class="o">=&gt;</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">'='</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">data</span><span class="p">[</span><span class="nx">key</span><span class="p">]))</span>
-        <span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">'&amp;'</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="kd">function</span> <span class="nx">onLoad</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#loginForm"</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">"submit"</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">//on pressing enter</span>
-        <span class="nx">event</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">()</span>
-        <span class="nx">login</span><span class="p">()</span>
-    <span class="p">});</span>
-<span class="p">}</span>
-<span class="k">async</span> <span class="kd">function</span> <span class="nx">login</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">usernameBox</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#username"</span><span class="p">);</span>
-    <span class="kd">const</span> <span class="nx">passwordBox</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#password"</span><span class="p">);</span>
-    <span class="kd">const</span> <span class="nx">loginStatus</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">"#loginStatus"</span><span class="p">);</span>
-    <span class="nx">loginStatus</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="s2">""</span>
-    <span class="kd">const</span> <span class="nx">creds</span> <span class="o">=</span> <span class="p">{</span> <span class="na">username</span><span class="p">:</span> <span class="nx">usernameBox</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="na">password</span><span class="p">:</span> <span class="nx">passwordBox</span><span class="p">.</span><span class="nx">value</span> <span class="p">}</span>
-    <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">postData</span><span class="p">(</span><span class="s2">"/api/login"</span><span class="p">,</span> <span class="nx">creds</span><span class="p">)</span>
-    <span class="kd">const</span> <span class="nx">statusOrCookie</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">()</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">statusOrCookie</span> <span class="o">===</span> <span class="s2">"Incorrect credentials"</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">loginStatus</span><span class="p">.</span><span class="nx">textContent</span> <span class="o">=</span> <span class="s2">"Incorrect Credentials"</span>
-        <span class="nx">passwordBox</span><span class="p">.</span><span class="nx">value</span><span class="o">=</span><span class="s2">""</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">Cookies</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="s2">"SessionToken"</span><span class="p">,</span><span class="nx">statusOrCookie</span><span class="p">)</span>
-        <span class="nb">window</span><span class="p">.</span><span class="nx">location</span> <span class="o">=</span> <span class="s2">"/admin"</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<pre><code class="language-highlight">async function postData(url = '', data = {}) {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'same-origin', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrerPolicy: 'no-referrer', // no-referrer, *client
+        body: encodeFormData(data) // body data type must match "Content-Type" header
+    });
+    return response; // We don't always want JSON back
+}
+const encodeFormData = (data) =&gt; {
+    return Object.keys(data)
+        .map(key =&gt; encodeURIComponent(key) + '=' + encodeURIComponent(data[key]))
+        .join('&amp;');
+}
+function onLoad() {
+    document.querySelector("#loginForm").addEventListener("submit", function (event) {
+        //on pressing enter
+        event.preventDefault()
+        login()
+    });
+}
+async function login() {
+    const usernameBox = document.querySelector("#username");
+    const passwordBox = document.querySelector("#password");
+    const loginStatus = document.querySelector("#loginStatus");
+    loginStatus.textContent = ""
+    const creds = { username: usernameBox.value, password: passwordBox.value }
+    const response = await postData("/api/login", creds)
+    const statusOrCookie = await response.text()
+    if (statusOrCookie === "Incorrect credentials") {
+        loginStatus.textContent = "Incorrect Credentials"
+        passwordBox.value=""
+    } else {
+        Cookies.set("SessionToken",statusOrCookie)
+        window.location = "/admin"
+    }
+}
+</code></pre>
 
 <p>Looking at the login function it appears the script will send a post request to /api/login and wait for a response. If the response equals “Incorrect credentials” the text is displayed to the user and the password field is reset to blank. However if the response does not equal “Incorrect credentials” a cookie is set. I wonder if I can set the cooke to any value and it will allow me to log in?</p>
 
@@ -562,15 +562,15 @@ root@overpass-prod:~#
 
 <p>During our enumeration we were able to download a Linux binary and the source code of the password manager however they were not used to root on the machine. Lets take a look at them now.</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
-└──╼ <span class="nv">$cat</span> buildscript.sh 
-<span class="nv">GOOS</span><span class="o">=</span>linux /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassLinux ~/src/overpass.go
-<span class="nv">GOOS</span><span class="o">=</span>windows /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassWindows.exe ~/src/overpass.go
-<span class="nv">GOOS</span><span class="o">=</span>darwin /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassMacOS ~/src/overpass.go
-<span class="nv">GOOS</span><span class="o">=</span>freebsd /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassFreeBSD ~/src/overpass.go
-<span class="nv">GOOS</span><span class="o">=</span>openbsd /usr/local/go/bin/go build <span class="nt">-o</span> ~/builds/overpassOpenBSD ~/src/overpass.go
-<span class="nb">echo</span> <span class="s2">"</span><span class="k">$(</span>date <span class="nt">-R</span><span class="k">)</span><span class="s2"> Builds completed"</span> <span class="o">&gt;&gt;</span> /root/buildStatus
-</code></pre></div></div>
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/Overpass]
+└──╼ $cat buildscript.sh 
+GOOS=linux /usr/local/go/bin/go build -o ~/builds/overpassLinux ~/src/overpass.go
+GOOS=windows /usr/local/go/bin/go build -o ~/builds/overpassWindows.exe ~/src/overpass.go
+GOOS=darwin /usr/local/go/bin/go build -o ~/builds/overpassMacOS ~/src/overpass.go
+GOOS=freebsd /usr/local/go/bin/go build -o ~/builds/overpassFreeBSD ~/src/overpass.go
+GOOS=openbsd /usr/local/go/bin/go build -o ~/builds/overpassOpenBSD ~/src/overpass.go
+echo "$(date -R) Builds completed" &gt;&gt; /root/buildStatus
+</code></pre>
 
 <p>The build script.sh is a very simple bash script to build the binaries. So I next ran the Linux binary to see what the binary did.</p>
 
@@ -623,22 +623,22 @@ test     testing123
 
 <p>Next I decided to look at the source code to see what the program was doing. Not being that familiar with Go I scanned through to see what jumped out.</p>
 
-<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">//Encrypt the credentials and write them to a file.                                 </span><span class="x">
-</span><span class="k">func</span><span class="x"> </span><span class="n">saveCredsToFile</span><span class="p">(</span><span class="n">filepath</span><span class="x"> </span><span class="kt">string</span><span class="p">,</span><span class="x"> </span><span class="n">passlist</span><span class="x"> </span><span class="p">[]</span><span class="n">passListEntry</span><span class="p">)</span><span class="x"> </span><span class="kt">string</span><span class="x"> </span><span class="p">{</span><span class="x">            
-        </span><span class="n">file</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">os</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span><span class="x"> </span><span class="n">os</span><span class="o">.</span><span class="n">O_TRUNC</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_CREATE</span><span class="o">|</span><span class="n">os</span><span class="o">.</span><span class="n">O_WRONLY</span><span class="p">,</span><span class="x"> </span><span class="m">0644</span><span class="p">)</span><span class="x">
-        </span><span class="k">if</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">                                                             
-                </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">())</span><span class="x">                                            
-                </span><span class="k">return</span><span class="x"> </span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">()</span><span class="x">                                                  
-        </span><span class="p">}</span><span class="x">                                                                           
-        </span><span class="k">defer</span><span class="x"> </span><span class="n">file</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span><span class="x">                                                          
-        </span><span class="n">stringToWrite</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">rot47</span><span class="p">(</span><span class="n">credsToJSON</span><span class="p">(</span><span class="n">passlist</span><span class="p">))</span><span class="x">                               
-        </span><span class="k">if</span><span class="x"> </span><span class="n">_</span><span class="p">,</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">:=</span><span class="x"> </span><span class="n">file</span><span class="o">.</span><span class="n">WriteString</span><span class="p">(</span><span class="n">stringToWrite</span><span class="p">);</span><span class="x"> </span><span class="n">err</span><span class="x"> </span><span class="o">!=</span><span class="x"> </span><span class="no">nil</span><span class="x"> </span><span class="p">{</span><span class="x">                  
-                </span><span class="n">fmt</span><span class="o">.</span><span class="n">Println</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">())</span><span class="x">                                            
-                </span><span class="k">return</span><span class="x"> </span><span class="n">err</span><span class="o">.</span><span class="n">Error</span><span class="p">()</span><span class="x">                                                  
-        </span><span class="p">}</span><span class="x">                                                                           
-        </span><span class="k">return</span><span class="x"> </span><span class="s">"Success"</span><span class="x">                                                            
-</span><span class="p">}</span><span class="x">                                                                                   
-</span></code></pre></div></div>
+<pre><code class="language-highlight">//Encrypt the credentials and write them to a file.                                 
+func saveCredsToFile(filepath string, passlist []passListEntry) string {            
+        file, err := os.OpenFile(filepath, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+        if err != nil {                                                             
+                fmt.Println(err.Error())                                            
+                return err.Error()                                                  
+        }                                                                           
+        defer file.Close()                                                          
+        stringToWrite := rot47(credsToJSON(passlist))                               
+        if _, err := file.WriteString(stringToWrite); err != nil {                  
+                fmt.Println(err.Error())                                            
+                return err.Error()                                                  
+        }                                                                           
+        return "Success"                                                            
+}                                                                                   
+</code></pre>
 
 <p>I found the encrypt function, what jumped out was its using rot47 to encrypt the sting and is indeed saving it to a local file. When I ran linpeas I noticed a tryhackme account on the system, I wonder if that has a .overpass file in the home directory and if so can we decode it?</p>
 
