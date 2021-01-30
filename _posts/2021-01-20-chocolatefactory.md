@@ -3,7 +3,7 @@ layout: post
 current: post
 cover: 'assets/images/chocolatefactory/cover.png'
 navigation: True
-title: "Chocolate Factory CTF Write Up"
+title: "Chocolate Factory Write Up"
 date: 2021-01-20 00:00:00
 tags: [tryhackme, ctf, easy]
 class: post-template
