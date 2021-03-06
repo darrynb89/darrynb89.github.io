@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Keldagrim Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/keldagrim" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Keldagrim Write Up" />
+    <meta property="og:description" content="Overview Keldagrim is a medium level CTF room on TryHackMe created by Optional. Can you overcome the forge and steal all of the gold! Nmap I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports. └──╼ $sudo nmap -sC" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/keldagrim" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/keldagrim/cover.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2021-03-06T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2021-03-06T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Keldagrim Write Up" />
+    <meta name="twitter:description" content="Overview Keldagrim is a medium level CTF room on TryHackMe created by Optional. Can you overcome the forge and steal all of the gold! Nmap I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports. └──╼ $sudo nmap -sC" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/keldagrim/cover.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/keldagrim",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/keldagrim/cover.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/keldagrim"
+    },
+    "description": "Overview Keldagrim is a medium level CTF room on TryHackMe created by Optional. Can you overcome the forge and steal all of the gold! Nmap I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports. └──╼ $sudo nmap -sC"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Keldagrim Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf tag-medium post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime=" 6 March 2021"> 6 March 2021</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/medium/'>MEDIUM</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Keldagrim Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/keldagrim/cover.png" alt="keldagrim" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p><a href="https://tryhackme.com/room/keldagrim">Keldagrim</a> is a medium level CTF room on <a href="https://tryhackme.com">TryHackMe</a> created by <a href="https://twitter.com/optionalctf">Optional</a>.</p>
+
+<blockquote>
+  <p>Can you overcome the forge and steal all of the gold!</p>
+</blockquote>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.252.142
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-03-06 13:03 GMT
+Nmap scan report for 10.10.252.142
+Host is up (0.030s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 d8:23:24:3c:6e:3f:5b:b0:ec:42:e4:ce:71:2f:1e:52 (RSA)
+|   256 c6:75:e5:10:b4:0a:51:83:3e:55:b4:f6:03:b5:0b:7a (ECDSA)
+|_  256 4c:51:80:db:31:4c:6a:be:bf:9b:48:b5:d4:d6:ff:7c (ED25519)
+80/tcp open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
+| http-cookie-flags: 
+|   /: 
+|     session: 
+|_      httponly flag not set
+|_http-server-header: Werkzeug/1.0.1 Python/3.6.9
+|_http-title:  Home page 
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.63 seconds
+</code></pre>
+
+<p>2 Ports open:</p>
+
+<ul>
+  <li>22 - SSH - Banner is showing its an Ubuntu machine</li>
+  <li>80 - HTTP - Werkzeug httpd 1.0.1</li>
+</ul>
+
+<p>I also ran a full port scan but no additional ports were found.</p>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>I opened up my browser and started to have a look at the web page.</p>
+
+<p><img src="/assets/images/keldagrim/webpage.png" alt="webpage" /></p>
+
+<p>Nothing really stood out however when I looked at the source code I could see a disabled link to /admin</p>
+
+<pre><code class="language-highlight">    &lt;li class="nav-item dropdown"&gt;
+        &lt;a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"&gt;
+          Buy Gold
+        &lt;/a&gt;
+        &lt;div class="dropdown-menu" aria-labelledby="navbarDropdown"&gt;
+            &lt;a class="dropdown-item" href="/wow"&gt;World of Warcraft&lt;/a&gt;
+            &lt;a class="dropdown-item" href="/OSRunescape"&gt;Old School Runescape&lt;/a&gt;
+            &lt;a class="dropdown-item" href="/runescape"&gt;Runescape3&lt;/a&gt;
+          &lt;div class="dropdown-divider"&gt;&lt;/div&gt;
+          &lt;a class="dropdown-item " href="/admin"&gt;Admin&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+<p>However the page looks pretty much the same. So I looked at cookies and found a session cooke with a base64 value.</p>
+
+<p><img src="/assets/images/keldagrim/guest.png" alt="guest" /></p>
+
+<p>There are lots of ways to change the base64 to plaintext but I really like <a href="https://gchq.github.io/CyberChef/">CyberChef</a> at the moment. Using CyberChef I was able to see the value was ‘guest’.</p>
+
+<p><img src="/assets/images/keldagrim/cyberchef.png" alt="cyberchef" /></p>
+
+<p>I used CyberChef again to encode ‘admin’ in to base64.</p>
+
+<p><img src="/assets/images/keldagrim/adminhash.png" alt="adminhash" /></p>
+
+<p>Simply changing the session cookie value to the base64 output and refreshing the page now allowed me to see - ‘Current user - $2,165’ and be provided with a sales cookie.</p>
+
+<p><img src="/assets/images/keldagrim/sales.png" alt="sales" /></p>
+
+<p>This was also base64 encoded, CyberChef has a great feature called ‘Magic’, if you are unsure how something is encoded use magic to suggest and test various operations.</p>
+
+<p><img src="/assets/images/keldagrim/saleshash.png" alt="saleshash" /></p>
+
+<p>This next bit took some time, I was able to base64 a string and input it in to the sales cookie and it would be displayed on the webpage, however I was unsure how I would be able to use this to get a foothold on the box. After some googling, I tried a technique called Server Side Template Injection (SSTI). This was not something I had tried to exploit before so I did some research on the technique to try and understand it and used <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection">PayloadsAllTheThings</a> to see if I was on the right track.</p>
+
+<p>I found a payload  and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output.</p>
+
+<p><img src="/assets/images/keldagrim/sstipayload.png" alt="sstipayload" /></p>
+
+<p>Refreshed the page and confirmed I had SSTI in the sales cookie!</p>
+
+<p><img src="/assets/images/keldagrim/ssti.png" alt="ssti" /></p>
+
+<h3 id="initial-access">Initial Access</h3>
+
+<p>On the same <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection">PayloadsAllTheThings</a> page was an example for remote code execution. I took the example for exploiting an SSTI by calling Popen without guessing the offset, changed the IP and port values and encoded again with base64.</p>
+
+<p>I opened a nc listener and updated the sales cookie with the base64 output and got a shell!</p>
+
+<pre><code class="language-highlight">└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.252.142] 36928
+/bin/sh: 0: can't access tty; job control turned off
+$ whoami
+jed
+$ 
+</code></pre>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>Now to get root i checked ‘sudo -l’.</p>
+
+<pre><code class="language-highlight">$ sudo -l
+Matching Defaults entries for jed on keldagrim:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, env_keep+=LD_PRELOAD
+
+User jed may run the following commands on keldagrim:
+    (ALL : ALL) NOPASSWD: /bin/ps
+</code></pre>
+
+<p>I had a look at <a href="https://gtfobins.github.io/">GTFOBins</a> for ‘/bin/ps’ but as expected I didn’t find anything, I also noticed ‘env_keep+=LD_PRELOAD’. There is a great course by <a href="https://twitter.com/thecybermentor">Heath Adams</a> on <a href="https://www.udemy.com/course/linux-privilege-escalation-for-beginners">udemy</a> for Linux privesc techinques and this is covered as part of the course. There is also a great <a href="https://touhidshaikh.com/blog/2018/04/12/sudo-ld_preload-linux-privilege-escalation/">article</a> which covers it.</p>
+
+<p>I used the steps in the article to create a file called evil.c, compiled with GCC. Ran the sudo command with LD_PRELOAD and got root!</p>
+
+<pre><code class="language-highlight">jed@keldagrim:/dev/shm$ sudo LD_PRELOAD=/dev/shm/evil.so ps
+root@keldagrim:/dev/shm# id
+uid=0(root) gid=0(root) groups=0(root)
+root@keldagrim:/dev/shm# 
+</code></pre>
+
+<p>Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2021</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
