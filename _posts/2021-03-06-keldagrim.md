@@ -100,7 +100,7 @@ This was also base64 encoded, CyberChef has a great feature called 'Magic', if y
 
 This next bit took some time, I was able to base64 a string and input it in to the sales cookie and it would be displayed on the webpage, however I was unsure how I would be able to use this to get a foothold on the box. After some googling, I tried a technique called Server Side Template Injection (SSTI). This was not something I had tried to exploit before so I did some research on the technique to try and understand it and used [PayloadsAllTheThings](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection) to see if I was on the right track. 
 
-I found a payload {{7*'7'}} and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output. 
+I found a payload \{\{7\*\'7'\}\} and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output. 
 
 ![sstipayload](/assets/images/keldagrim/sstipayload.png)
 
