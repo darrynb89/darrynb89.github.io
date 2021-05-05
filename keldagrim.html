@@ -325,7 +325,7 @@ Nmap done: 1 IP address (1 host up) scanned in 8.63 seconds
 
 <p>This next bit took some time, I was able to base64 a string and input it in to the sales cookie and it would be displayed on the webpage, however I was unsure how I would be able to use this to get a foothold on the box. After some googling, I tried a technique called Server Side Template Injection (SSTI). This was not something I had tried to exploit before so I did some research on the technique to try and understand it and used <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection">PayloadsAllTheThings</a> to see if I was on the right track.</p>
 
-<p>I found a payload  and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output.</p>
+<p>I found a payload {{7*'7’}} and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output.</p>
 
 <p><img src="/assets/images/keldagrim/sstipayload.png" alt="sstipayload" /></p>
 
