@@ -1,16 +1,16 @@
 ---
 layout: post
 current: post
-cover: 'assets/images/htbcybersanta21/cover.png'
+cover: 'assets/images/htbcybersanta/cover.png'
 navigation: True
-title: "HTB Cyber Santa CTF Web Write Up"
-date: 2021-12-06 00:00:00
+title: "HTB Cyber Santa CTF 2021 Web Write Up"
+date: 2021-12-05 00:00:00
 tags: [hackthebox, ctf]
 class: post-template
 subclass: 'post'
 author: darryn
 ---
-![cover](/assets/images/htbcybersanta21/cover.png)
+![cover](/assets/images/htbcybersanta/cover.png)
 
 ### Overview
 
@@ -28,7 +28,7 @@ The challenge had both a docker instance to active and downloadable content.
 
 Taking a look at the docker instance IP we get a simple web page. 
 
-![workshop](/assets/images/htbcybersanta21/workshop.gif)
+![workshop](/assets/images/htbcybersanta/workshop.gif)
 
 Rather than spend time poking around the website I took a look at the code provided.
 
@@ -128,7 +128,7 @@ The description for Toy Management was:
 
 Again with both a docker instance to start and downloadable content. This time its just a login form. I tried "admin'-- -" in the username field and "admin" as the password and got in and got the flag!
 
-![toymanagement](/assets/images/htbcybersanta21/toymanagement.png)
+![toymanagement](/assets/images/htbcybersanta/toymanagement.png)
 
 ### Gadget Santa
 
@@ -140,17 +140,17 @@ Again this challenge had both a docker instance and downloadable content.
 
 Looking at the webpage, I appears I can select options to print output from the system.
 
-![gadgets](/assets/images/htbcybersanta21/gadgets.gif)
+![gadgets](/assets/images/htbcybersanta/gadgets.gif)
 
 The URL has a command parameter: http://{{DOCKERIP}}:{{DOCKERPORT}}/?command=list_storage
 
 So I tried some basic linux commands and I got output.
 
-![commands](/assets/images/htbcybersanta21/commands.gif)
+![commands](/assets/images/htbcybersanta/commands.gif)
 
 However, when ever I try and use a space I get no output. I can chain commands together using ```;``` but it still fails to show an output if I use a space.
 
-![listfiles](/assets/images/htbcybersanta21/listfiles.gif)
+![listfiles](/assets/images/htbcybersanta/listfiles.gif)
 
 Looking at the source, there is a sanitize function which removes spaces from the command.
 
@@ -227,11 +227,11 @@ There is no downloadable content for this challenge just a docker instance to st
 
 Going to the docker instance IP and port shows a login page, unfortunately no simple SQL bypass this time.
 
-![elfdirectory](/assets/images/htbcybersanta21/elfdirectory.png)
+![elfdirectory](/assets/images/htbcybersanta/elfdirectory.png)
 
 I tried some basic default credentials but had no luck so created an account with the username d4zs3c and logged in.
 
-![loggedin](/assets/images/htbcybersanta21/loggedin.png)
+![loggedin](/assets/images/htbcybersanta/loggedin.png)
 
 There is a message:
 
@@ -239,7 +239,7 @@ There is a message:
 
 Now logged I checked the developer tools in Firefox and I have a PHPSESSID. I coped the cookie value and put it in [CyberChef](https://gchq.github.io) and used 'From Base64' operation.
 
-![cookie](/assets/images/htbcybersanta21/cookie.png)
+![cookie](/assets/images/htbcybersanta/cookie.png)
 
 I removed the %3D which left with me ```{"username":"d4zs3c","approved":false}```.
 
@@ -247,7 +247,7 @@ Next I changed the input to ```{"username":"d4zs3c","approved":true}``` and used
 
 Now refreshing the page with my new cookie I get the option to upload a file.
 
-![approved](/assets/images/htbcybersanta21/approved.png)
+![approved](/assets/images/htbcybersanta/approved.png)
 
 I tried to upload a PHP file but got an error:
 
@@ -255,10 +255,10 @@ I tried to upload a PHP file but got an error:
 
 So I downloaded an image of Santa (had to be) and tried to upload it but this time via Burp so I could modify it before its submitted. I appended the file name with .php and removed the contents of the file with a simple PHP script.
 
-![uploadbypass](/assets/images/htbcybersanta21/uploadbypass.gif)
+![uploadbypass](/assets/images/htbcybersanta/uploadbypass.gif)
 
 Now all I need to do is browse to the file and I will have command execution and can read the flag.
 
-![commandinjection](/assets/images/htbcybersanta21/commandinjection.gif)
+![commandinjection](/assets/images/htbcybersanta/commandinjection.gif)
 
 Thanks for reading!
