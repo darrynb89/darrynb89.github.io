@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/websecurityacademy/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2021-12-22T10:44:29+00:00</updated>
+  <updated>2021-12-22T11:14:36+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/websecurityacademy/feed.xml</id>
 
   
@@ -88,7 +88,13 @@ print(&quot;Password is: &quot; + password)
   &lt;li&gt;Automate the process of finding the password length and pass to the range function&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Thanks for reading!&lt;/p&gt;</content>
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;p&gt;============================================================&lt;/p&gt;
+
+&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
 
       
       
