@@ -61,3 +61,10 @@ The script could be a lot better, for example:
 - Automate the process of finding the password length and pass to the range function
 
 Thanks for reading!
+
+============================================================
+
+Any comments or feedback welcome! You can find me on [twitter](https://twitter.com/dazbrownfield).
+
+<a href="https://www.buymeacoffee.com/dazbrownfield" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+

@@ -316,3 +316,10 @@ Great, we can now see all the commits. Commits 2 and 3 look interesting, clearly
 Found it! Ive redacted it from the output as part of the TryHackMe write up rules however the password is part of the login function.
 
 Thanks for reading!
+
+============================================================
+
+Any comments or feedback welcome! You can find me on [twitter](https://twitter.com/dazbrownfield).
+
+<a href="https://www.buymeacoffee.com/dazbrownfield" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+

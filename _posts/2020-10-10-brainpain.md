@@ -579,7 +579,7 @@ I exit the manual as root!
 
 Thats the box, thanks for reading!
 
-==========================================================================
+============================================================
 
 Any comments or feedback welcome! You can find me on [twitter](https://twitter.com/dazbrownfield).
 
