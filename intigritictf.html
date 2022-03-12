@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <!-- Document Settings -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Base Meta -->
+    <!-- dynamically fixing the title for tag/author pages -->
+
+
+
+    <title>Intigriti 1337UP CTF 2022</title>
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Styles'n'Scripts -->
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/screen.edited.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/built/syntax.css" />
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <style>.hljs { background: none; }</style>
+
+    <!--[if IE]>
+        <style>
+            p, ol, ul{
+                width: 100%;
+            }
+            blockquote{
+                width: 100%;
+            }
+        </style>
+    <![endif]-->
+    
+    <!-- This tag outputs SEO meta+structured data and other important settings -->
+    <meta name="description" content="Infosec | Hacking | CTF" />
+    <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/intigritictf" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+     <!--title below is coming from _includes/dynamic_title-->
+    <meta property="og:site_name" content="Darryn Brownfield" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Intigriti 1337UP CTF 2022" />
+    <meta property="og:description" content="Overview These are a few write ups from the 1337UP CTF hosted by [Intigriti]](https://www.intigriti.com). It was a 24 hour CTF so didn’t get as much time on it as I would have liked however it was still a lot of fun. Mirage - Misc The link for the ‘Mirage’ challenge" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/intigritictf" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/intigritictf/cover.gif" />
+    <meta property="article:publisher" content="https://www.facebook.com/" />
+    <meta property="article:author" content="https://www.facebook.com/" />
+    <meta property="article:published_time" content="2022-03-12T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2022-03-12T00:00:00+00:00" />
+    <meta property="article:tag" content="Intigriti" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Intigriti 1337UP CTF 2022" />
+    <meta name="twitter:description" content="Overview These are a few write ups from the 1337UP CTF hosted by [Intigriti]](https://www.intigriti.com). It was a 24 hour CTF so didn’t get as much time on it as I would have liked however it was still a lot of fun. Mirage - Misc The link for the ‘Mirage’ challenge" />
+    <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/intigritictf/cover.gif" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Darryn Brownfield" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Intigriti" />
+    <meta name="twitter:site" content="@dazbrownfield" />
+    <meta name="twitter:creator" content="@dazbrownfield" />
+    <meta property="og:image:width" content="1400" />
+    <meta property="og:image:height" content="933" />
+
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Website",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Darryn Brownfield",
+        "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
+    },
+    "url": "https://darrynbrownfield.co.uk/intigritictf",
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://darrynbrownfield.co.uk/assets/images/intigritictf/cover.gif",
+        "width": 2000,
+        "height": 666
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://darrynbrownfield.co.uk/intigritictf"
+    },
+    "description": "Overview These are a few write ups from the 1337UP CTF hosted by [Intigriti]](https://www.intigriti.com). It was a 24 hour CTF so didn’t get as much time on it as I would have liked however it was still a lot of fun. Mirage - Misc The link for the ‘Mirage’ challenge"
+}
+    </script>
+
+    <!-- <script type="text/javascript" src="https://demo.ghost.io/public/ghost-sdk.min.js?v=724281a32e"></script>
+    <script type="text/javascript">
+    ghost.init({
+    	clientId: "ghost-frontend",
+    	clientSecret: "f84a07a72b17"
+    });
+    </script> -->
+
+    <meta name="generator" content="Jekyll 3.6.2" />
+    <link rel="alternate" type="application/rss+xml" title="Intigriti 1337UP CTF 2022" href="/feed.xml" />
+
+
+</head>
+<body class="post-template">
+
+    <div class="site-wrapper">
+        <!-- All the main content gets inserted here, index.hbs, post.hbs, etc -->
+        <!-- default -->
+
+<!-- The tag above means: insert everything in this file
+into the {body} of the default.hbs template -->
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+        
+            
+
+            
+        
+        
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="/">Home</a></li>
+    <li class="nav-about" role="menuitem"><a href="/about/">About</a></li>
+    <li class="nav-getting-started" role="menuitem"><a href="/tag/ctf/">CTF</a></li>
+</ul>
+
+        
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+            
+            <a
+              class="social-link social-link-tw"
+              href="https://github.com/darrynb89"
+              target="_blank"
+              rel="noopener"
+              ><svg
+  version="1.0"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 120.000000 120.000000"
+>
+  <g
+    transform="translate(0.000000,120.000000) scale(0.0900000,-0.0900000)"
+    fill="#ffffff"
+    stroke="none"
+  >
+    <path
+      d="M441 1174 c-105 -28 -181 -73 -266 -159 -125 -124 -175 -246 -175
+-425 0 -179 50 -300 175 -425 85 -85 185 -145 243 -145 36 0 42 13 42 89 l0
+57 -57 -3 c-74 -5 -117 17 -150 78 -13 24 -37 56 -54 71 -34 33 -36 38 -9 38
+12 0 20 -7 20 -16 0 -10 6 -14 14 -11 10 4 13 1 9 -9 -3 -10 2 -14 18 -14 18
+0 20 -3 10 -9 -16 -11 -4 -34 14 -27 9 3 11 -2 7 -16 -4 -18 -2 -20 21 -14 20
+5 25 3 21 -8 -9 -23 17 -31 33 -11 12 17 13 17 13 2 0 -11 8 -17 21 -17 15 0
+19 5 15 15 -3 8 -1 15 4 15 6 0 10 -7 10 -15 0 -8 7 -15 15 -15 8 0 15 8 15
+18 0 10 10 39 23 64 l23 46 -59 13 c-136 28 -210 123 -211 268 -1 66 3 82 27
+124 23 39 27 55 22 86 -7 40 9 121 24 121 18 0 78 -25 113 -46 30 -19 42 -22
+70 -14 18 6 71 10 118 10 47 0 100 -4 118 -10 28 -8 40 -5 70 14 35 21 95 46
+113 46 15 0 31 -81 24 -121 -5 -31 -1 -47 22 -86 24 -42 28 -58 27 -123 -1
+-147 -65 -231 -203 -266 l-68 -18 18 -30 c15 -25 19 -51 19 -138 0 -58 3 -113
+6 -122 20 -52 166 16 279 129 125 125 175 246 175 425 0 179 -50 301 -175 425
+-86 87 -161 131 -270 160 -75 19 -241 19 -314 -1z"
+    />
+  </g>
+</svg></a
+            >
+            
+            <a
+              class="social-link social-link-li"
+              href="https://www.linkedin.com/in/darryn-brownfield-0b1132b5"
+              target="_blank"
+              rel="noopener"
+              ><svg viewBox="0 50 512 512">
+    <g transform="translate(0.000000,20.000000) scale(1.1)">
+      <path
+        d="M150.65,100.682c0,27.992-22.508,50.683-50.273,50.683c-27.765,0-50.273-22.691-50.273-50.683
+      C50.104,72.691,72.612,50,100.377,50C128.143,50,150.65,72.691,150.65,100.682z M143.294,187.333H58.277V462h85.017V187.333z
+      M279.195,187.333h-81.541V462h81.541c0,0,0-101.877,0-144.181c0-38.624,17.779-61.615,51.807-61.615
+      c31.268,0,46.289,22.071,46.289,61.615c0,39.545,0,144.181,0,144.181h84.605c0,0,0-100.344,0-173.915
+      s-41.689-109.131-99.934-109.131s-82.768,45.369-82.768,45.369V187.333z"
+      />
+    </g>
+  </svg></a
+            >
+             
+            <a
+              class="social-link social-link-tw"
+              href="https://twitter.com/dazbrownfield"
+              target="_blank"
+              rel="noopener"
+              ><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a
+            >
+             
+          </div>
+</nav>
+
+    </div>
+</header>
+
+<!-- Everything inside the #post tags pulls data from the post -->
+<!-- #post -->
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full  tag-intigriti tag-ctf post ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="12 March 2022">12 March 2022</time>
+                    
+                        <span class="date-divider">/</span>
+                        
+                            
+                               <a href='/tag/intigriti/'>INTIGRITI</a>,
+                            
+                        
+                            
+                               <a href='/tag/ctf/'>CTF</a>
+                            
+                        
+                    
+                </section>
+                <h1 class="post-full-title">Intigriti 1337UP CTF 2022</h1>
+            </header>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown">
+                    <p><img src="/assets/images/intigritictf/cover.gif" alt="cover" /></p>
+
+<h3 id="overview">Overview</h3>
+
+<p>These are a few write ups from the 1337UP CTF hosted by [Intigriti]](https://www.intigriti.com). It was a 24 hour CTF so didn’t get as much time on it as I would have liked however it was still a lot of fun.</p>
+
+<h1 id="mirage---misc">Mirage - Misc</h1>
+
+<p>The link for the ‘Mirage’ challenge was https://mirage.ctf.intigriti.io/. There were no additional files with this challenge. Looking at the website was just a static page with no working links.</p>
+
+<p><img src="/assets/images/intigritictf/mirage.png" alt="mirage" /></p>
+
+<p>I looked at /robots.txt and found a whole list of entries.</p>
+
+<p><img src="/assets/images/intigritictf/miragerobots.png" alt="miragerobots" /></p>
+
+<p>There are a few entires that lead no where and a some are trolls, the important ones are:</p>
+
+<pre><code class="language-highlight">Disallow: /wordlists.txt
+Disallow: /ok.txt
+</code></pre>
+
+<p>I used <code class="highlighter-rouge">wget https://mirage.ctf.intigriti.io/wordlists.txt</code> to download the wordlist to my machine. On /ok.txt is some text which includes ‘/uncclzrny.wct’ with a hint of using ROT.</p>
+
+<p><img src="/assets/images/intigritictf/mirageok.png" alt="mirageok" /></p>
+
+<p>I went over to <a href="https://gchq.github.io/CyberChef/">CyberChef</a> and used rot13 on the text. This provided the url ‘/happymeal.jpg’.</p>
+
+<p><img src="/assets/images/intigritictf/cyberchefrot.png" alt="cyberchefrot" /></p>
+
+<p>This led to another page ‘HelpMeOut.txt’.</p>
+
+<p><img src="/assets/images/intigritictf/miragehelp.png" alt="miragehelp" /></p>
+
+<p>This page provides a link to a download. Again using wget I download the zip file.</p>
+
+<p><img src="/assets/images/intigritictf/miragedownload.png" alt="miragedownload" /></p>
+
+<p>The zip is password protected.</p>
+
+<pre><code class="language-highlight">└──╼ $unzip flag.zip 
+Archive:  flag.zip
+[flag.zip] flag.txt password: 
+   skipping: flag.txt                incorrect password
+</code></pre>
+
+<p>I used zip2john to create a hash.</p>
+
+<pre><code class="language-highlight">└──╼ $zip2john flag.zip &gt; zip.john                                                                          
+ver 1.0 efh 5455 efh 7875 flag.zip/flag.txt PKZIP Encr: 2b chk, TS_chk, cmplen=68, decmplen=56, crc=CC303849
+</code></pre>
+
+<p>Then use john to crack the hash with the word list downloaded earlier.</p>
+
+<pre><code class="language-highlight">└──╼ $john --wordlist=wordlists.txt zip.john 
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 2 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Soeasypeasy214   (flag.zip/flag.txt)
+1g 0:00:00:00 DONE (2022-03-11 20:32) 100.0g/s 15500p/s 15500c/s 15500C/s ##this will help you later..violent
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed
+┌─[daz@parrotos]─[~/Documents/1337UPCTF/Mirage]
+└──╼ $unzip flag.zip 
+Archive:  flag.zip
+[flag.zip] flag.txt password: 
+ extracting: flag.txt                
+┌─[daz@parrotos]─[~/Documents/1337UPCTF/Mirage]
+└──╼ $cat flag.txt 
+1337UP{Wh4tAM3ss.txt.jpg.whyareyouputtingmethroughthis}
+</code></pre>
+
+<h1 id="traveler---web">Traveler - Web</h1>
+
+<p>The link for the ‘Traveler’ challenge was https://traveller.ctf.intigriti.io/. There were no additional files with this challenge. Looking at the link its a travel agent based website.</p>
+
+<p><img src="/assets/images/intigritictf/traveler.png" alt="traveler" /></p>
+
+<p>Poking around the website I found a section to check availability.</p>
+
+<p><img src="/assets/images/intigritictf/travelerinjection.png" alt="travelerinjection" /></p>
+
+<p>I sent the request to Burp and started fuzzing the pack name field.</p>
+
+<p><img src="/assets/images/intigritictf/travelerapi.png" alt="travelerapi" /></p>
+
+<p>When submitting <code class="highlighter-rouge">Single'</code>  an error was generated showing</p>
+
+<blockquote>
+  <p>An error occurred whilst executing: bash check.sh Couple’</p>
+</blockquote>
+
+<p><img src="/assets/images/intigritictf/travelererror.png" alt="travelererror" /></p>
+
+<p>It doesn’t appear to be verifying user input so I should be able to just append bash commands to the syntax so I tried <code class="highlighter-rouge">Single&amp;ls</code> because of the special character I URL encoded it.</p>
+
+<p><img src="/assets/images/intigritictf/travelerls.png" alt="travelerls" /></p>
+
+<p>It worked, so getting the flag was simple using the payload <code class="highlighter-rouge">pack=Single%26%63%61%74%20%2e%2e%2f%2e%2e%2f%2e%2e%2f%66%6c%61%67%2e%74%78%74&amp;submit=Submit</code> which is <code class="highlighter-rouge">&amp;cat ../../../flag.txt</code> URL encoded.</p>
+
+<p><img src="/assets/images/intigritictf/travelerflag.png" alt="travelerflag" /></p>
+
+<h1 id="lovely-kitten-pictures-1---lovely-kitten-pictures">Lovely Kitten Pictures 1 - Lovely Kitten Pictures</h1>
+
+<p>The link for the ‘Lovely Kitten Pictures 1’ challenge was https://lovelykittenpictures.ctf.intigriti.io/. No files were included as part of this challenge. Navigating to the website just showed a picture of a cat with an option to switch.</p>
+
+<p><img src="/assets/images/intigritictf/cats.png" alt="cats" /></p>
+
+<p>I sent the requests through Burp and saw a request to ‘/pictures.php?path=assets/1.jpg’. That looks it could be vulnerable to an LFI (Local File Inclusion).</p>
+
+<p><img src="/assets/images/intigritictf/catsassets.png" alt="catsassets" /></p>
+
+<p>I played around for a while trying the basics such as ../../../../flag.txt, ../../../../etc/passwd &amp; etc but just got 404’s so decided to try ‘/pictures.php?path=pictures.php’ which if it worked would include the source code of the php file and I would be able to see how the request worked and it worked!</p>
+
+<p><img src="/assets/images/intigritictf/catsflag.png" alt="catsflag" /></p>
+
+<p>Reading the code it looks like any file other than .jpg would return the contents of flag1.txt I look at the headers and the flag was included1.</p>
+
+<p>Thanks for reading!</p>
+
+<p>==========================================================================</p>
+
+<p>Any comments or feedback welcome! You can find me on <a href="https://twitter.com/dazbrownfield">twitter</a>.</p>
+
+<p><a href="https://www.buymeacoffee.com/dazbrownfield" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" /></a></p>
+
+
+                </div>
+            </section>
+
+            <!-- Email subscribe form at the bottom of the page -->
+            
+
+            <footer class="post-full-footer">
+                <!-- Everything inside the #author tags pulls data from the author -->
+            </footer>
+
+            <!-- If you use Disqus comments, just uncomment this block.
+            The only thing you need to change is "test-apkdzgmqhj" - which
+            should be replaced with your own Disqus site-id. -->
+            
+
+        </article>
+
+    </div>
+</main>
+
+
+
+        <!-- Previous/next page links - displayed on every page -->
+        
+
+        <!-- The footer at the very bottom of the screen -->
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="https://darrynbrownfield.co.uk/">Darryn Brownfield</a> &copy; 2022</section>
+                <nav class="site-footer-nav">
+                    <a href="/">Latest Posts</a>
+                 </nav>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- The big email subscribe modal content -->
+    
+
+    <!-- highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.10.0/components/prism-abap.min.js"></script>
+    <script>$(document).ready(function() {
+      $('pre code').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });</script>
+
+    <!-- jQuery + Fitvids, which makes all video embeds responsive -->
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="https://demo.ghost.io/assets/js/jquery.fitvids.js?v=724281a32e"></script>
+
+
+    <!-- Paginator increased to "infinit" in _config.yml -->
+    <!-- if paginator.posts  -->
+    <!-- <script>
+        var maxPages = parseInt('');
+    </script>
+    <script src="/assets/js/infinitescroll.js"></script> -->
+    <!-- /endif -->
+
+    
+
+
+    <!-- Add Google Analytics  -->
+    <!-- Google Analytics Tracking code -->
+ <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-175458891-1', 'auto');
+  ga('send', 'pageview');
+
+ </script>
+
+
+    <!-- The #block helper will pull in data from the #contentFor other template files. In this case, there's some JavaScript which we only want to use in post.hbs, but it needs to be included down here, after jQuery has already loaded. -->
+    
+        <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+    
+
+    <!-- Ghost outputs important scripts and data with this tag - it should always be the very last thing before the closing body tag -->
+    <!-- ghost_foot -->
+
+</body>
+</html>
