@@ -205,7 +205,7 @@ w1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2A
 
 I've updated the script with the string and also removed the while true as we are no longer fuzzing.
 
-```highlight
+{% highlight python %}
 #!/usr/bin/python3
 
 import sys, socket
@@ -227,7 +227,7 @@ try:
 except:
    print("Application crashed")
    sys.exit()
-```
+{% endhighlight %}
 
 Running the script again crashes the application as excepted.
 
