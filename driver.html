@@ -243,20 +243,20 @@ into the {body} of the default.hbs template -->
 
 <p>I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.</p>
 
-<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.11.106
-Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:20 GMT
-Nmap scan report for 10.10.11.106
-Host is up (0.020s latency).
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">└──╼ <span class="nv">$sudo</span> nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oA</span> nmap/initial 10.10.11.106
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-02-27 17:20 GMT
+Nmap scan report <span class="k">for </span>10.10.11.106
+Host is up <span class="o">(</span>0.020s latency<span class="o">)</span><span class="nb">.</span>
 Not shown: 997 filtered ports
 PORT    STATE SERVICE      VERSION
 80/tcp  open  http         Microsoft IIS httpd 10.0
 | http-auth: 
-| HTTP/1.1 401 Unauthorized\x0D
-|_  Basic realm=MFP Firmware Update Center. Please enter password for admin
+| HTTP/1.1 401 Unauthorized<span class="se">\x</span>0D
+|_  Basic <span class="nv">realm</span><span class="o">=</span>MFP Firmware Update Center. Please enter password <span class="k">for </span>admin
 | http-methods: 
 |_  Potentially risky methods: TRACE
 |_http-server-header: Microsoft-IIS/10.0
-|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+|_http-title: Site doesn<span class="s1">'t have a title (text/html; charset=UTF-8).
 135/tcp open  msrpc        Microsoft Windows RPC
 445/tcp open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
 Service Info: Host: DRIVER; OS: Windows; CPE: cpe:/o:microsoft:windows
@@ -276,8 +276,7 @@ Host script results:
 |_  start_date: 2022-02-27T04:55:51
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
-</code></pre>
+Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds</span></code></pre></figure>
 
 <p>3 Ports open:</p>
 
@@ -289,17 +288,16 @@ Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
 
 <p>I also ran a full port scan and found winrm to be open on port 5985.</p>
 
-<pre><code class="language-highlight">└──╼ $sudo nmap -p- -oA nmap/all_ports 10.10.11.106
-Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:25 GMT
-Nmap scan report for 10.10.11.106
-Host is up (0.026s latency).
+<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell">└──╼ <span class="nv">$sudo</span> nmap -p- -oA nmap/all_ports 10.10.11.106
+Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-02-27 17:25 GMT
+Nmap scan report <span class="k">for </span>10.10.11.106
+Host is up <span class="o">(</span>0.026s latency<span class="o">)</span><span class="nb">.</span>
 Not shown: 65531 filtered ports
 PORT     STATE SERVICE
 80/tcp   open  http
 135/tcp  open  msrpc
 445/tcp  open  microsoft-ds
-5985/tcp open  wsman
-</code></pre>
+5985/tcp open  wsman</code></pre></figure>
 
 <p>The web service is showing an unauthorized response however it could be leaking a username with the message “Please enter password for admin”.</p>
 
