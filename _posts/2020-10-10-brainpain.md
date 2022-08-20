@@ -150,7 +150,7 @@ Looking at the output from the exe console, the application is copying the input
 
 I have created a very simple python script to fuzz the application. I updated my hosts file to connect to my windows VM rather than TryHackMe for now.
 
-```highlight
+{% highlight python %}
 #!/usr/bin/python3
 
 import sys, socket
@@ -171,7 +171,7 @@ while True:
     except:
        print("Fuzzing crashed at %s bytes" % str(len(buffer)))
        sys.exit()
-```
+{% endhighlight %}
 
 The script will send 100 A's to the application and will keep increasing the sent characters by 100 on each attempt. If the application crashes the script will fail and print out the length of A's sent at the time of the crash. 
 
@@ -243,7 +243,7 @@ EIP now has a value of 35724134. I use msf pattern offset to determine the EIP o
 
 Great the offset is 524. To make sure its correct I've updated the script with a buffer of 524 A's, 4 B's which is what will be shown as 42424242 in EIP and the remaining bytes as D's. Ive also added a slight offset of 4 C's
 
-```highlight
+{% highlight python %}
 #!/usr/bin/python3
 
 import sys, socket
@@ -266,7 +266,7 @@ try:
 except:
    print("Application crashed")
    sys.exit()
-```
+{% endhighlight %}
 
 I ran the exploit script again.
 
@@ -291,7 +291,7 @@ Before I go any further I need to check for bad characters that could break the 
 
 Ive updated the script with the bad character list.
 
-```highlight
+{% highlight python %}
 #!/usr/bin/python3
 
 import sys, socket
@@ -322,7 +322,7 @@ try:
 except:
    print("Application crashed")
    sys.exit()
-```
+{% endhighlight %}
 
 I ran the script again and checked Immunity Debugger.
 
@@ -352,7 +352,7 @@ Again only one with the value 311712f3. x86 architectures stores values in memor
 
 Now I have a JMP ESP value I update the script.
 
-```highlight
+{% highlight python %}
 #!/usr/bin/python3
 
 import sys, socket
@@ -376,7 +376,7 @@ try:
 except:
    print("Application crashed")
    sys.exit()
-```
+{% endhighlight %}
 
 #### Create shell code
 
@@ -432,7 +432,7 @@ msfvenom allows for the reverse shell payload to be created which I can add to t
 
 The final exploit script is:
 
-```highlight
+{% highlight python %}
 #!/usr/bin/python3                                                                                                        
                                                                                                                           
 import sys, socket                                                                                                        
@@ -483,7 +483,7 @@ try:
 except:
    print("Application crashed")
    sys.exit()
-```
+{% endhighlight %}
 
 Before I run the script I change the hosts file to point to the machine IP provided by TryHackMe and start a netcat listener.
 
