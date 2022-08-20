@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2022-08-20T23:17:34+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Intigriti 1337UP CTF 2022</title><link href="https://darrynbrownfield.co.uk/intigritictf" rel="alternate" type="text/html" title="Intigriti 1337UP CTF 2022" /><published>2022-03-12T00:00:00+00:00</published><updated>2022-03-12T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/intigritictf</id><content type="html" xml:base="https://darrynbrownfield.co.uk/intigritictf">&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cover.gif&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2022-08-20T23:24:12+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Intigriti 1337UP CTF 2022</title><link href="https://darrynbrownfield.co.uk/intigritictf" rel="alternate" type="text/html" title="Intigriti 1337UP CTF 2022" /><published>2022-03-12T00:00:00+00:00</published><updated>2022-03-12T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/intigritictf</id><content type="html" xml:base="https://darrynbrownfield.co.uk/intigritictf">&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cover.gif&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -280,20 +280,19 @@ Protocol: [MS-RPRN]: Print System Remote Protocol
 
 &lt;p&gt;I used git to clone the repo in to my /opt directory.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo git clone https://github.com/calebstewart/CVE-2021-1675.git
-Cloning into 'CVE-2021-1675'...
-remote: Enumerating objects: 40, done.
-remote: Counting objects: 100% (40/40), done.
-remote: Compressing objects: 100% (32/32), done.
-remote: Total 40 (delta 9), reused 37 (delta 6), pack-reused 0
-Receiving objects: 100% (40/40), 131.12 KiB | 932.00 KiB/s, done.
-Resolving deltas: 100% (9/9), done.
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; git clone https://github.com/calebstewart/CVE-2021-1675.git
+Cloning into &lt;span class=&quot;s1&quot;&gt;'CVE-2021-1675'&lt;/span&gt;...
+remote: Enumerating objects: 40, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+remote: Counting objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+remote: Compressing objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;32/32&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+remote: Total 40 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, reused 37 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, pack-reused 0
+Receiving objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 131.12 KiB | 932.00 KiB/s, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Resolving deltas: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9/9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 ┌─[daz@parrotos]─[/opt]
-└──╼ $cd CVE-2021-1675
+└──╼ &lt;span class=&quot;nv&quot;&gt;$cd&lt;/span&gt; CVE-2021-1675
 ┌─[daz@parrotos]─[/opt/CVE-2021-1675]
-└──╼ $ls
-CVE-2021-1675.ps1  nightmare-dll  README.md
-&lt;/code&gt;&lt;/pre&gt;
+└──╼ &lt;span class=&quot;nv&quot;&gt;$ls&lt;/span&gt;
+CVE-2021-1675.ps1  nightmare-dll  README.md&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Now using Evil-WinRM I can upload the powershell script and execute it.&lt;/p&gt;
 

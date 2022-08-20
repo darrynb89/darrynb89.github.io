@@ -390,20 +390,19 @@ Protocol: [MS-RPRN]: Print System Remote Protocol
 
 <p>I used git to clone the repo in to my /opt directory.</p>
 
-<pre><code class="language-highlight">└──╼ $sudo git clone https://github.com/calebstewart/CVE-2021-1675.git
-Cloning into 'CVE-2021-1675'...
-remote: Enumerating objects: 40, done.
-remote: Counting objects: 100% (40/40), done.
-remote: Compressing objects: 100% (32/32), done.
-remote: Total 40 (delta 9), reused 37 (delta 6), pack-reused 0
-Receiving objects: 100% (40/40), 131.12 KiB | 932.00 KiB/s, done.
-Resolving deltas: 100% (9/9), done.
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">└──╼ <span class="nv">$sudo</span> git clone https://github.com/calebstewart/CVE-2021-1675.git
+Cloning into <span class="s1">'CVE-2021-1675'</span>...
+remote: Enumerating objects: 40, <span class="k">done</span><span class="nb">.</span>
+remote: Counting objects: 100% <span class="o">(</span>40/40<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
+remote: Compressing objects: 100% <span class="o">(</span>32/32<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
+remote: Total 40 <span class="o">(</span>delta 9<span class="o">)</span>, reused 37 <span class="o">(</span>delta 6<span class="o">)</span>, pack-reused 0
+Receiving objects: 100% <span class="o">(</span>40/40<span class="o">)</span>, 131.12 KiB | 932.00 KiB/s, <span class="k">done</span><span class="nb">.</span>
+Resolving deltas: 100% <span class="o">(</span>9/9<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
 ┌─[daz@parrotos]─[/opt]
-└──╼ $cd CVE-2021-1675
+└──╼ <span class="nv">$cd</span> CVE-2021-1675
 ┌─[daz@parrotos]─[/opt/CVE-2021-1675]
-└──╼ $ls
-CVE-2021-1675.ps1  nightmare-dll  README.md
-</code></pre>
+└──╼ <span class="nv">$ls</span>
+CVE-2021-1675.ps1  nightmare-dll  README.md</code></pre></figure>
 
 <p>Now using Evil-WinRM I can upload the powershell script and execute it.</p>
 
